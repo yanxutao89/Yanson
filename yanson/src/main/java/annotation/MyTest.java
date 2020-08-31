@@ -7,24 +7,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Marker for method executed time 
+ * Marker for method executed time
  * @author yanxt7
  *
  */
-@Target(METHOD) 
+@Target(METHOD)
 @Retention(RUNTIME)
 public @interface MyTest {
-	
+
 	/**
-	 * method name
+	 * field name
 	 * @return
 	 */
 	String name() default "";
-	
+
 	/**
 	 * execution amount
 	 * @return
 	 */
 	int count() default 1;
-	
+
 }

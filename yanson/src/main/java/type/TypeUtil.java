@@ -42,7 +42,7 @@ public class TypeUtil {
 			return false;
 		} else if (isNumeric(jsonStr)) {
 			return getNumber(jsonStr);
-		} 
+		}
 
 		throw new InvalidJsonValueFormatException(
 			String.format("Invalid json data type, suppored types are %s, but found %s ",  Arrays.toString(SUPPORTED_DATA_TYPES), jsonStr));
@@ -53,17 +53,25 @@ public class TypeUtil {
 		List<String> list = new ArrayList<String>();
 		String json = jsonStr.trim() + ',';
 		int bracketCount = 0;
-		
+		int bracesCount = -1;
+
 		StringBuilder sb = new StringBuilder();
 		for (char c : json.toCharArray()) {
 			if (c == '{') {
 				bracketCount++;
 			} else if (c == '}') {
 				bracketCount--;
+			} else if (c == '[') {
+				if (bracesCount == -1) {
+					bracesCount = 0;
+				}
+				bracesCount++;
+			} else if (c == ']') {
+				bracesCount--;
 			}
 
 			sb.append(c);
-			if (bracketCount == 0 && c == ',') {
+			if (c == ',' && bracketCount == 0 && (bracesCount == -1 || bracesCount == 0)) {
 				list.add(sb.substring(0, sb.length() - 1));
 				sb = new StringBuilder();
 			}
@@ -222,7 +230,7 @@ public class TypeUtil {
 	public static boolean isCollectionType(Class<?> clazz) {
 		return COLLECTION_TYPE_SET.contains(clazz);
 	}
-	
+
 	/**
 	 * integer (-MAX, MAX)
 	 */
@@ -268,21 +276,21 @@ public class TypeUtil {
 		Matcher isNum = pattern.matcher(orginal);
 		return isNum.matches();
 	}
-	
+
 	public static Object getNumber(String original) {
-		
+
 		Object object = null;
-		
+
 		object = isLong(original);
 		if (null != object) {
 			return (Long) object;
 		}
-		
+
 		object = isDouble(original);
 		if (null != object){
 			return (Double)object;
 		}
-		
+
 		return null;
 	}
 

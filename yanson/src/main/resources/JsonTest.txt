@@ -9,7 +9,7 @@
     "string": "111",
     "integer": 111,
     "float": 1.11,
-    "boolean": true
+    "boolean": true,
     "employees": [
         {
             "firstName": "Bill",
@@ -30,7 +30,7 @@
     "XXX公司": [
         {
             "name": "IT部",
-            "mebers": [
+            "members": [
                 {
                     "维护人员": [
                         "ASA",
@@ -47,7 +47,7 @@
         },
         {
             "name": "人事部",
-            "mebers": [
+            "members": [
                 {
                     "招聘专员": {
                         "A": [

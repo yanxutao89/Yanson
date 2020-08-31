@@ -15,9 +15,9 @@ import utils.PatternUtils;
 import utils.StringUtils;
 
 public class JsonObject extends HashMap<String, Object> {
-	
+
 	private static final long serialVersionUID = 4560188633954957114L;
-	
+
 	private static final boolean SET_ON_NONULL = true;
 	private static final String MAGIC = "luxkui";
 
@@ -26,7 +26,7 @@ public class JsonObject extends HashMap<String, Object> {
 		JsonObject jsonObject = new JsonObject();
 		StringBuffer sb = new StringBuffer();
 		boolean isArray = false;
-		
+
 		String json = jsonStr.trim();
 		if (json.startsWith("[") && json.endsWith("]")) {
 			isArray = true;
@@ -55,50 +55,54 @@ public class JsonObject extends HashMap<String, Object> {
 			String keyStr = kvStr.substring(0, separator);
 			String currKey = TypeUtil.getKey(keyStr);
 			String valueStr = kvStr.substring(separator + 1).trim();
-			
-			JsonObject currObject = (JsonObject) jsonObject.get(currKey);
-			if (null == currObject) {
-				currObject = new JsonObject();
-				jsonObject.put(currKey, currObject);
-			}
 
 			// Object data
 			if (valueStr.startsWith("{") && valueStr.endsWith("}")) {
+
+				JsonObject currObject = (JsonObject) jsonObject.get(currKey);
+				if (null == currObject) {
+					currObject = new JsonObject();
+					jsonObject.put(currKey, currObject);
+				}
+
 				valueStr = valueStr.substring(1, valueStr.length() - 1);
 				List<String> keyValues = TypeUtil.formatKeyValues(valueStr);
 				for (String keyValue : keyValues) {
-	
-					generateObject((JsonObject) currObject, keyValue);
+
+					generateObject(currObject, keyValue);
 				}
+
 			// Array data
 			} else if (valueStr.startsWith("[") && valueStr.endsWith("]")) {
-				
-				List<String> keyValues = TypeUtil.formatKeyValues(valueStr);
-				
+
+				List<String> keyValues = TypeUtil.formatKeyValues(valueStr.substring(1, valueStr.length() - 1));
+
 				if (!CollectionUtils.isEmpty(keyValues)) {
-					JsonArray currArray = new JsonArray(keyValues.size());
-					for (String keyValue : keyValues) {
-						
-						keyValues = TypeUtil.formatKeyValues(valueStr.substring(1, keyValue.length() - 1));
-						currObject.put(currKey, currArray);				
-						for (int i = 0; i < keyValues.size(); i++) {
-							
-							currArray.add(new JsonObject());
-							StringBuilder arrayObject = new StringBuilder();
-							arrayObject.append("\"").append(currKey).append("\"").append(":").append(keyValues.get(i));
-							generateObject((JsonObject) currArray.get(i), arrayObject.toString());
-						}
+
+					JsonArray currArray = (JsonArray) jsonObject.get(currKey);
+					if (CollectionUtils.isEmpty(currArray)) {
+						currArray = new JsonArray(keyValues.size());
+						jsonObject.put(currKey, currArray);
+					}
+
+					for (int i = 0; i < keyValues.size(); i++) {
+
+						currArray.add(new JsonObject());
+						StringBuilder arrayObject = new StringBuilder();
+						arrayObject.append("\"").append(currKey).append("\"").append(":").append(keyValues.get(i));
+						generateObject((JsonObject) currArray.get(i), arrayObject.toString());
 					}
 				}
+
 			// Non object data
-			} else { 
+			} else {
 				jsonObject.put(currKey, TypeUtil.getValue(valueStr));
 			}
 		} else {
 			return ;
 		}
 	}
-	
+
 	public static <T> T toJavaObject(String jsonStr, Class<T> clazz) throws Exception {
 		return ((JsonObject) parseObject(jsonStr)).toJavaObject(clazz);
 	}
@@ -129,8 +133,8 @@ public class JsonObject extends HashMap<String, Object> {
 
 		return (T) instance;
 	}
-	
-	
+
+
 	@Override
 	public String toString() {
 		return this.toJsonString();
@@ -144,7 +148,7 @@ public class JsonObject extends HashMap<String, Object> {
 		sb.append("}");
 		String str = PatternUtils.commaRightCurlyBracket(sb.toString(), "}");
 		return PatternUtils.commaRightSquareBracket(str, "]");
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
