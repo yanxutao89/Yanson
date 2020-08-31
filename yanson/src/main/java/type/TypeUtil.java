@@ -45,7 +45,7 @@ public class TypeUtil {
 		}
 
 		throw new InvalidJsonValueFormatException(
-			String.format("Invalid json data type, suppored types are %s, but found %s ",  Arrays.toString(SUPPORTED_DATA_TYPES), jsonStr));
+			String.format("Invalid json data type, supported types are %s, but found %s ",  Arrays.toString(SUPPORTED_DATA_TYPES), jsonStr));
 	}
 
 	public static List<String> formatKeyValues(String jsonStr) {
