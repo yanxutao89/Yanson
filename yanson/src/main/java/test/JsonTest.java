@@ -40,7 +40,7 @@ public class JsonTest {
 		for (String json : jsons) {
 			JSON_LIST.add(json.trim());
 		}
-		jsonStr = JSON_LIST.get(4);
+		jsonStr = JSON_LIST.get(6);
 	}
 
 	@MyTest(count = 1, name = "Yanson")
