@@ -38,8 +38,7 @@ public class JsonObject extends HashMap<String, Object> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		JsonObject retObj = (JsonObject) jsonObject.get(MAGIC);
-		return isArray == false ? retObj : (JsonArray) retObj.get(MAGIC);
+		return isArray == false ? (JsonObject) jsonObject.get(MAGIC) : (JsonArray) jsonObject.get(MAGIC);
 	}
 
 	private static void generateObject(JsonObject jsonObject, String jsonStr) throws Exception {

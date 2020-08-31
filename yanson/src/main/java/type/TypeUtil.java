@@ -268,12 +268,12 @@ public class TypeUtil {
 	 */
 	public final static String REGEX_NON_NEGATIVE_REAL_NUMBER = "^\\+?(\\d+|\\d+\\.\\d+)$"; //$NON-NLS-1$
 
-	private static boolean isMatch(String regex, String orginal) {
-		if (orginal == null || orginal.trim().equals("")) { //$NON-NLS-1$
+	private static boolean isMatch(String regex, String original) {
+		if (original == null || original.trim().equals("")) { //$NON-NLS-1$
 			return false;
 		}
 		Pattern pattern = Pattern.compile(regex);
-		Matcher isNum = pattern.matcher(orginal);
+		Matcher isNum = pattern.matcher(original);
 		return isNum.matches();
 	}
 
@@ -294,62 +294,62 @@ public class TypeUtil {
 		return null;
 	}
 
-	public static boolean isNumeric(String orginal) {
-		return isMatch(REGEX_NUMERIC, orginal) || isMatch(REGEX_DOUBLE, orginal);
+	public static boolean isNumeric(String original) {
+		return isMatch(REGEX_NUMERIC, original) || isMatch(REGEX_NEGATIVE_LONG, original) || isMatch(REGEX_DOUBLE, original) || isMatch(REGEX_NEGATIVE_DOUBLE, original);
 	}
 
-	public static Long isPositiveLong(String orginal) {
-		if(isMatch(REGEX_POSITIVE_LONG, orginal)) {
-			return Long.parseLong(orginal);
+	public static Long isPositiveLong(String original) {
+		if(isMatch(REGEX_POSITIVE_LONG, original)) {
+			return Long.parseLong(original);
 		}
 		return null;
 	}
 
-	public static Long isNegativeLong(String orginal) {
-		if(isMatch(REGEX_NEGATIVE_LONG, orginal)) {
-			return Long.parseLong(orginal);
+	public static Long isNegativeLong(String original) {
+		if(isMatch(REGEX_NEGATIVE_LONG, original)) {
+			return Long.parseLong(original);
 		}
 		return null;
 	}
 
-	public static Long isLong(String orginal) {
-		if(isMatch(REGEX_LONG, orginal)) {
-			return Long.parseLong(orginal);
+	public static Long isLong(String original) {
+		if(isMatch(REGEX_LONG, original)) {
+			return Long.parseLong(original);
 		}
 		return null;
 	}
 
-	public static Double isPositiveDouble(String orginal) {
-		if(isMatch(REGEX_POSITIVE_DOUBLE, orginal)) {
-			return Double.parseDouble(orginal);
+	public static Double isPositiveDouble(String original) {
+		if(isMatch(REGEX_POSITIVE_DOUBLE, original)) {
+			return Double.parseDouble(original);
 		}
 		return null;
 	}
 
-	public static Double isNegativeDouble(String orginal) {
-		if(isMatch(REGEX_NEGATIVE_DOUBLE, orginal)) {
-			return Double.parseDouble(orginal);
+	public static Double isNegativeDouble(String original) {
+		if(isMatch(REGEX_NEGATIVE_DOUBLE, original)) {
+			return Double.parseDouble(original);
 		}
 		return null;
 	}
 
-	public static Double isDouble(String orginal) {
-		if(isMatch(REGEX_DOUBLE, orginal)) {
-			return Double.parseDouble(orginal);
+	public static Double isDouble(String original) {
+		if(isMatch(REGEX_DOUBLE, original)) {
+			return Double.parseDouble(original);
 		}
 		return null;
 	}
 
-	public static boolean isRealNumber(String orginal) {
-		return isMatch(REGEX_REAL_NUMBER, orginal);
+	public static boolean isRealNumber(String original) {
+		return isMatch(REGEX_REAL_NUMBER, original);
 	}
 
-	public static boolean isNonNegativeRealNumber(String orginal) {
-		return isMatch(REGEX_NON_NEGATIVE_REAL_NUMBER, orginal);
+	public static boolean isNonNegativeRealNumber(String original) {
+		return isMatch(REGEX_NON_NEGATIVE_REAL_NUMBER, original);
 	}
 
-	public static boolean isPositiveRealNumber(String orginal) {
-		return null == isPositiveDouble(orginal) || null == isPositiveLong(orginal);
+	public static boolean isPositiveRealNumber(String original) {
+		return null == isPositiveDouble(original) || null == isPositiveLong(original);
 	}
 
 }
