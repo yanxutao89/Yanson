@@ -2,13 +2,6 @@
     "string": "111",
     "integer": 111,
     "float": 1.11,
-    "boolean": true
-}
-*******
-{
-    "string": "111",
-    "integer": 111,
-    "float": 1.11,
     "boolean": true,
     "employees": [
         {

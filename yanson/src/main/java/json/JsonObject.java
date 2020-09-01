@@ -4,10 +4,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import annotation.JsonField;
 import exception.InvalidJsonKeyValueFormatException;
 import type.TypeUtil;
 import utils.CollectionUtils;
@@ -38,7 +40,23 @@ public class JsonObject extends HashMap<String, Object> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return isArray == false ? (JsonObject) jsonObject.get(MAGIC) : (JsonArray) jsonObject.get(MAGIC);
+		return isArray == false ? (JsonObject) jsonObject.get(MAGIC) : getJsonArray(jsonObject);
+	}
+
+	private static JsonArray getJsonArray(JsonObject jsonObject) {
+
+		JsonArray jsonArray = (JsonArray) jsonObject.get(MAGIC);
+		if (!CollectionUtils.isEmpty(jsonArray)) {
+			JsonArray array = new JsonArray(jsonArray.size());
+			for (Object obj : jsonArray) {
+				JsonObject temp = (JsonObject) obj;
+				array.add(temp.get(MAGIC));
+			}
+			return array;
+		} else {
+			return new JsonArray(0);
+		}
+
 	}
 
 	private static void generateObject(JsonObject jsonObject, String jsonStr) throws Exception {
@@ -71,7 +89,7 @@ public class JsonObject extends HashMap<String, Object> {
 					generateObject(currObject, keyValue);
 				}
 
-			// Array data
+				// Array data
 			} else if (valueStr.startsWith("[") && valueStr.endsWith("]")) {
 
 				List<String> keyValues = TypeUtil.formatKeyValues(valueStr.substring(1, valueStr.length() - 1));
@@ -93,46 +111,81 @@ public class JsonObject extends HashMap<String, Object> {
 					}
 				}
 
-			// Non object data
+				// Non object data
 			} else {
 				jsonObject.put(currKey, TypeUtil.getValue(valueStr));
 			}
 		} else {
-			return ;
+			return;
 		}
 	}
 
-	public static <T> T toJavaObject(String jsonStr, Class<T> clazz) throws Exception {
-		return ((JsonObject) parseObject(jsonStr)).toJavaObject(clazz);
+	public <T> T toJavaObject(String jsonStr, Class<T> clazz) throws Exception {
+		return ((JsonObject) parseObject(jsonStr)).toJavaObject(this, clazz);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T toJavaObject(Class<T> clazz) throws Exception {
+	public <T> T toJavaObject(Object object, Class<T> clazz) throws Exception {
 
 		Object instance = clazz.newInstance();
 		Field[] fields = clazz.getDeclaredFields();
 		Method[] methods = clazz.getDeclaredMethods();
 
-		for (Map.Entry<String, Object> entry : this.entrySet()) {
-			String key = entry.getKey();
-			Object value = entry.getValue();
-			for (Field field : fields) {
-				if (key.equals(field.getName())) {
-					for (Method method : methods) {
-						String name = method.getName();
-						if (name.startsWith("set") && name.toLowerCase().contains(key.toLowerCase())) {
-							method.setAccessible(true);
-							Class<?>[] parameterTypes = method.getParameterTypes();
-							method.invoke(instance, TypeUtil.cast(value, parameterTypes[0]));
+		for (Field field : fields) {
+
+			Class<?> type = field.getType();
+			if (object instanceof JsonObject) {
+				
+				JsonObject jsonObject = (JsonObject) object;
+				for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+					String key = entry.getKey();
+					Object value = entry.getValue();
+					boolean isMatched = key.equals(field.getName());
+					JsonField jsonField = field.getAnnotation(JsonField.class);
+					if (null != jsonField) {
+						List<String> aliasKeys = Arrays.asList(jsonField.aliasKeys());
+						String propertyName = jsonField.value();
+						isMatched |= aliasKeys.contains(key) && key.equals(propertyName);
+					}
+					if (isMatched) {
+						
+						if (TypeUtil.isElementType(type)) {
+							
+							// Field invoke
+//							field.setAccessible(true);
+//							field.set(instance, TypeUtil.cast2Element(value, type));
+							
+							// Method invoke
+							for (Method method : methods) {
+								String name = method.getName();
+								if ((name.startsWith("set") || name.startsWith("is")) && name.toLowerCase().contains(key.toLowerCase())) {
+									method.setAccessible(true);
+									Class<?>[] parameterTypes = method.getParameterTypes();
+									method.invoke(instance, TypeUtil.cast2Element(value, parameterTypes[0]));
+									break;
+								}
+							}
+							
+							break;
+						} else {
+							field.setAccessible(true);
+							field.set(instance, toJavaObject(jsonObject.get(key), type));
 						}
 					}
 				}
+			} else if (object instanceof JsonArray) {
+				JsonArray jsonArray = (JsonArray) object;
+				if (!CollectionUtils.isEmpty(jsonArray)) {
+					for (Object arr : jsonArray) {
+						toJavaObject(arr, type);
+					}
+				}
 			}
+			
 		}
 
 		return (T) instance;
 	}
-
 
 	@Override
 	public String toString() {

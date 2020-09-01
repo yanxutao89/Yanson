@@ -1,31 +1,36 @@
 package annotation;
 
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+
 /**
  * Marker for field deserialization
  * @author yanxt7
  *
  */
-@Target(FIELD)
-@Retention(RUNTIME)
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD})
 public @interface JsonField {
 
 	/**
-	 * field name
+	 * target property name
 	 * @return
 	 */
-	String name() default "";
+	String value();
 
 	/**
-	 * alternative field names
+	 * alternative keys
 	 * @return
 	 */
-	String[] aliasNames() default {};
+	String[] aliasKeys() default {};
 
 }

@@ -18,7 +18,7 @@ import json.JsonObject;
 import utils.AnnotationUtils;
 
 
-public class JsonTest {
+public class JsonTest2 {
 
 	public static final List<String> JSON_LIST = new ArrayList<String>();
 	private static String jsonStr;
@@ -47,11 +47,13 @@ public class JsonTest {
 	public void yanson() throws Exception {
 
 		if (jsonStr.startsWith("[")) {
-			JsonArray jsonArray = (JsonArray) JsonObject.parseObject(jsonStr);
+			Object parseObject = JsonObject.parseObject(jsonStr);
+			JsonArray jsonArray = (JsonArray) parseObject;
 			System.out.println(jsonArray);
 		} else {
 			JsonObject jsonObject = (JsonObject) JsonObject.parseObject(jsonStr);
-			System.out.println(jsonObject);
+			BaseTypeVo javaObject = jsonObject.toJavaObject(jsonObject, BaseTypeVo.class);
+			System.out.println(javaObject);
 		}
 
 	}
@@ -63,7 +65,8 @@ public class JsonTest {
 
 		} else {
 			JSONObject jsonObject = JSONObject.parseObject(jsonStr);
-			System.out.println(jsonObject);
+			BaseTypeVo javaObject = jsonObject.toJavaObject(BaseTypeVo.class);
+			System.out.println(javaObject);
 		}
 
 	}
@@ -75,8 +78,8 @@ public class JsonTest {
 		if (jsonStr.startsWith("[")) {
 
 		} else {
-			JsonObject jsonObject = objectMapper.readValue(jsonStr, JsonObject.class);
-			System.out.println(jsonObject);
+			BaseTypeVo readValue = objectMapper.readValue(jsonStr, BaseTypeVo.class);
+			System.out.println(readValue);
 		}
 
 	}
@@ -88,15 +91,15 @@ public class JsonTest {
 		if (jsonStr.startsWith("[")) {
 
 		} else {
-			JsonObject jsonObject = gson.fromJson(jsonStr, JsonObject.class);
-			System.out.println(jsonObject);
+			BaseTypeVo fromJson = gson.fromJson(jsonStr, BaseTypeVo.class);
+			System.out.println(fromJson);
 		}
 
 	}
 
 	public static void main(String[] args) throws Exception {
 
-		AnnotationUtils.getExecutedTime("test.JsonTest", args);
+		AnnotationUtils.getExecutedTime("test.JsonTest2", args);
 	}
 }
 

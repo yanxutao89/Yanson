@@ -1,5 +1,6 @@
 package utils;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 public class CollectionUtils {
@@ -11,6 +12,10 @@ public class CollectionUtils {
 		}
 		
 		return false;
+	}
+	
+	public static boolean isEmpty(Object[] array) {
+		return isEmpty(Arrays.asList(array));
 	}
 
 }

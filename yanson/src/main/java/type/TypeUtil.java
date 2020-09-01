@@ -81,7 +81,7 @@ public class TypeUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T cast(Object object, Class<T> clazz) throws Exception {
+	public static <T> T cast2Element(Object object, Class<T> clazz) throws Exception {
 
 		if (object != null) {
 			if (clazz == String.class) {

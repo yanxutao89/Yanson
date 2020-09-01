@@ -1,9 +1,8 @@
 package annotation;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
@@ -11,15 +10,15 @@ import java.lang.annotation.Target;
  * @author yanxt7
  *
  */
-@Target(METHOD)
-@Retention(RUNTIME)
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
 public @interface MyTest {
 
 	/**
-	 * field name
+	 * target method name
 	 * @return
 	 */
-	String name() default "";
+	String name();
 
 	/**
 	 * execution amount
