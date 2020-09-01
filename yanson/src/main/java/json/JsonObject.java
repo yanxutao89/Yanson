@@ -1,7 +1,6 @@
 package json;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -158,11 +157,19 @@ public class JsonObject extends HashMap<String, Object> {
 									method.invoke(instance, TypeUtil.cast2Element(value, parameterTypes[0]));
 									break;
 								} else {
-									JsonArray jsonArray = (JsonArray)jsonObject.get(key);
-									for (Object obj : jsonArray) {
-										toJavaObject(obj, obj.getClass());
-									}
-									break;
+//									JsonArray jsonArray = (JsonArray)jsonObject.get(key);
+//									Class<?> classType = null;
+//									Type superClass = type.getGenericSuperclass();
+//									Type actualType = ((ParameterizedType) superClass).getActualTypeArguments()[0];
+//									if (actualType instanceof ParameterizedType) {
+//										classType = (Class<?>) ((ParameterizedType) actualType).getRawType();
+//									} else {
+//										classType = (Class<?>) actualType;
+//									}
+//									for (Object obj : jsonArray) {
+//										toJavaObject(obj, classType);
+//									}
+//									break;
 								}
 							}
 						}
