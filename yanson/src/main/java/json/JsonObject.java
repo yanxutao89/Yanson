@@ -158,7 +158,10 @@ public class JsonObject extends HashMap<String, Object> {
 									method.invoke(instance, TypeUtil.cast2Element(value, parameterTypes[0]));
 									break;
 								} else {
-									toJavaObject(jsonObject.get(key), type);
+									JsonArray jsonArray = (JsonArray)jsonObject.get(key);
+									for (Object obj : jsonArray) {
+										toJavaObject(obj, obj.getClass());
+									}
 									break;
 								}
 							}
