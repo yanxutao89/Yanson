@@ -131,12 +131,12 @@ public class JsonObject extends HashMap<String, Object> {
 		Field[] fields = clazz.getDeclaredFields();
 		Method[] methods = clazz.getDeclaredMethods();
 
-		for (Field field : fields) {
+		if (object instanceof JsonObject) {
 
-			Class<?> type = field.getType();
-			if (object instanceof JsonObject) {
-				
-				JsonObject jsonObject = (JsonObject) object;
+			JsonObject jsonObject = (JsonObject) object;
+			for (Field field : fields) {
+
+				Class<?> type = field.getType();
 				for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
 					String key = entry.getKey();
 					Object value = entry.getValue();
@@ -145,43 +145,27 @@ public class JsonObject extends HashMap<String, Object> {
 					if (null != jsonField) {
 						List<String> aliasKeys = Arrays.asList(jsonField.aliasKeys());
 						String propertyName = jsonField.value();
-						isMatched |= aliasKeys.contains(key) && key.equals(propertyName);
+						isMatched |= aliasKeys.contains(key) && propertyName.equals(field.getName());
 					}
+
 					if (isMatched) {
-						
-						if (TypeUtil.isElementType(type)) {
-							
-							// Field invoke
-//							field.setAccessible(true);
-//							field.set(instance, TypeUtil.cast2Element(value, type));
-							
-							// Method invoke
-							for (Method method : methods) {
-								String name = method.getName();
-								if ((name.startsWith("set") || name.startsWith("is")) && name.toLowerCase().contains(key.toLowerCase())) {
+						for (Method method : methods) {
+							String name = method.getName();
+							if ((name.startsWith("set") || name.startsWith("is")) && name.toLowerCase().contains(key.toLowerCase())) {
+								if (TypeUtil.isElementType(type)) {
 									method.setAccessible(true);
 									Class<?>[] parameterTypes = method.getParameterTypes();
 									method.invoke(instance, TypeUtil.cast2Element(value, parameterTypes[0]));
 									break;
+								} else {
+									toJavaObject(jsonObject.get(key), type);
+									break;
 								}
 							}
-							
-							break;
-						} else {
-							field.setAccessible(true);
-							field.set(instance, toJavaObject(jsonObject.get(key), type));
 						}
 					}
 				}
-			} else if (object instanceof JsonArray) {
-				JsonArray jsonArray = (JsonArray) object;
-				if (!CollectionUtils.isEmpty(jsonArray)) {
-					for (Object arr : jsonArray) {
-						toJavaObject(arr, type);
-					}
-				}
 			}
-			
 		}
 
 		return (T) instance;

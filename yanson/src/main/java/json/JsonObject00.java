@@ -12,7 +12,7 @@ import type.TypeUtil;
 import utils.PatternUtils;
 
 public class JsonObject00 extends HashMap<String, Object> {
-	
+
 	private static final long serialVersionUID = 4560188633954957114L;
 	private static final boolean SET_ON_NONULL = false;
 	private static final String MAGIC = "luxkui";
@@ -61,7 +61,7 @@ public class JsonObject00 extends HashMap<String, Object> {
 						if (name.startsWith("set") && name.toLowerCase().contains(key.toLowerCase())) {
 							method.setAccessible(true);
 							Class<?>[] parameterTypes = method.getParameterTypes();
-							method.invoke(instance, TypeUtil.cast(value, parameterTypes[0]));
+							method.invoke(instance, TypeUtil.cast2Element(value, parameterTypes[0]));
 						}
 					}
 				}
@@ -92,7 +92,7 @@ public class JsonObject00 extends HashMap<String, Object> {
 			}
 
 			if (valueStr.startsWith("[") && valueStr.endsWith("]")) { // Array data
-				
+
 				List<String> keyValues = formatKVs(valueStr);
 				for (String keyValue : keyValues) {
 					keyStr = "\"" + currKey + "\"";
@@ -211,8 +211,8 @@ public class JsonObject00 extends HashMap<String, Object> {
 	private static void vlidateJson(String jsonStr) {
 
 	}
-	
-	
+
+
 	@Override
 	public String toString() {
 		return this.toJsonString();

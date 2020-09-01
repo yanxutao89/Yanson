@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import exception.InvalidJsonValueFormatException;
+import utils.StringUtils;
 
 public class TypeUtil {
 
@@ -175,6 +176,22 @@ public class TypeUtil {
 
 	public static Date castToDate(Object object) {
 		return (Date) object;
+	}
+
+	public static boolean hasSetterMethod(Class<?> clazz, String property) {
+		return false;
+	}
+
+	public static String capitalizesFirstLetter(String property) {
+
+		if (StringUtils.isEmpty(property)) {
+			return "";
+		}
+		if (Character.isLowerCase(property.charAt(0))) {
+			property = Character.toUpperCase(property.charAt(0)) + property.substring(1);
+		}
+
+		return property;
 	}
 
 	private static final Set<Class<?>> PRIMITIVE_TYPE_SET = new HashSet<Class<?>>();
