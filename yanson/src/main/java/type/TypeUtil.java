@@ -45,8 +45,8 @@ public class TypeUtil {
 			return true;
 		} else if ("false".equals(json)) {
 			return false;
-		} else if (isNumeric(jsonStr)) {
-			return getNumber(jsonStr);
+		} else if (isNumeric(json)) {
+			return getNumber(json);
 		}
 
 		throw new InvalidJsonValueFormatException(String.format("Invalid json data type, supported types are %s, but found %s ",  Arrays.toString(SUPPORTED_DATA_TYPES), jsonStr));
