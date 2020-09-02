@@ -3,10 +3,7 @@ package json;
 import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import annotation.JsonField;
 import exception.InvalidJsonKeyValueFormatException;
@@ -19,13 +16,13 @@ public class JsonObject extends HashMap<String, Object> {
 
 	private static final long serialVersionUID = 4560188633954957114L;
 
-	private static final boolean SET_ON_NONULL = true;
+	private static final boolean SET_ON_NONNULL = true;
 	private static final String MAGIC = "luxkui";
 
 	public static Object parseObject(String jsonStr) {
 
 		JsonObject jsonObject = new JsonObject();
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		boolean isArray = false;
 
 		String json = jsonStr.trim();
@@ -60,7 +57,7 @@ public class JsonObject extends HashMap<String, Object> {
 
 	private static void generateObject(JsonObject jsonObject, String jsonStr) throws Exception {
 
-		if (!StringUtils.isEmpty(jsonStr)) {
+		if (!StringUtils.isEmpty(jsonStr) && !"isArrayEmptyOrSeparatedByComma".equals(jsonStr)) {
 
 			String kvStr = jsonStr.trim();
 			int separator = kvStr.indexOf(":");
@@ -88,25 +85,31 @@ public class JsonObject extends HashMap<String, Object> {
 					generateObject(currObject, keyValue);
 				}
 
-				// Array data
+			// Array data
 			} else if (valueStr.startsWith("[") && valueStr.endsWith("]")) {
 
-				List<String> keyValues = TypeUtil.formatKeyValues(valueStr.substring(1, valueStr.length() - 1));
+				List<String> keyValues = TypeUtil.formatKeyValues(valueStr);
 
 				if (!CollectionUtils.isEmpty(keyValues)) {
 
-					JsonArray currArray = (JsonArray) jsonObject.get(currKey);
-					if (CollectionUtils.isEmpty(currArray)) {
-						currArray = new JsonArray(keyValues.size());
-						jsonObject.put(currKey, currArray);
-					}
+					if ("isArrayEmptyOrSeparatedByComma".equals(keyValues.get(0))) {
 
-					for (int i = 0; i < keyValues.size(); i++) {
+						jsonObject.put(currKey, keyValues.get(1));
+					} else {
 
-						currArray.add(new JsonObject());
-						StringBuilder arrayObject = new StringBuilder();
-						arrayObject.append("\"").append(currKey).append("\"").append(":").append(keyValues.get(i));
-						generateObject((JsonObject) currArray.get(i), arrayObject.toString());
+						JsonArray currArray = (JsonArray) jsonObject.get(currKey);
+						if (CollectionUtils.isEmpty(currArray)) {
+							currArray = new JsonArray(keyValues.size());
+							jsonObject.put(currKey, currArray);
+						}
+
+						for (int i = 0; i < keyValues.size(); i++) {
+
+							currArray.add(new JsonObject());
+							StringBuilder arrayObject = new StringBuilder();
+							arrayObject.append("\"").append(currKey).append("\"").append(":").append(keyValues.get(i));
+							generateObject((JsonObject) currArray.get(i), arrayObject.toString());
+						}
 					}
 				}
 
@@ -120,11 +123,11 @@ public class JsonObject extends HashMap<String, Object> {
 	}
 
 	public <T> T toJavaObject(String jsonStr, Class<T> clazz) throws Exception {
-		return ((JsonObject) parseObject(jsonStr)).toJavaObject(this, clazz);
+		return ((JsonObject) parseObject(jsonStr)).toJavaObject0(this, clazz, "");
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T toJavaObject(Object object, Class<T> clazz) throws Exception {
+	public <T> T toJavaObject0(Object object, Class<T> clazz, String parent) throws Exception {
 
 		Object instance = clazz.newInstance();
 		Field[] fields = clazz.getDeclaredFields();
@@ -133,45 +136,54 @@ public class JsonObject extends HashMap<String, Object> {
 		if (object instanceof JsonObject) {
 
 			JsonObject jsonObject = (JsonObject) object;
+			if (!StringUtils.isEmpty(parent)) {
+				jsonObject = (JsonObject) jsonObject.get(parent);
+			}
 			for (Field field : fields) {
 
 				Class<?> type = field.getType();
 				for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+
 					String key = entry.getKey();
 					Object value = entry.getValue();
-					boolean isMatched = key.equals(field.getName());
-					JsonField jsonField = field.getAnnotation(JsonField.class);
-					if (null != jsonField) {
-						List<String> aliasKeys = Arrays.asList(jsonField.aliasKeys());
-						String propertyName = jsonField.value();
-						isMatched |= aliasKeys.contains(key) && propertyName.equals(field.getName());
-					}
+					for (Method method : methods) {
 
-					if (isMatched) {
-						for (Method method : methods) {
-							String name = method.getName();
-							if ((name.startsWith("set") || name.startsWith("is")) && name.toLowerCase().contains(key.toLowerCase())) {
-								if (TypeUtil.isElementType(type)) {
-									method.setAccessible(true);
-									Class<?>[] parameterTypes = method.getParameterTypes();
-									method.invoke(instance, TypeUtil.cast2Element(value, parameterTypes[0]));
-									break;
-								} else {
-//									JsonArray jsonArray = (JsonArray)jsonObject.get(key);
-//									Class<?> classType = null;
-//									Type superClass = type.getGenericSuperclass();
-//									Type actualType = ((ParameterizedType) superClass).getActualTypeArguments()[0];
-//									if (actualType instanceof ParameterizedType) {
-//										classType = (Class<?>) ((ParameterizedType) actualType).getRawType();
-//									} else {
-//										classType = (Class<?>) actualType;
-//									}
-//									for (Object obj : jsonArray) {
-//										toJavaObject(obj, classType);
-//									}
-//									break;
+						if (TypeUtil.isFieldMatched(field, method, key)) {
+							method.setAccessible(true);
+							if (TypeUtil.isElementType(type)) {
+								Class<?>[] parameterTypes = method.getParameterTypes();
+								method.invoke(instance, TypeUtil.cast2Element(value, parameterTypes[0]));
+							} else if (TypeUtil.isCollectionType(type)){
+								JsonArray jsonArray = (JsonArray)jsonObject.get(key);
+								int size = jsonArray.size();
+
+								Class<?> classType = null;
+								Type genericType = field.getGenericType();
+								if (genericType instanceof ParameterizedType) {
+									ParameterizedType parameterizedType = (ParameterizedType) genericType;
+									classType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 								}
+
+								Object o = TypeUtil.cast2Collection(value, type, size);
+								if (o instanceof List) {
+									List list = (List) o;
+									for (Object temp : jsonArray) {
+										list.add(toJavaObject0(temp, classType, key));
+									}
+									method.invoke(instance, list);
+								} else if (o instanceof Map) {
+									Map map = (Map) o;
+									for (Object temp : jsonArray) {
+										map.putAll((Map) toJavaObject0(temp, classType, key));
+									}
+									method.invoke(instance, map);
+								}
+							} else if (TypeUtil.isArrayType(type)) {
+								JsonArray jsonArray = (JsonArray)jsonObject.get(key);
+								int size = jsonArray.size();
+								Object o = TypeUtil.cast2Collection(value, type, size);
 							}
+							break;
 						}
 					}
 				}
@@ -188,7 +200,7 @@ public class JsonObject extends HashMap<String, Object> {
 
 	public String toJsonString() {
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 		recursive2String(sb, this, false);
 		sb.append("}");
@@ -198,7 +210,7 @@ public class JsonObject extends HashMap<String, Object> {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void recursive2String(StringBuffer sb, Object object, boolean isList) {
+	private void recursive2String(StringBuilder sb, Object object, boolean isList) {
 
 		if (object instanceof Map) {
 			Map<String, Object> map = (Map<String, Object>) object;
@@ -223,51 +235,51 @@ public class JsonObject extends HashMap<String, Object> {
 						sb.append("\"" + entry.getKey() + "\"");
 						sb.append(":");
 					}
-					sb.append((Integer) value);
+					sb.append(value);
 				} else if (value instanceof Short) {
 					if (!isList) {
 						sb.append("\"" + entry.getKey() + "\"");
 						sb.append(":");
 					}
-					sb.append((Short) value);
+					sb.append(value);
 				} else if (value instanceof Long) {
 					if (!isList) {
 						sb.append("\"" + entry.getKey() + "\"");
 						sb.append(":");
 					}
-					sb.append((Long) value);
+					sb.append(value);
 				} else if (value instanceof BigInteger) {
 					if (!isList) {
 						sb.append("\"" + entry.getKey() + "\"");
 						sb.append(":");
 					}
-					sb.append((BigInteger) value);
+					sb.append(value);
 				} else if (value instanceof Float) {
 					if (!isList) {
 						sb.append("\"" + entry.getKey() + "\"");
 						sb.append(":");
 					}
-					sb.append((Float) value);
+					sb.append(value);
 				} else if (value instanceof Double) {
 					if (!isList) {
 						sb.append("\"" + entry.getKey() + "\"");
 						sb.append(":");
 					}
-					sb.append((Double) value);
+					sb.append(value);
 				} else if (value instanceof BigDecimal) {
 					if (!isList) {
 						sb.append("\"" + entry.getKey() + "\"");
 						sb.append(":");
 					}
-					sb.append((BigDecimal) value);
+					sb.append(value);
 				} else if (value instanceof Boolean) {
 					if (!isList) {
 						sb.append("\"" + entry.getKey() + "\"");
 						sb.append(":");
 					}
-					sb.append((Boolean) value);
+					sb.append(value);
 				} else if (null == value) {
-					if (SET_ON_NONULL) {
+					if (SET_ON_NONNULL) {
 						if (!isList) {
 							sb.append("\"" + entry.getKey() + "\"");
 							sb.append(":");

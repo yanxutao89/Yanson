@@ -25,7 +25,7 @@ public class JsonTest2 {
 
 	static {
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("JsonTest.txt");
 		byte[] buffer = new byte[1024 * 8];
 		int len;
@@ -43,7 +43,7 @@ public class JsonTest2 {
 		jsonStr = JSON_LIST.get(0);
 	}
 
-	@MyTest(count = 1, name = "Yanson")
+	@MyTest
 	public void yanson() throws Exception {
 
 		if (jsonStr.startsWith("[")) {
@@ -52,13 +52,13 @@ public class JsonTest2 {
 			System.out.println(jsonArray);
 		} else {
 			JsonObject jsonObject = (JsonObject) JsonObject.parseObject(jsonStr);
-			BaseTypeVo javaObject = jsonObject.toJavaObject(jsonObject, BaseTypeVo.class);
-			System.out.println(javaObject);
+			BaseTypeVo javaObject = jsonObject.toJavaObject(jsonStr, BaseTypeVo.class);
+//			System.out.println(javaObject);
 		}
 
 	}
 
-	@MyTest(count = 1, name = "FastJson")
+	@MyTest
 	public void fastJson() {
 
 		if (jsonStr.startsWith("[")) {
@@ -66,12 +66,12 @@ public class JsonTest2 {
 		} else {
 			JSONObject jsonObject = JSONObject.parseObject(jsonStr);
 			BaseTypeVo javaObject = jsonObject.toJavaObject(BaseTypeVo.class);
-			System.out.println(javaObject);
+//			System.out.println(javaObject);
 		}
 
 	}
 
-	@MyTest(count = 1, name = "Jackson")
+	@MyTest
 	public void jackson() throws JsonMappingException, JsonProcessingException {
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -79,12 +79,12 @@ public class JsonTest2 {
 
 		} else {
 			BaseTypeVo readValue = objectMapper.readValue(jsonStr, BaseTypeVo.class);
-			System.out.println(readValue);
+//			System.out.println(readValue);
 		}
 
 	}
 
-	@MyTest(count = 1, name = "Gson")
+	@MyTest
 	public void gson() {
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -92,7 +92,7 @@ public class JsonTest2 {
 
 		} else {
 			BaseTypeVo fromJson = gson.fromJson(jsonStr, BaseTypeVo.class);
-			System.out.println(fromJson);
+//			System.out.println(fromJson);
 		}
 
 	}

@@ -18,7 +18,7 @@ public @interface MyTest {
 	 * target method name
 	 * @return
 	 */
-	String name();
+	String name() default "";
 
 	/**
 	 * execution amount

@@ -1,20 +1,18 @@
 package type;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import annotation.JsonField;
 import exception.InvalidJsonValueFormatException;
 import utils.StringUtils;
+
+import static utils.ValidationUtils.isTrue;
 
 public class TypeUtil {
 
@@ -34,6 +32,12 @@ public class TypeUtil {
 		String json = jsonStr.trim();
 
 		if (json.startsWith("\"") && json.endsWith("\"")) {
+			if (json.startsWith("\"\"")) {
+				json = json.substring(1);
+			}
+			if (json.endsWith("\"\"")) {
+				json = json.substring(0, json.length() - 1);
+			}
 			return json;
 		} else if ("null".equals(json)) {
 			return null;
@@ -45,40 +49,63 @@ public class TypeUtil {
 			return getNumber(jsonStr);
 		}
 
-		throw new InvalidJsonValueFormatException(
-			String.format("Invalid json data type, supported types are %s, but found %s ",  Arrays.toString(SUPPORTED_DATA_TYPES), jsonStr));
+		throw new InvalidJsonValueFormatException(String.format("Invalid json data type, supported types are %s, but found %s ",  Arrays.toString(SUPPORTED_DATA_TYPES), jsonStr));
 	}
 
 	public static List<String> formatKeyValues(String jsonStr) {
 
 		List<String> list = new ArrayList<String>();
-		String json = jsonStr.trim() + ',';
-		int bracketCount = 0;
-		int bracesCount = -1;
+		if (isArrayEmptyOrSeparatedByComma(jsonStr)) {
 
-		StringBuilder sb = new StringBuilder();
-		for (char c : json.toCharArray()) {
-			if (c == '{') {
-				bracketCount++;
-			} else if (c == '}') {
-				bracketCount--;
-			} else if (c == '[') {
-				if (bracesCount == -1) {
-					bracesCount = 0;
-				}
-				bracesCount++;
-			} else if (c == ']') {
-				bracesCount--;
+			list.add("isArrayEmptyOrSeparatedByComma");
+			list.add(jsonStr);
+		} else {
+
+			String json = jsonStr.trim();
+			if (json.startsWith("[") && json.endsWith("]")) {
+				json = json.substring(1, json.length() - 1);
 			}
+			json = json + ',';
+			int bracketCount = 0;
+			int bracesCount = -1;
 
-			sb.append(c);
-			if (c == ',' && bracketCount == 0 && (bracesCount == -1 || bracesCount == 0)) {
-				list.add(sb.substring(0, sb.length() - 1));
-				sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
+			for (char c : json.toCharArray()) {
+				if (c == '{') {
+					bracketCount++;
+				} else if (c == '}') {
+					bracketCount--;
+				} else if (c == '[') {
+					if (bracesCount == -1) {
+						bracesCount = 0;
+					}
+					bracesCount++;
+				} else if (c == ']') {
+					bracesCount--;
+				}
+
+				sb.append(c);
+				if (c == ',' && bracketCount == 0 && (bracesCount == -1 || bracesCount == 0)) {
+					list.add(sb.substring(0, sb.length() - 1));
+					sb = new StringBuilder();
+				}
 			}
 		}
 
 		return list;
+	}
+
+	private static boolean isArrayEmptyOrSeparatedByComma(String jsonStr) {
+
+		String json = jsonStr.trim();
+		if (json.startsWith("[") && json.endsWith("]")) {
+
+			json = json.substring(1, json.length() - 1);
+			json = json.trim();
+			return json.charAt(0) != '{' && json.charAt(json.length() - 1) != '}';
+		}
+
+		return false;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -86,96 +113,241 @@ public class TypeUtil {
 
 		if (object != null) {
 			if (clazz == String.class) {
-				return (T) castToString(object);
+				return (T) cast2String(object);
 			}
 			if (clazz == boolean.class || clazz == Boolean.class) {
-				return (T) castToBoolean(object);
+				return (T) cast2Boolean(object);
 			}
 			if (clazz == int.class || clazz == Integer.class) {
-				return (T) castToInteger(object);
+				return (T) cast2Integer(object);
 			}
 			if (clazz == long.class || clazz == Long.class) {
-				return (T) castToLong(object);
+				return (T) cast2Long(object);
 			}
 			if (clazz == short.class || clazz == Short.class) {
-				return (T) castToShort(object);
+				return (T) cast2Short(object);
 			}
 			if (clazz == BigInteger.class) {
-				return (T) castToBigInteger(object);
+				return (T) cast2BigInteger(object);
 			}
 			if (clazz == float.class || clazz == Float.class) {
-				return (T) castToFloat(object);
+				return (T) cast2Float(object);
 			}
 			if (clazz == double.class || clazz == Double.class) {
-				return (T) castToDouble(object);
-			}
-			if (clazz == double.class || clazz == Double.class) {
-				return (T) castToDouble(object);
+				return (T) cast2Double(object);
 			}
 			if (clazz == BigDecimal.class) {
-				return (T) castToBigDecimal(object);
+				return (T) cast2BigDecimal(object);
 			}
 			if (clazz == byte.class || clazz == Byte.class) {
-				return (T) castToByte(object);
+				return (T) cast2Byte(object);
 			}
 			if (clazz == char.class || clazz == Character.class) {
-				return (T) castToCharacter(object);
+				return (T) cast2Character(object);
 			}
 		}
 
 		return null;
 	}
 
-	public static String castToString(Object object) {
+	@SuppressWarnings("unchecked")
+	public static <T> T cast2Array(Object object, Class<T> clazz, int size) throws Exception {
+
+		if (object != null) {
+			if (clazz == Object[].class) {
+				return (T) cast2Strings(object, size);
+			}
+			if (clazz == boolean[].class || clazz == Boolean[].class) {
+				return (T) cast2Booleans(object, size);
+			}
+			if (clazz == int[].class || clazz == Integer[].class) {
+				return (T) cast2Integers(object, size);
+			}
+			if (clazz == long[].class || clazz == Long[].class) {
+				return (T) cast2Longs(object, size);
+			}
+			if (clazz == short[].class || clazz == Short[].class) {
+				return (T) cast2Shorts(object, size);
+			}
+			if (clazz == BigInteger[].class) {
+				return (T) cast2BigIntegers(object, size);
+			}
+			if (clazz == float[].class || clazz == Float[].class) {
+				return (T) cast2Float(object);
+			}
+			if (clazz == double[].class || clazz == Double[].class) {
+				return (T) cast2Doubles(object, size);
+			}
+			if (clazz == BigDecimal[].class) {
+				return (T) cast2BigDecimals(object, size);
+			}
+			if (clazz == byte[].class || clazz == Byte[].class) {
+				return (T) cast2Bytes(object, size);
+			}
+			if (clazz == char[].class || clazz == Character[].class) {
+				return (T) cast2Characters(object, size);
+			}
+		}
+
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T cast2Collection(Object object, Class<T> clazz, int size) throws Exception {
+
+		if (object != null) {
+			if (clazz == Map.class) {
+				return (T) cast2Map(object, size);
+			}
+			if (clazz == List.class) {
+				return (T) cast2List(object, size);
+			}
+		}
+
+		return null;
+	}
+
+	public static String cast2String(Object object) {
 		return (String) object;
 	}
 
-	public static Boolean castToBoolean(Object object) {
+	public static Boolean cast2Boolean(Object object) {
 		return (Boolean) object;
 	}
 
-	public static Integer castToInteger(Object object) {
+	public static Integer cast2Integer(Object object) {
 		Long l = (Long) object;
 		return l.intValue();
 	}
 
-	public static Long castToLong(Object object) {
+	public static Long cast2Long(Object object) {
 		return (Long) object;
 	}
 
-	public static Short castToShort(Object object) {
+	public static Short cast2Short(Object object) {
 		Long l = (Long) object;
 		return l.shortValue();
 	}
 
-	public static BigInteger castToBigInteger(Object object) {
+	public static BigInteger cast2BigInteger(Object object) {
 		return new BigInteger(object.toString());
 	}
 
-	public static Float castToFloat(Object object) {
+	public static Float cast2Float(Object object) {
 		Double d = (Double) object;
 		return d.floatValue();
 	}
 
-	public static Double castToDouble(Object object) {
+	public static Double cast2Double(Object object) {
 		return (Double) object;
 	}
 
-	public static BigDecimal castToBigDecimal(Object object) {
+	public static BigDecimal cast2BigDecimal(Object object) {
 		return new BigDecimal(object.toString());
 	}
 
-	public static Byte castToByte(Object object) {
+	public static Byte cast2Byte(Object object) {
 		Long l = (Long) object;
 		return l.byteValue();
 	}
 
-	public static Character castToCharacter(Object object) {
+	public static Character cast2Character(Object object) {
 		return (Character) object;
 	}
 
-	public static Date castToDate(Object object) {
+	public static Date cast2Date(Object object) {
 		return (Date) object;
+	}
+
+	public static Map cast2Map(Object object, int size) {
+		return new HashMap(size);
+	}
+
+	public static List cast2List(Object object, int size) {
+		return new ArrayList(size);
+	}
+
+	public static String[] cast2Strings(Object object, int size) {
+		String[] strings = new String[size];
+		return strings;
+	}
+
+	public static Boolean[] cast2Booleans(Object object, int size) {
+		Boolean[] booleans = new Boolean[size];
+		return booleans;
+	}
+
+	public static Integer[] cast2Integers(Object object, int size) {
+		Integer[] integers = new Integer[size];
+		return integers;
+	}
+
+	public static Long[] cast2Longs(Object object, int size) {
+		Long[] longs = new Long[size];
+		return longs;
+	}
+
+	public static Short[] cast2Shorts(Object object, int size) {
+		Short[] shorts = new Short[size];
+		return shorts;
+	}
+
+	public static BigInteger[] cast2BigIntegers(Object object, int size) {
+		BigInteger[] bigIntegers = new BigInteger[size];
+		return bigIntegers;
+	}
+
+	public static Float[] cast2Floats(Object object, int size) {
+		Float[] floats = new Float[size];
+		return floats;
+	}
+
+	public static Double[] cast2Doubles(Object object, int size) {
+		Double[] doubles = new Double[size];
+		return doubles;
+	}
+
+	public static BigDecimal[] cast2BigDecimals(Object object, int size) {
+		BigDecimal[] bigDecimals = new BigDecimal[size];
+		return bigDecimals;
+	}
+
+	public static Byte[] cast2Bytes(Object object, int size) {
+		Byte[] bytes = new Byte[size];
+		return bytes;
+	}
+
+	public static Character[] cast2Characters(Object object, int size) {
+		Character[] characters = new Character[size];
+		return characters;
+	}
+
+	public static Date[] cast2Dates(Object object, int size) {
+		Date[] dates = new Date[size];
+		return dates;
+	}
+
+	public static boolean isFieldMatched(Field field, Method method, String key) throws Exception {
+
+		isTrue(!StringUtils.isEmpty(key), "Parameter 'key' must not be null or empty");
+
+		boolean isMatched = key.equals(field.getName());
+		JsonField jsonField = field.getAnnotation(JsonField.class);
+		if (null != jsonField) {
+			List<String> aliasKeys = Arrays.asList(jsonField.aliasKeys());
+			String propertyName = jsonField.value();
+			isMatched |= aliasKeys.contains(key) && propertyName.equals(field.getName());
+		}
+
+		if (isMatched) {
+			String name = method.getName();
+			if ((name.startsWith("set") || name.startsWith("is")) && name.toLowerCase().contains(key.toLowerCase())) {
+				return true;
+			}
+		}
+
+		return false;
+
 	}
 
 	public static boolean hasSetterMethod(Class<?> clazz, String property) {
@@ -196,6 +368,7 @@ public class TypeUtil {
 
 	private static final Set<Class<?>> PRIMITIVE_TYPE_SET = new HashSet<Class<?>>();
 	private static final Set<Class<?>> ELEMENT_TYPE_SET = new HashSet<Class<?>>();
+	private static final Set<Class<?>> ARRAY_TYPE_SET = new HashSet<Class<?>>();
 	private static final Set<Class<?>> COLLECTION_TYPE_SET = new HashSet<Class<?>>();
 
 	static {
@@ -223,17 +396,18 @@ public class TypeUtil {
 		ELEMENT_TYPE_SET.add(BigInteger.class);
 		ELEMENT_TYPE_SET.add(BigDecimal.class);
 
-		COLLECTION_TYPE_SET.add(Object[].class);
-		COLLECTION_TYPE_SET.add(byte[].class);
-		COLLECTION_TYPE_SET.add(char[].class);
-		COLLECTION_TYPE_SET.add(int[].class);
-		COLLECTION_TYPE_SET.add(short[].class);
-		COLLECTION_TYPE_SET.add(long[].class);
-		COLLECTION_TYPE_SET.add(float[].class);
-		COLLECTION_TYPE_SET.add(double[].class);
-		COLLECTION_TYPE_SET.add(boolean[].class);
+		ARRAY_TYPE_SET.add(Object[].class);
+		ARRAY_TYPE_SET.add(byte[].class);
+		ARRAY_TYPE_SET.add(char[].class);
+		ARRAY_TYPE_SET.add(int[].class);
+		ARRAY_TYPE_SET.add(short[].class);
+		ARRAY_TYPE_SET.add(long[].class);
+		ARRAY_TYPE_SET.add(float[].class);
+		ARRAY_TYPE_SET.add(double[].class);
+		ARRAY_TYPE_SET.add(boolean[].class);
+
 		COLLECTION_TYPE_SET.add(Map.class);
-		COLLECTION_TYPE_SET.add(Collection.class);
+		COLLECTION_TYPE_SET.add(List.class);
 	}
 
 	public static boolean isPrimitiveType(Class<?> clazz) {
@@ -242,6 +416,10 @@ public class TypeUtil {
 
 	public static boolean isElementType(Class<?> clazz) {
 		return ELEMENT_TYPE_SET.contains(clazz);
+	}
+
+	public static boolean isArrayType(Class<?> clazz) {
+		return ARRAY_TYPE_SET.contains(clazz);
 	}
 
 	public static boolean isCollectionType(Class<?> clazz) {

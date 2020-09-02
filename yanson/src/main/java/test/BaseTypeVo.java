@@ -22,6 +22,7 @@ public class BaseTypeVo {
 	@JsonAlias(value = {"boolean"})
 	@SerializedName(value = "boolean2", alternate = {"boolean"})
 	private Boolean boolean2;
+	private int[] array;
 	private List<EmployeeVo> employees;
 
 	public String getString() {
@@ -48,6 +49,15 @@ public class BaseTypeVo {
 	public void setBoolean2(Boolean boolean2) {
 		this.boolean2 = boolean2;
 	}
+
+	public int[] getArray() {
+		return array;
+	}
+
+	public void setArray(int[] array) {
+		this.array = array;
+	}
+
 	public List<EmployeeVo> getEmployees() {
 		return employees;
 	}

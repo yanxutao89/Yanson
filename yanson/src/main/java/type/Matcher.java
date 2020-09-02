@@ -1,5 +1,8 @@
 package type;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 /**
  * @Author: Yanxt7
  * @Desc:
@@ -7,5 +10,5 @@ package type;
  */
 public interface Matcher {
 
-    boolean isMatched();
+    boolean isMatched(Field field, Method method, String key);
 }

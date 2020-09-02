@@ -43,7 +43,7 @@ public class JsonTest {
 		jsonStr = JSON_LIST.get(0);
 	}
 
-	@MyTest(count = 1, name = "Yanson")
+	@MyTest
 	public void yanson() throws Exception {
 
 		if (jsonStr.startsWith("[")) {
@@ -56,7 +56,7 @@ public class JsonTest {
 
 	}
 
-	@MyTest(count = 1, name = "FastJson")
+	@MyTest
 	public void fastJson() {
 
 		if (jsonStr.startsWith("[")) {
@@ -68,7 +68,7 @@ public class JsonTest {
 
 	}
 
-	@MyTest(count = 1, name = "Jackson")
+	@MyTest
 	public void jackson() throws JsonMappingException, JsonProcessingException {
 
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -81,7 +81,7 @@ public class JsonTest {
 
 	}
 
-	@MyTest(count = 1, name = "Gson")
+	@MyTest
 	public void gson() {
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
