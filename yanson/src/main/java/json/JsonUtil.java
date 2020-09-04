@@ -27,8 +27,6 @@ public class JsonUtil {
         String[] commas = jsonStr.split(COMMA);
         if (commas.length < 2) {
             return index;
-        } else if (commas.length == 2) {
-            return commas[0].length();
         } else {
             for (int i = 1; i < commas.length; ++i) {
                 if (isValidJsonKey(commas[i - 1]) && isValidJsonValue(commas[i])) {
@@ -42,7 +40,6 @@ public class JsonUtil {
     }
 
     public static int indexOfBrace(String jsonStr){
-
 
         if (StringUtils.isEmpty(jsonStr)) {
             return -1;
@@ -72,9 +69,15 @@ public class JsonUtil {
             || "true".equals(json)
             || "false".equals(json)
             || TypeUtil.isNumeric(json)) {
+            return true;
         }
 
         return false;
+    }
+
+    public static void main(String[] args) {
+        String s = "\"\\\"1\\\"\": 1";
+        System.out.println(indexOfComma(s));
     }
 
 }
