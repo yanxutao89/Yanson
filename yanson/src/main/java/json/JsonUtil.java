@@ -16,15 +16,15 @@ public class JsonUtil {
     private static final String OPEN_BRACKET = "[";
     private static final String CLOSE_BRACKET = "]";
 
-    public static int indexOfComma(String jsonStr){
+    public static int indexOfColon(String str){
 
         int index = -1;
 
-        if (StringUtils.isEmpty(jsonStr)) {
+        if (StringUtils.isEmpty(str)) {
             return index;
         }
 
-        String[] commas = jsonStr.split(COMMA);
+        String[] commas = str.split(COMMA);
         if (commas.length < 2) {
             return index;
         } else {
@@ -39,18 +39,23 @@ public class JsonUtil {
 
     }
 
-    public static int indexOfBrace(String jsonStr){
+    public static int indexOfComma(String str) {
 
-        if (StringUtils.isEmpty(jsonStr)) {
+        return -1;
+    }
+
+    public static int indexOfBrace(String str){
+
+        if (StringUtils.isEmpty(str)) {
             return -1;
         }
 
         return -1;
     }
 
-    public static int indexOfBracket(String jsonStr){
+    public static int indexOfBracket(String str){
 
-        if (StringUtils.isEmpty(jsonStr)) {
+        if (StringUtils.isEmpty(str)) {
             return -1;
         }
 
@@ -65,10 +70,12 @@ public class JsonUtil {
 
         String json = keyToJudge.trim();
         if (json.startsWith("\"") && json.endsWith("\"")
-            || "null".equals(json)
-            || "true".equals(json)
-            || "false".equals(json)
-            || TypeUtil.isNumeric(json)) {
+                || json.startsWith("{") && json.endsWith("}")
+                || json.startsWith("[") && json.endsWith("]")
+                || "null".equals(json)
+                || "true".equals(json)
+                || "false".equals(json)
+                || TypeUtil.isNumeric(json)) {
             return true;
         }
 
@@ -76,8 +83,10 @@ public class JsonUtil {
     }
 
     public static void main(String[] args) {
-        String s = "\"\\\"1\\\"\": 1";
-        System.out.println(indexOfComma(s));
+        String colon = "\"\\\"1\\\"\": 1";
+        System.out.println(indexOfColon(colon));
+        String comma = "\",";
+        System.out.println(comma.length());
     }
 
 }

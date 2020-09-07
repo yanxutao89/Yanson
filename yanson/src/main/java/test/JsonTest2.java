@@ -53,49 +53,49 @@ public class JsonTest2 {
 		} else {
 			JsonObject jsonObject = (JsonObject) JsonObject.parseObject(jsonStr);
 			BaseTypeVo javaObject = jsonObject.toJavaObject(jsonStr, BaseTypeVo.class);
-//			System.out.println(javaObject);
+			System.out.println(javaObject);
 		}
 
 	}
 
-	@MyTest
-	public void fastJson() {
-
-		if (jsonStr.startsWith("[")) {
-
-		} else {
-			JSONObject jsonObject = JSONObject.parseObject(jsonStr);
-			BaseTypeVo javaObject = jsonObject.toJavaObject(BaseTypeVo.class);
+//	@MyTest
+//	public void fastJson() {
+//
+//		if (jsonStr.startsWith("[")) {
+//
+//		} else {
+//			JSONObject jsonObject = JSONObject.parseObject(jsonStr);
+//			BaseTypeVo javaObject = jsonObject.toJavaObject(BaseTypeVo.class);
 //			System.out.println(javaObject);
-		}
-
-	}
-
-	@MyTest
-	public void jackson() throws JsonMappingException, JsonProcessingException {
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		if (jsonStr.startsWith("[")) {
-
-		} else {
-			BaseTypeVo readValue = objectMapper.readValue(jsonStr, BaseTypeVo.class);
+//		}
+//
+//	}
+//
+//	@MyTest
+//	public void jackson() throws JsonMappingException, JsonProcessingException {
+//
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		if (jsonStr.startsWith("[")) {
+//
+//		} else {
+//			BaseTypeVo readValue = objectMapper.readValue(jsonStr, BaseTypeVo.class);
 //			System.out.println(readValue);
-		}
-
-	}
-
-	@MyTest
-	public void gson() {
-
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		if (jsonStr.startsWith("[")) {
-
-		} else {
-			BaseTypeVo fromJson = gson.fromJson(jsonStr, BaseTypeVo.class);
+//		}
+//
+//	}
+//
+//	@MyTest
+//	public void gson() {
+//
+//		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//		if (jsonStr.startsWith("[")) {
+//
+//		} else {
+//			BaseTypeVo fromJson = gson.fromJson(jsonStr, BaseTypeVo.class);
 //			System.out.println(fromJson);
-		}
-
-	}
+//		}
+//
+//	}
 
 	public static void main(String[] args) throws Exception {
 

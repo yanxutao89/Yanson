@@ -1,5 +1,6 @@
 package test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.alibaba.fastjson.annotation.JSONField;
@@ -22,7 +23,7 @@ public class BaseTypeVo {
 	@JsonAlias(value = {"boolean"})
 	@SerializedName(value = "boolean2", alternate = {"boolean"})
 	private Boolean boolean2;
-	private int[] array;
+	private Object[] array = new Object[4];
 	private List<EmployeeVo> employees;
 
 	public String getString() {
@@ -50,11 +51,11 @@ public class BaseTypeVo {
 		this.boolean2 = boolean2;
 	}
 
-	public int[] getArray() {
+	public Object[] getArray() {
 		return array;
 	}
 
-	public void setArray(int[] array) {
+	public void setArray(Object[] array) {
 		this.array = array;
 	}
 
@@ -67,8 +68,14 @@ public class BaseTypeVo {
 
 	@Override
 	public String toString() {
-		return "BaseTypeVo [string=" + string + ", integer=" + integer + ", float2=" + float2 + ", boolean2=" + boolean2
-				+ ", employees=" + employees + "]";
+		return "BaseTypeVo{" +
+				"string='" + string + '\'' +
+				", integer=" + integer +
+				", float2=" + float2 +
+				", boolean2=" + boolean2 +
+				", array=" + Arrays.toString(array) +
+				", employees=" + employees +
+				'}';
 	}
 
 }

@@ -47,9 +47,26 @@ public class TypeUtil {
 			return false;
 		} else if (isNumeric(json)) {
 			return getNumber(json);
+		} else if (json.startsWith("[") && json.endsWith("]")) {
+			String[] strings = json.split(",");
+			if (strings != null && strings.length > 0) {
+				Class aClass = determineType4Array(strings);
+				Object[] objects = new Object[strings.length];
+				for (int i = 0; i < strings.length; ++i) {
+					objects[i] = strings[i];
+				}
+				return objects;
+			} else {
+				return new Object[0];
+			}
 		}
 
 		throw new InvalidJsonValueFormatException(String.format("Invalid json data type, supported types are %s, but found %s ",  Arrays.toString(SUPPORTED_DATA_TYPES), jsonStr));
+	}
+
+	private static Class determineType4Array(String[] strings) {
+
+		return Object.class;
 	}
 
 	public static List<String> formatKeyValues(String jsonStr) {
@@ -121,11 +138,11 @@ public class TypeUtil {
 			if (clazz == int.class || clazz == Integer.class) {
 				return (T) cast2Integer(object);
 			}
-			if (clazz == long.class || clazz == Long.class) {
-				return (T) cast2Long(object);
-			}
 			if (clazz == short.class || clazz == Short.class) {
 				return (T) cast2Short(object);
+			}
+			if (clazz == long.class || clazz == Long.class) {
+				return (T) cast2Long(object);
 			}
 			if (clazz == BigInteger.class) {
 				return (T) cast2BigInteger(object);
@@ -397,6 +414,7 @@ public class TypeUtil {
 		ELEMENT_TYPE_SET.add(BigDecimal.class);
 
 		ARRAY_TYPE_SET.add(Object[].class);
+		ARRAY_TYPE_SET.add(String[].class);
 		ARRAY_TYPE_SET.add(byte[].class);
 		ARRAY_TYPE_SET.add(char[].class);
 		ARRAY_TYPE_SET.add(int[].class);

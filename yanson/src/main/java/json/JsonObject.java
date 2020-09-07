@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.util.*;
 
 import annotation.JsonField;
+import com.alibaba.fastjson.JSONArray;
 import exception.InvalidJsonKeyValueFormatException;
 import type.TypeUtil;
 import utils.CollectionUtils;
@@ -94,7 +95,7 @@ public class JsonObject extends HashMap<String, Object> {
 
 					if ("isArrayEmptyOrSeparatedByComma".equals(keyValues.get(0))) {
 
-						jsonObject.put(currKey, keyValues.get(1));
+						jsonObject.put(currKey, TypeUtil.getValue(keyValues.get(1)));
 					} else {
 
 						JsonArray currArray = (JsonArray) jsonObject.get(currKey);
@@ -179,9 +180,72 @@ public class JsonObject extends HashMap<String, Object> {
 									method.invoke(instance, map);
 								}
 							} else if (TypeUtil.isArrayType(type)) {
-								JsonArray jsonArray = (JsonArray)jsonObject.get(key);
-								int size = jsonArray.size();
-								Object o = TypeUtil.cast2Collection(value, type, size);
+								Object o = jsonObject.get(key);
+								Object[] objects = (Object[]) o;
+								int size = objects.length;
+								if (o instanceof boolean[] || o instanceof Boolean[]) {
+									Boolean[] booleans = (Boolean[]) o;
+									for (int i = 0; i < size; ++i) {
+										booleans[i] = (Boolean) objects[i];
+									}
+									method.invoke(instance, new Object[]{booleans});
+								} else if (o instanceof int[] || o instanceof Integer[]) {
+									Integer[] integers = (Integer[]) o;
+									for (int i = 0; i < size; ++i) {
+										integers[i] = (Integer) objects[i];
+									}
+									method.invoke(instance, new Object[]{integers});
+								}  else if (o instanceof short[] || o instanceof Short[]) {
+									Short[] shorts = (Short[]) o;
+									for (int i = 0; i < size; ++i) {
+										shorts[i] = (Short) objects[i];
+									}
+									method.invoke(instance, new Object[]{shorts});
+								} else if (o instanceof long[] || o instanceof Long[]) {
+									Long[] longs = (Long[]) o;
+									for (int i = 0; i < size; ++i) {
+										longs[i] = (Long) objects[i];
+									}
+									method.invoke(instance, new Object[]{longs});
+								} else if (o instanceof BigInteger[]) {
+									BigInteger[] bigIntegers = (BigInteger[]) o;
+									for (int i = 0; i < size; ++i) {
+										bigIntegers[i] = (BigInteger) objects[i];
+									}
+									method.invoke(instance, new Object[]{bigIntegers});
+								} else if (o instanceof float[] || o instanceof Float[]) {
+									Float[] floats = (Float[]) o;
+									for (int i = 0; i < size; ++i) {
+										floats[i] = (Float) objects[i];
+									}
+									method.invoke(instance, new Object[]{floats});
+								} else if (o instanceof double[] || o instanceof Double[]) {
+									Double[] doubles = (Double[]) o;
+									for (int i = 0; i < size; ++i) {
+										doubles[i] = (Double) objects[i];
+									}
+									method.invoke(instance, new Object[]{doubles});
+								} else if (o instanceof BigDecimal[]) {
+									BigDecimal[] bigDecimals = (BigDecimal[]) o;
+									for (int i = 0; i < size; ++i) {
+										bigDecimals[i] = (BigDecimal) objects[i];
+									}
+									method.invoke(instance, new Object[]{bigDecimals});
+								} else if (o instanceof byte[] || o instanceof Byte[]) {
+									Byte[] bytes = (Byte[]) o;
+									for (int i = 0; i < size; ++i) {
+										bytes[i] = (Byte) objects[i];
+									}
+									method.invoke(instance, new Object[]{bytes});
+								} else if (o instanceof char[] || o instanceof Character[]) {
+									Character[] characters = (Character[]) o;
+									for (int i = 0; i < size; ++i) {
+										characters[i] = (Character) objects[i];
+									}
+									method.invoke(instance, new Object[]{characters});
+								} else {
+									method.invoke(instance, new Object[]{objects});
+								}
 							}
 							break;
 						}
