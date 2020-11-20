@@ -47,10 +47,10 @@ public class JsonTest {
 	public void yanson() throws Exception {
 
 		if (jsonStr.startsWith("[")) {
-			JsonArray jsonArray = (JsonArray) JsonObject.parseObject(jsonStr);
+			JsonArray jsonArray = JsonObject.parseArray(jsonStr);
 			System.out.println(jsonArray);
 		} else {
-			JsonObject jsonObject = (JsonObject) JsonObject.parseObject(jsonStr);
+			JsonObject jsonObject = JsonObject.parseObject(jsonStr);
 			System.out.println(jsonObject);
 		}
 

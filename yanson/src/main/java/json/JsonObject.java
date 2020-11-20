@@ -12,6 +12,7 @@ import type.TypeUtil;
 import utils.CollectionUtils;
 import utils.PatternUtils;
 import utils.StringUtils;
+import utils.ValidationUtils;
 
 public class JsonObject extends HashMap<String, Object> {
 
@@ -20,40 +21,44 @@ public class JsonObject extends HashMap<String, Object> {
 	private static final boolean SET_ON_NONNULL = true;
 	private static final String MAGIC = "luxkui";
 
-	public static Object parseObject(String jsonStr) {
+	public static JsonObject parseObject(String jsonStr) {
 
 		JsonObject jsonObject = new JsonObject();
 		StringBuilder sb = new StringBuilder();
-		boolean isArray = false;
-
-		String json = jsonStr.trim();
-		if (json.startsWith("[") && json.endsWith("]")) {
-			isArray = true;
-		}
-		sb.append("\"").append(MAGIC).append("\"").append(":").append(json);
 
 		try {
+			ValidationUtils.isTrue(!isArray(jsonStr), String.format("Expect '{', but found '['"));
+			sb.append("\"").append(MAGIC).append("\"").append(":").append(jsonStr.trim());
 			generateObject(jsonObject, sb.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return isArray == false ? (JsonObject) jsonObject.get(MAGIC) : getJsonArray(jsonObject);
+		return (JsonObject) jsonObject.get(MAGIC);
 	}
 
-	private static JsonArray getJsonArray(JsonObject jsonObject) {
+	public static JsonArray parseArray(String jsonStr) {
 
-		JsonArray jsonArray = (JsonArray) jsonObject.get(MAGIC);
-		if (!CollectionUtils.isEmpty(jsonArray)) {
-			JsonArray array = new JsonArray(jsonArray.size());
-			for (Object obj : jsonArray) {
-				JsonObject temp = (JsonObject) obj;
-				array.add(temp.get(MAGIC));
-			}
-			return array;
-		} else {
-			return new JsonArray(0);
+		JsonObject jsonObject = new JsonObject();
+		StringBuilder sb = new StringBuilder();
+
+		try {
+			ValidationUtils.isTrue(isArray(jsonStr), String.format("Expect '[', but found '{'"));
+			sb.append("\"").append(MAGIC).append("\"").append(":").append(jsonStr.trim());
+			generateObject(jsonObject, sb.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return (JsonArray) jsonObject.get(MAGIC);
 
+	}
+
+	private static boolean isArray(String jsonStr) {
+		boolean isArray = false;
+		String json = jsonStr.trim();
+		if (json.startsWith("[") && json.endsWith("]")) {
+			isArray = true;
+		}
+		return isArray;
 	}
 
 	private static void generateObject(JsonObject jsonObject, String jsonStr) throws Exception {
