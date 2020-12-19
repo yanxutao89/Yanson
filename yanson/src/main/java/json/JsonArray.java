@@ -1,19 +1,44 @@
 package json;
 
+import utils.JsonUtils;
+import utils.ValidationUtils;
+
 import java.util.ArrayList;
 
-public class JsonArray extends ArrayList<Object> {
-	
+import static json.Configuration.MAGIC;
+
+public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray> {
+
 	private static final long serialVersionUID = -7694911553868661587L;
-	
+
 	private static final int DEFAULT_SIZE = 16;
 
 	public JsonArray() {
 		super(DEFAULT_SIZE);
 	}
-	
+
 	public JsonArray(int size) {
 		super(size);
 	}
 
+	public JsonArray fromJson(String json) {
+
+		try {
+			StringBuilder sb = new StringBuilder();
+			ValidationUtils.isTrue(JsonUtils.isArray(json), String.format("Expect array, but found object"));
+			sb.append("\"").append(MAGIC).append("\"").append(":").append(json.trim());
+			JsonObject jsonObject = new JsonObject();
+			JsonHelper.readJson(jsonObject, sb.toString());
+			return (json.JsonArray) jsonObject.get(MAGIC);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new JsonArray();
+
+	}
+
+	public String toJson(JsonArray o) {
+		return null;
+	}
 }

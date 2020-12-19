@@ -5,6 +5,7 @@
 //import utils.CollectionUtils;
 //import utils.PatternUtils;
 //import utils.StringUtils;
+//import utils.ValidationUtils;
 //
 //import java.lang.reflect.Field;
 //import java.lang.reflect.Method;
@@ -16,50 +17,54 @@
 //import java.util.List;
 //import java.util.Map;
 //
-//public class JsonObject01 extends HashMap<String, Object> {
+//public class JsonObject02 extends HashMap<String, Object> {
 //
 //	private static final long serialVersionUID = 4560188633954957114L;
 //
 //	private static final boolean SET_ON_NONNULL = true;
 //	private static final String MAGIC = "luxkui";
 //
-//	public static Object parseObject(String jsonStr) {
+//	public static JsonObject02 parseObject(String jsonStr) {
 //
-//		JsonObject01 jsonObject = new JsonObject01();
+//		JsonObject02 jsonObject = new JsonObject02();
 //		StringBuilder sb = new StringBuilder();
-//		boolean isArray = false;
-//
-//		String json = jsonStr.trim();
-//		if (json.startsWith("[") && json.endsWith("]")) {
-//			isArray = true;
-//		}
-//		sb.append("\"").append(MAGIC).append("\"").append(":").append(json);
 //
 //		try {
+//			ValidationUtils.isTrue(!isArray(jsonStr), String.format("Expect '{', but found '['"));
+//			sb.append("\"").append(MAGIC).append("\"").append(":").append(jsonStr.trim());
 //			generateObject(jsonObject, sb.toString());
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-//		return isArray == false ? (JsonObject01) jsonObject.get(MAGIC) : getJsonArray(jsonObject);
+//		return (JsonObject02) jsonObject.get(MAGIC);
 //	}
 //
-//	private static json.JsonArray getJsonArray(JsonObject01 jsonObject) {
+//	public static json.JsonArray parseArray(String jsonStr) {
 //
-//		json.JsonArray jsonArray = (json.JsonArray) jsonObject.get(MAGIC);
-//		if (!CollectionUtils.isEmpty(jsonArray)) {
-//			json.JsonArray array = new json.JsonArray(jsonArray.size());
-//			for (Object obj : jsonArray) {
-//				JsonObject01 temp = (JsonObject01) obj;
-//				array.add(temp.get(MAGIC));
-//			}
-//			return array;
-//		} else {
-//			return new json.JsonArray(0);
+//		JsonObject02 jsonObject = new JsonObject02();
+//		StringBuilder sb = new StringBuilder();
+//
+//		try {
+//			ValidationUtils.isTrue(isArray(jsonStr), String.format("Expect '[', but found '{'"));
+//			sb.append("\"").append(MAGIC).append("\"").append(":").append(jsonStr.trim());
+//			generateObject(jsonObject, sb.toString());
+//		} catch (Exception e) {
+//			e.printStackTrace();
 //		}
+//		return (json.JsonArray) jsonObject.get(MAGIC);
 //
 //	}
 //
-//	private static void generateObject(JsonObject01 jsonObject, String jsonStr) throws Exception {
+//	private static boolean isArray(String jsonStr) {
+//		boolean isArray = false;
+//		String json = jsonStr.trim();
+//		if (json.startsWith("[") && json.endsWith("]")) {
+//			isArray = true;
+//		}
+//		return isArray;
+//	}
+//
+//	private static void generateObject(JsonObject02 jsonObject, String jsonStr) throws Exception {
 //
 //		if (!StringUtils.isEmpty(jsonStr) && !"isArrayEmptyOrSeparatedByComma".equals(jsonStr)) {
 //
@@ -76,9 +81,9 @@
 //			// Object data
 //			if (valueStr.startsWith("{") && valueStr.endsWith("}")) {
 //
-//				JsonObject01 currObject = (JsonObject01) jsonObject.get(currKey);
+//				JsonObject02 currObject = (JsonObject02) jsonObject.get(currKey);
 //				if (null == currObject) {
-//					currObject = new JsonObject01();
+//					currObject = new JsonObject02();
 //					jsonObject.put(currKey, currObject);
 //				}
 //
@@ -109,10 +114,10 @@
 //
 //						for (int i = 0; i < keyValues.size(); i++) {
 //
-//							currArray.add(new JsonObject01());
+//							currArray.add(new JsonObject02());
 //							StringBuilder arrayObject = new StringBuilder();
 //							arrayObject.append("\"").append(currKey).append("\"").append(":").append(keyValues.get(i));
-//							generateObject((JsonObject01) currArray.get(i), arrayObject.toString());
+//							generateObject((JsonObject02) currArray.get(i), arrayObject.toString());
 //						}
 //					}
 //				}
@@ -127,7 +132,7 @@
 //	}
 //
 //	public <T> T toJavaObject(String jsonStr, Class<T> clazz) throws Exception {
-//		return ((JsonObject01) parseObject(jsonStr)).toJavaObject0(this, clazz, "");
+//		return ((JsonObject02) parseObject(jsonStr)).toJavaObject0(this, clazz, "");
 //	}
 //
 //	@SuppressWarnings("unchecked")
@@ -137,11 +142,11 @@
 //		Field[] fields = clazz.getDeclaredFields();
 //		Method[] methods = clazz.getDeclaredMethods();
 //
-//		if (object instanceof JsonObject01) {
+//		if (object instanceof JsonObject02) {
 //
-//			JsonObject01 jsonObject = (JsonObject01) object;
+//			JsonObject02 jsonObject = (JsonObject02) object;
 //			if (!StringUtils.isEmpty(parent)) {
-//				jsonObject = (JsonObject01) jsonObject.get(parent);
+//				jsonObject = (JsonObject02) jsonObject.get(parent);
 //			}
 //			for (Field field : fields) {
 //

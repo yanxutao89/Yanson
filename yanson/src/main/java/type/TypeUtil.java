@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import annotation.JsonField;
-import exception.InvalidJsonValueFormatException;
+import exception.InvalidJsonFormatException;
 import utils.StringUtils;
 
 import static utils.ValidationUtils.isTrue;
@@ -27,7 +27,7 @@ public class TypeUtil {
 		return json.substring(1, json.length() - 1);
 	}
 
-	public static Object getValue(String jsonStr) throws InvalidJsonValueFormatException {
+	public static Object getValue(String jsonStr) throws InvalidJsonFormatException {
 
 		String json = jsonStr.trim();
 
@@ -61,7 +61,7 @@ public class TypeUtil {
 			}
 		}
 
-		throw new InvalidJsonValueFormatException(String.format("Invalid json data type, supported types are %s, but found %s ",  Arrays.toString(SUPPORTED_DATA_TYPES), jsonStr));
+		throw new InvalidJsonFormatException(String.format("Invalid json data type, supported types are %s, but found %s ",  Arrays.toString(SUPPORTED_DATA_TYPES), jsonStr));
 	}
 
 	private static Class determineType4Array(String[] strings) {

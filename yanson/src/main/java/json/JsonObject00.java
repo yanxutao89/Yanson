@@ -34,7 +34,7 @@
 //			e.printStackTrace();
 //		}
 //		JsonObject00 retObj = (JsonObject00) jsonObject.get(MAGIC);
-//		return isArray == false ? retObj : (JsonArray) retObj.get(MAGIC);
+//		return isArray == false ? retObj : (json.JsonArray) retObj.get(MAGIC);
 //	}
 //
 //	public static <T> T toJavaObject(String jsonStr, Class<T> clazz) throws Exception {
@@ -97,7 +97,7 @@
 //				for (String keyValue : keyValues) {
 //					keyStr = "\"" + currKey + "\"";
 //					List<String> kvs = formatKVs(valueStr.substring(1, keyValue.length() - 1));
-//					JsonArray currArray = new JsonArray(kvs.size());
+//					json.JsonArray currArray = new json.JsonArray(kvs.size());
 //					currObject.put(currKey, currArray);
 //
 //					for (int i = 0; i < kvs.size(); i++) {
@@ -128,7 +128,7 @@
 //						currKey = getKey(keyStr);
 //						valueStr = keyValue.substring(separator + 1).trim();
 //						List<String> kvs = formatKVs(valueStr.substring(1, valueStr.length() - 1));
-//						JsonArray currArray = new JsonArray(kvs.size());
+//						json.JsonArray currArray = new json.JsonArray(kvs.size());
 //						currObject.put(currKey, currArray);
 //
 //						for (int i = 0; i < kvs.size(); i++) {

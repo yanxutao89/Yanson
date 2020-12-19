@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import annotation.MyTest;
+import json.Json;
 import json.JsonArray;
 import json.JsonObject;
 import utils.AnnotationUtils;
@@ -47,10 +48,10 @@ public class JsonTest {
 	public void yanson() throws Exception {
 
 		if (jsonStr.startsWith("[")) {
-			JsonArray jsonArray = JsonObject.parseArray(jsonStr);
+			JsonArray jsonArray = Json.parseArray(jsonStr);
 			System.out.println(jsonArray);
 		} else {
-			JsonObject jsonObject = JsonObject.parseObject(jsonStr);
+			JsonObject jsonObject = Json.parseObject(jsonStr);
 			System.out.println(jsonObject);
 		}
 

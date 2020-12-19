@@ -5,14 +5,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import annotation.MyTest;
+import json.Json;
 import json.JsonArray;
 import json.JsonObject;
 import utils.AnnotationUtils;
@@ -47,13 +41,12 @@ public class JsonTest2 {
 	public void yanson() throws Exception {
 
 		if (jsonStr.startsWith("[")) {
-			Object parseObject = JsonObject.parseObject(jsonStr);
-			JsonArray jsonArray = (JsonArray) parseObject;
+			JsonArray jsonArray = Json.parseArray(jsonStr);
 			System.out.println(jsonArray);
 		} else {
-			JsonObject jsonObject = (JsonObject) JsonObject.parseObject(jsonStr);
-			BaseTypeVo javaObject = jsonObject.toJavaObject(jsonStr, BaseTypeVo.class);
-			System.out.println(javaObject);
+			JsonObject jsonObject = Json.parseObject(jsonStr);
+			BaseTypeVo baseTypeVo = jsonObject.toJavaObject(jsonStr, BaseTypeVo.class);
+			System.out.println(baseTypeVo);
 		}
 
 	}

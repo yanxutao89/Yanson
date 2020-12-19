@@ -5,131 +5,39 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
-import annotation.JsonField;
-import com.alibaba.fastjson.JSONArray;
-import exception.InvalidJsonKeyValueFormatException;
 import type.TypeUtil;
-import utils.CollectionUtils;
-import utils.PatternUtils;
-import utils.StringUtils;
-import utils.ValidationUtils;
+import utils.*;
 
-public class JsonObject extends HashMap<String, Object> {
+import static json.Configuration.MAGIC;
+import static json.Configuration.SET_ON_NONNULL;
+
+public class JsonObject extends HashMap<String, Object> implements JsonParser<JsonObject> {
 
 	private static final long serialVersionUID = 4560188633954957114L;
 
-	private static final boolean SET_ON_NONNULL = true;
-	private static final String MAGIC = "luxkui";
+	public JsonObject fromJson(String json) {
 
-	public static JsonObject parseObject(String jsonStr) {
+        try {
+            ValidationUtils.isTrue(!JsonUtils.isArray(json), String.format("Expect object, but found array"));
+            StringBuilder sb = new StringBuilder();
+            sb.append("\"").append(MAGIC).append("\"").append(":").append(json.trim());
+            JsonObject jsonObject = new JsonObject();
+            JsonHelper.readJson(jsonObject, json);
+            return (JsonObject) jsonObject.get(MAGIC);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		JsonObject jsonObject = new JsonObject();
-		StringBuilder sb = new StringBuilder();
-
-		try {
-			ValidationUtils.isTrue(!isArray(jsonStr), String.format("Expect '{', but found '['"));
-			sb.append("\"").append(MAGIC).append("\"").append(":").append(jsonStr.trim());
-			generateObject(jsonObject, sb.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return (JsonObject) jsonObject.get(MAGIC);
-	}
-
-	public static JsonArray parseArray(String jsonStr) {
-
-		JsonObject jsonObject = new JsonObject();
-		StringBuilder sb = new StringBuilder();
-
-		try {
-			ValidationUtils.isTrue(isArray(jsonStr), String.format("Expect '[', but found '{'"));
-			sb.append("\"").append(MAGIC).append("\"").append(":").append(jsonStr.trim());
-			generateObject(jsonObject, sb.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return (JsonArray) jsonObject.get(MAGIC);
+        return new JsonObject();
 
 	}
 
-	private static boolean isArray(String jsonStr) {
-		boolean isArray = false;
-		String json = jsonStr.trim();
-		if (json.startsWith("[") && json.endsWith("]")) {
-			isArray = true;
-		}
-		return isArray;
+	public String toJson(JsonObject o) {
+		return null;
 	}
 
-	private static void generateObject(JsonObject jsonObject, String jsonStr) throws Exception {
-
-		if (!StringUtils.isEmpty(jsonStr) && !"isArrayEmptyOrSeparatedByComma".equals(jsonStr)) {
-
-			String kvStr = jsonStr.trim();
-			int separator = kvStr.indexOf(":");
-			if (-1 == separator) {
-				throw new InvalidJsonKeyValueFormatException(String.format("expect key:value, but found %s", kvStr));
-			}
-
-			String keyStr = kvStr.substring(0, separator);
-			String currKey = TypeUtil.getKey(keyStr);
-			String valueStr = kvStr.substring(separator + 1).trim();
-
-			// Object data
-			if (valueStr.startsWith("{") && valueStr.endsWith("}")) {
-
-				JsonObject currObject = (JsonObject) jsonObject.get(currKey);
-				if (null == currObject) {
-					currObject = new JsonObject();
-					jsonObject.put(currKey, currObject);
-				}
-
-				valueStr = valueStr.substring(1, valueStr.length() - 1);
-				List<String> keyValues = TypeUtil.formatKeyValues(valueStr);
-				for (String keyValue : keyValues) {
-
-					generateObject(currObject, keyValue);
-				}
-
-			// Array data
-			} else if (valueStr.startsWith("[") && valueStr.endsWith("]")) {
-
-				List<String> keyValues = TypeUtil.formatKeyValues(valueStr);
-
-				if (!CollectionUtils.isEmpty(keyValues)) {
-
-					if ("isArrayEmptyOrSeparatedByComma".equals(keyValues.get(0))) {
-
-						jsonObject.put(currKey, TypeUtil.getValue(keyValues.get(1)));
-					} else {
-
-						JsonArray currArray = (JsonArray) jsonObject.get(currKey);
-						if (CollectionUtils.isEmpty(currArray)) {
-							currArray = new JsonArray(keyValues.size());
-							jsonObject.put(currKey, currArray);
-						}
-
-						for (int i = 0; i < keyValues.size(); i++) {
-
-							currArray.add(new JsonObject());
-							StringBuilder arrayObject = new StringBuilder();
-							arrayObject.append("\"").append(currKey).append("\"").append(":").append(keyValues.get(i));
-							generateObject((JsonObject) currArray.get(i), arrayObject.toString());
-						}
-					}
-				}
-
-				// Non object data
-			} else {
-				jsonObject.put(currKey, TypeUtil.getValue(valueStr));
-			}
-		} else {
-			return;
-		}
-	}
-
-	public <T> T toJavaObject(String jsonStr, Class<T> clazz) throws Exception {
-		return ((JsonObject) parseObject(jsonStr)).toJavaObject0(this, clazz, "");
+    public <T> T toJavaObject(String jsonStr, Class<T> clazz) throws Exception {
+		return (fromJson(jsonStr)).toJavaObject0(this, clazz, "");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -160,7 +68,7 @@ public class JsonObject extends HashMap<String, Object> {
 								Class<?>[] parameterTypes = method.getParameterTypes();
 								method.invoke(instance, TypeUtil.cast2Element(value, parameterTypes[0]));
 							} else if (TypeUtil.isCollectionType(type)){
-								JsonArray jsonArray = (JsonArray)jsonObject.get(key);
+								JsonArray jsonArray = (JsonArray) jsonObject.get(key);
 								int size = jsonArray.size();
 
 								Class<?> classType = null;
