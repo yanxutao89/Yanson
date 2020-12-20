@@ -12,117 +12,13 @@ import annotation.JsonField;
 import exception.InvalidJsonFormatException;
 import utils.StringUtils;
 
+import static json.Constants.SUPPORTED_VALUE_TYPES;
 import static utils.ValidationUtils.isTrue;
 
 public class TypeUtil {
 
-	private static final String[] SUPPORTED_DATA_TYPES = { "string", "number", "boolean", "null" };
-
 	private TypeUtil() throws Exception {
 		throw new Exception("The constructor can not be called outside");
-	}
-
-	public static String getKey(String jsonStr) {
-		String json = jsonStr.trim();
-		return json.substring(1, json.length() - 1);
-	}
-
-	public static Object getValue(String jsonStr) throws InvalidJsonFormatException {
-
-		String json = jsonStr.trim();
-
-		if (json.startsWith("\"") && json.endsWith("\"")) {
-			if (json.startsWith("\"\"")) {
-				json = json.substring(1);
-			}
-			if (json.endsWith("\"\"")) {
-				json = json.substring(0, json.length() - 1);
-			}
-			return json;
-		} else if ("null".equals(json)) {
-			return null;
-		} else if ("true".equals(json)) {
-			return true;
-		} else if ("false".equals(json)) {
-			return false;
-		} else if (isNumeric(json)) {
-			return getNumber(json);
-		} else if (json.startsWith("[") && json.endsWith("]")) {
-			String[] strings = json.split(",");
-			if (strings != null && strings.length > 0) {
-				Class aClass = determineType4Array(strings);
-				Object[] objects = new Object[strings.length];
-				for (int i = 0; i < strings.length; ++i) {
-					objects[i] = strings[i];
-				}
-				return objects;
-			} else {
-				return new Object[0];
-			}
-		}
-
-		throw new InvalidJsonFormatException(String.format("Invalid json data type, supported types are %s, but found %s ",  Arrays.toString(SUPPORTED_DATA_TYPES), jsonStr));
-	}
-
-	private static Class determineType4Array(String[] strings) {
-
-		return Object.class;
-	}
-
-	public static List<String> formatKeyValues(String jsonStr) {
-
-		List<String> list = new ArrayList<String>();
-		if (isArrayEmptyOrSeparatedByComma(jsonStr)) {
-
-			list.add("isArrayEmptyOrSeparatedByComma");
-			list.add(jsonStr);
-		} else {
-
-			String json = jsonStr.trim();
-			if (json.startsWith("[") && json.endsWith("]")) {
-				json = json.substring(1, json.length() - 1);
-			}
-			json = json + ',';
-			int bracketCount = 0;
-			int bracesCount = -1;
-
-			StringBuilder sb = new StringBuilder();
-			for (char c : json.toCharArray()) {
-				if (c == '{') {
-					bracketCount++;
-				} else if (c == '}') {
-					bracketCount--;
-				} else if (c == '[') {
-					if (bracesCount == -1) {
-						bracesCount = 0;
-					}
-					bracesCount++;
-				} else if (c == ']') {
-					bracesCount--;
-				}
-
-				sb.append(c);
-				if (c == ',' && bracketCount == 0 && (bracesCount == -1 || bracesCount == 0)) {
-					list.add(sb.substring(0, sb.length() - 1));
-					sb = new StringBuilder();
-				}
-			}
-		}
-
-		return list;
-	}
-
-	private static boolean isArrayEmptyOrSeparatedByComma(String jsonStr) {
-
-		String json = jsonStr.trim();
-		if (json.startsWith("[") && json.endsWith("]")) {
-
-			json = json.substring(1, json.length() - 1);
-			json = json.trim();
-			return json.charAt(0) != '{' && json.charAt(json.length() - 1) != '}';
-		}
-
-		return false;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -233,30 +129,33 @@ public class TypeUtil {
 	}
 
 	public static Integer cast2Integer(Object object) {
-		Long l = (Long) object;
-		return l.intValue();
+		BigDecimal bd = (BigDecimal) object;
+		return bd.intValue();
 	}
 
 	public static Long cast2Long(Object object) {
-		return (Long) object;
+		BigDecimal bd = (BigDecimal) object;
+		return bd.longValue();
 	}
 
 	public static Short cast2Short(Object object) {
-		Long l = (Long) object;
-		return l.shortValue();
+		BigDecimal bd = (BigDecimal) object;
+		return bd.shortValue();
 	}
 
 	public static BigInteger cast2BigInteger(Object object) {
-		return new BigInteger(object.toString());
+		BigDecimal bd = (BigDecimal) object;
+		return bd.toBigInteger();
 	}
 
 	public static Float cast2Float(Object object) {
-		Double d = (Double) object;
-		return d.floatValue();
+		BigDecimal bd = (BigDecimal) object;
+		return bd.floatValue();
 	}
 
 	public static Double cast2Double(Object object) {
-		return (Double) object;
+		BigDecimal bd = (BigDecimal) object;
+		return bd.doubleValue();
 	}
 
 	public static BigDecimal cast2BigDecimal(Object object) {
@@ -264,8 +163,8 @@ public class TypeUtil {
 	}
 
 	public static Byte cast2Byte(Object object) {
-		Long l = (Long) object;
-		return l.byteValue();
+		BigDecimal bd = (BigDecimal) object;
+		return bd.byteValue();
 	}
 
 	public static Character cast2Character(Object object) {
@@ -344,21 +243,21 @@ public class TypeUtil {
 		return dates;
 	}
 
-	public static boolean isFieldMatched(Field field, Method method, String key) throws Exception {
+	public static boolean isFieldMatched(Field field, Method method, String name) throws Exception {
 
-		isTrue(!StringUtils.isEmpty(key), "Parameter 'key' must not be null or empty");
+		isTrue(!StringUtils.isEmpty(name), "Parameter 'name' must not be null or empty");
 
-		boolean isMatched = key.equals(field.getName());
+		boolean isMatched = name.equals(field.getName());
 		JsonField jsonField = field.getAnnotation(JsonField.class);
 		if (null != jsonField) {
-			List<String> aliasKeys = Arrays.asList(jsonField.aliasKeys());
+			List<String> aliasKeys = Arrays.asList(jsonField.aliasNames());
 			String propertyName = jsonField.value();
-			isMatched |= aliasKeys.contains(key) && propertyName.equals(field.getName());
+			isMatched |= aliasKeys.contains(name) && propertyName.equals(field.getName());
 		}
 
 		if (isMatched) {
-			String name = method.getName();
-			if ((name.startsWith("set") || name.startsWith("is")) && name.toLowerCase().contains(key.toLowerCase())) {
+			String methodName = method.getName();
+			if ((methodName.startsWith("set") || methodName.startsWith("is")) && methodName.toLowerCase().contains(name.toLowerCase())) {
 				return true;
 			}
 		}

@@ -1,5 +1,7 @@
 package json;
 
+import java.util.Collection;
+
 /**
  * @Author: Yanxt7
  * @Desc:
@@ -17,4 +19,15 @@ public class Json {
     public static JsonArray parseArray(String json) {
         return jsonArray.fromJson(json);
     }
+
+    public static String toJsonString(Object object){
+
+        if (null == object) {
+            return "{}";
+        }
+
+        return JsonHelper.toJsonSting(object, object instanceof Collection ? true : false);
+
+    }
+
 }

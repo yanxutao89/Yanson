@@ -12,7 +12,7 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 
 /**
- * Marker for field deserialization
+ * Marker for field deserialization on JavaBean
  * @author yanxt7
  *
  */
@@ -31,6 +31,6 @@ public @interface JsonField {
 	 * alternative keys
 	 * @return
 	 */
-	String[] aliasKeys() default {};
+	String[] aliasNames() default {};
 
 }

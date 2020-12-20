@@ -1,11 +1,12 @@
 package json;
 
-import utils.JsonUtils;
+import utils.PatternUtils;
 import utils.ValidationUtils;
 
 import java.util.ArrayList;
 
-import static json.Configuration.MAGIC;
+import static json.Constants.MAGIC;
+
 
 public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray> {
 
@@ -25,7 +26,7 @@ public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray
 
 		try {
 			StringBuilder sb = new StringBuilder();
-			ValidationUtils.isTrue(JsonUtils.isArray(json), String.format("Expect array, but found object"));
+			ValidationUtils.isTrue(JsonUtil.isArray(json), String.format("Expect array, but found object"));
 			sb.append("\"").append(MAGIC).append("\"").append(":").append(json.trim());
 			JsonObject jsonObject = new JsonObject();
 			JsonHelper.readJson(jsonObject, sb.toString());
@@ -38,7 +39,12 @@ public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray
 
 	}
 
-	public String toJson(JsonArray o) {
-		return null;
+	public String toJson(JsonArray jsonArray) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		sb.append(JsonHelper.toJsonSting(jsonArray, true));
+		sb.append("]");
+		String str = PatternUtils.commaRightCurlyBracket(sb.toString(), "}");
+		return PatternUtils.commaRightSquareBracket(str, "]");
 	}
 }

@@ -11,4 +11,5 @@ import java.lang.reflect.Method;
 public interface Matcher {
 
     boolean isMatched(Field field, Method method, String key);
+
 }

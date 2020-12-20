@@ -8,6 +8,5 @@ package json;
 public class Configuration {
 
     public static final boolean SET_ON_NONNULL = true;
-    public static final String MAGIC = "luxkui";
 
 }

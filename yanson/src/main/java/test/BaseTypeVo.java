@@ -13,12 +13,12 @@ public class BaseTypeVo {
 
 	private String string;
 	private Integer integer;
-	@JsonField(value = "float2", aliasKeys = {"float"})
+	@JsonField(value = "float2", aliasNames = {"float"})
 	@JSONField(alternateNames = {"float"})
 	@JsonAlias(value = {"float"})
 	@SerializedName(value = "float2", alternate = {"float"})
 	private Float float2;
-	@JsonField(value = "boolean2", aliasKeys = {"boolean"})
+	@JsonField(value = "boolean2", aliasNames = {"boolean"})
 	@JSONField(alternateNames = {"boolean"})
 	@JsonAlias(value = {"boolean"})
 	@SerializedName(value = "boolean2", alternate = {"boolean"})

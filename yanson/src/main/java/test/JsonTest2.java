@@ -45,7 +45,7 @@ public class JsonTest2 {
 			System.out.println(jsonArray);
 		} else {
 			JsonObject jsonObject = Json.parseObject(jsonStr);
-			BaseTypeVo baseTypeVo = jsonObject.toJavaObject(jsonStr, BaseTypeVo.class);
+			BaseTypeVo baseTypeVo = jsonObject.toJavaObject(BaseTypeVo.class);
 			System.out.println(baseTypeVo);
 		}
 
