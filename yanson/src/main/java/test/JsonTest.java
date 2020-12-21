@@ -16,6 +16,7 @@ import annotation.MyTest;
 import json.Json;
 import json.JsonArray;
 import json.JsonObject;
+import reflection.ClassUtil;
 import utils.AnnotationUtils;
 
 
@@ -27,7 +28,7 @@ public class JsonTest {
 	static {
 
 		StringBuffer sb = new StringBuffer();
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("JsonTest.txt");
+		InputStream is = ClassUtil.getDefaultClassLoader().getResourceAsStream("JsonTest.txt");
 		byte[] buffer = new byte[1024 * 8];
 		int len;
 		try {

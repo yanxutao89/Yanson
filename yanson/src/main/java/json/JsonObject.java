@@ -4,8 +4,7 @@ import java.util.*;
 
 import utils.*;
 
-import static json.Constants.MAGIC;
-import static json.Constants.COLON;
+import static json.Constants.*;
 
 public class JsonObject extends HashMap<String, Object> implements JsonParser<JsonObject> {
 
@@ -18,7 +17,7 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
             StringBuilder sb = new StringBuilder();
             sb.append("\"").append(MAGIC).append("\"").append(COLON).append(json.trim());
             JsonObject jsonObject = new JsonObject();
-            JsonHelper.readJson(jsonObject, sb.toString());
+            JsonHelper.readJson(sb.toString(), jsonObject);
             return (JsonObject) jsonObject.get(MAGIC);
         } catch (Exception e) {
             e.printStackTrace();
@@ -30,11 +29,11 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
 
 	public String toJson(JsonObject jsonObject) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("{");
+		sb.append(LEFT_CURLY_BRACKET);
 		sb.append(JsonHelper.toJsonSting(jsonObject, false));
-		sb.append("}");
-		String str = PatternUtils.commaRightCurlyBracket(sb.toString(), "}");
-		return PatternUtils.commaRightSquareBracket(str, "]");
+		sb.append(RIGHT_CURLY_BRACKET);
+		String str = PatternUtils.commaRightCurlyBracket(sb.toString(), RIGHT_CURLY_BRACKET);
+		return PatternUtils.commaRightSquareBracket(str, RIGHT_SQUARE_BRACKET);
 	}
 
 	public <T> T toJavaObject(Class<T> clazz) {

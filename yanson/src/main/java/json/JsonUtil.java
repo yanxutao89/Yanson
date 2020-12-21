@@ -26,7 +26,11 @@ import static type.TypeUtil.isNumeric;
  */
 public class JsonUtil {
 
-    public static int indexOfColon(String jsonStr){
+    private JsonUtil() {
+
+    }
+
+    public static int indexOfColon(String jsonStr) {
 
         int index = -1;
 
@@ -34,18 +38,18 @@ public class JsonUtil {
             return index;
         }
 
-        String[] commas = jsonStr.split(COLON);
-        if (commas.length < 2) {
-            return index;
-        } else {
-            for (int i = 1; i < commas.length; ++i) {
-                if (isValidJsonKey(commas[i - 1]) && isValidJsonValue(commas[i])) {
-                    return commas[i - 1].length();
-                }
+        index = jsonStr.indexOf(COLON);
+        if (index != -1) {
+            String nameToCheck = jsonStr.substring(0, index);
+            String valueToCheck = jsonStr.substring(index + 1);
+            while (!(isValidJsonName(nameToCheck) && isValidJsonValue(valueToCheck))) {
+                index = jsonStr.indexOf(COLON, index);
+                nameToCheck = jsonStr.substring(0, index);
+                valueToCheck = jsonStr.substring(index + 1);
             }
         }
 
-        return -1;
+        return index;
 
     }
 
@@ -54,7 +58,7 @@ public class JsonUtil {
         return -1;
     }
 
-    public static int indexOfBrace(String jsonStr){
+    public static int indexOfBrace(String jsonStr) {
 
         if (StringUtils.isEmpty(jsonStr)) {
             return -1;
@@ -63,7 +67,7 @@ public class JsonUtil {
         return -1;
     }
 
-    public static int indexOfBracket(String jsonStr){
+    public static int indexOfBracket(String jsonStr) {
 
         if (StringUtils.isEmpty(jsonStr)) {
             return -1;
@@ -77,7 +81,7 @@ public class JsonUtil {
      * @param name
      * @return
      */
-    public static boolean isValidJsonKey(String name){
+    public static boolean isValidJsonName(String name) {
         return null != name;
     }
 
@@ -91,7 +95,7 @@ public class JsonUtil {
      * @param value
      * @return
      */
-    public static boolean isValidJsonValue(String value){
+    public static boolean isValidJsonValue(String value) {
 
         value = value.trim();
         if (value.startsWith("\"") && value.endsWith("\"")
@@ -100,7 +104,7 @@ public class JsonUtil {
                 || "null".equals(value)
                 || "true".equals(value)
                 || "false".equals(value)
-                || isNumeric(value)) {
+                || isNumber(value)) {
             return true;
         }
 
@@ -141,7 +145,7 @@ public class JsonUtil {
             if (jsonStr.endsWith("\"\"")) {
                 jsonStr = jsonStr.substring(0, jsonStr.length() - 1);
             }
-            return jsonStr;
+            return jsonStr.substring(1, jsonStr.length() - 1);
         } else if ("null".equals(jsonStr)) {
             return null;
         } else if ("true".equals(jsonStr)) {
@@ -150,10 +154,9 @@ public class JsonUtil {
             return false;
         } else if (isNumber(jsonStr)) {
             return getNumber(jsonStr);
-        } else if (jsonStr.startsWith("[") && jsonStr.endsWith("]")) {
-            String[] strings = jsonStr.split(",");
+        } else if (jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET)) {
+            String[] strings = jsonStr.substring(1, jsonStr.length() - 1).split(",");
             if (strings != null && strings.length > 0) {
-                Class aClass = determineType4Array(strings);
                 Object[] objects = new Object[strings.length];
                 for (int i = 0; i < strings.length; ++i) {
                     objects[i] = strings[i];
@@ -174,55 +177,55 @@ public class JsonUtil {
 
     public static List<String> formatNameValues(String jsonStr) {
 
-        List<String> list = new ArrayList<String>();
+        List<String> nameValues = new ArrayList<String>();
         if (isArrayEmptyOrSeparatedByComma(jsonStr)) {
 
-            list.add(ARRAY_VALUE);
-            list.add(jsonStr);
+            nameValues.add(ARRAY_VALUE_WITH_PRIMITIVE_TYPES);
+            nameValues.add(jsonStr);
         } else {
 
             jsonStr = jsonStr.trim();
-            if (jsonStr.startsWith("[") && jsonStr.endsWith("]")) {
+            if (jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
             }
             jsonStr = jsonStr + ',';
-            int bracketCount = 0;
-            int bracesCount = -1;
+            int curlyBracketCount = 0;
+            int squareBracketCount = -1;
 
             StringBuilder sb = new StringBuilder();
             for (char c : jsonStr.toCharArray()) {
                 if (c == '{') {
-                    bracketCount++;
+                    curlyBracketCount++;
                 } else if (c == '}') {
-                    bracketCount--;
+                    curlyBracketCount--;
                 } else if (c == '[') {
-                    if (bracesCount == -1) {
-                        bracesCount = 0;
+                    if (squareBracketCount == -1) {
+                        squareBracketCount = 0;
                     }
-                    bracesCount++;
+                    squareBracketCount++;
                 } else if (c == ']') {
-                    bracesCount--;
+                    squareBracketCount--;
                 }
 
                 sb.append(c);
-                if (c == ',' && bracketCount == 0 && (bracesCount == -1 || bracesCount == 0)) {
-                    list.add(sb.substring(0, sb.length() - 1));
+                if (c == ',' && curlyBracketCount == 0 && (squareBracketCount == -1 || squareBracketCount == 0)) {
+                    nameValues.add(sb.substring(0, sb.length() - 1));
                     sb = new StringBuilder();
                 }
             }
         }
 
-        return list;
+        return nameValues;
+
     }
 
-    private static boolean isArrayEmptyOrSeparatedByComma(String json) {
+    private static boolean isArrayEmptyOrSeparatedByComma(String jsonStr) {
 
-        json = json.trim();
-        if (json.startsWith("[") && json.endsWith("]")) {
+        jsonStr = jsonStr.trim();
+        if (jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET)) {
 
-            json = json.substring(1, json.length() - 1);
-            json = json.trim();
-            return json.charAt(0) != '{' && json.charAt(json.length() - 1) != '}';
+            jsonStr = jsonStr.substring(1, jsonStr.length() - 1).trim();
+            return jsonStr.charAt(0) != '{' && jsonStr.charAt(jsonStr.length() - 1) != '}';
         }
 
         return false;

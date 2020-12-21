@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import annotation.MyTest;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import json.Json;
 import json.JsonArray;
 import json.JsonObject;
@@ -44,51 +50,49 @@ public class JsonTest2 {
 			JsonArray jsonArray = Json.parseArray(jsonStr);
 			System.out.println(jsonArray);
 		} else {
-			JsonObject jsonObject = Json.parseObject(jsonStr);
-			BaseTypeVo baseTypeVo = jsonObject.toJavaObject(BaseTypeVo.class);
-			System.out.println(baseTypeVo);
+			BaseTypeVo baseTypeVo = Json.parseObject(jsonStr, BaseTypeVo.class);
+//			System.out.println(baseTypeVo);
 		}
 
 	}
 
-//	@MyTest
-//	public void fastJson() {
-//
-//		if (jsonStr.startsWith("[")) {
-//
-//		} else {
-//			JSONObject jsonObject = JSONObject.parseObject(jsonStr);
-//			BaseTypeVo javaObject = jsonObject.toJavaObject(BaseTypeVo.class);
-//			System.out.println(javaObject);
-//		}
-//
-//	}
-//
-//	@MyTest
-//	public void jackson() throws JsonMappingException, JsonProcessingException {
-//
-//		ObjectMapper objectMapper = new ObjectMapper();
-//		if (jsonStr.startsWith("[")) {
-//
-//		} else {
-//			BaseTypeVo readValue = objectMapper.readValue(jsonStr, BaseTypeVo.class);
+	@MyTest
+	public void fastJson() {
+
+		if (jsonStr.startsWith("[")) {
+
+		} else {
+			BaseTypeVo baseTypeVo = JSONObject.parseObject(jsonStr, BaseTypeVo.class);
+//			System.out.println(baseTypeVo);
+		}
+
+	}
+
+	@MyTest
+	public void jackson() throws JsonMappingException, JsonProcessingException {
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		if (jsonStr.startsWith("[")) {
+
+		} else {
+			BaseTypeVo readValue = objectMapper.readValue(jsonStr, BaseTypeVo.class);
 //			System.out.println(readValue);
-//		}
-//
-//	}
-//
-//	@MyTest
-//	public void gson() {
-//
-//		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//		if (jsonStr.startsWith("[")) {
-//
-//		} else {
-//			BaseTypeVo fromJson = gson.fromJson(jsonStr, BaseTypeVo.class);
+		}
+
+	}
+
+	@MyTest
+	public void gson() {
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		if (jsonStr.startsWith("[")) {
+
+		} else {
+			BaseTypeVo fromJson = gson.fromJson(jsonStr, BaseTypeVo.class);
 //			System.out.println(fromJson);
-//		}
-//
-//	}
+		}
+
+	}
 
 	public static void main(String[] args) throws Exception {
 

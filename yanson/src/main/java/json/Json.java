@@ -12,12 +12,16 @@ public class Json {
     private static final JsonObject jsonObject = new JsonObject();
     private static final JsonArray jsonArray = new JsonArray();
 
-    public static JsonObject parseObject(String json) {
-        return jsonObject.fromJson(json);
+    public static JsonObject parseObject(String jsonStr) {
+        return jsonObject.fromJson(jsonStr);
     }
 
-    public static JsonArray parseArray(String json) {
-        return jsonArray.fromJson(json);
+    public static <T> T parseObject(String jsonStr, Class<T> clazz) {
+        return JsonHelper.readJson(jsonStr, clazz);
+    }
+
+    public static JsonArray parseArray(String jsonStr) {
+        return jsonArray.fromJson(jsonStr);
     }
 
     public static String toJsonString(Object object){

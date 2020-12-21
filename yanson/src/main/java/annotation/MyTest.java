@@ -24,6 +24,6 @@ public @interface MyTest {
 	 * execution amount
 	 * @return
 	 */
-	int count() default 1;
+	int count() default 1000000;
 
 }

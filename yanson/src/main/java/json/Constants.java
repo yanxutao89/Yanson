@@ -33,6 +33,6 @@ public class Constants {
     public static final String RIGHT_CURLY_BRACKET = "}";
     public static final String LEFT_SQUARE_BRACKET = "[";
     public static final String RIGHT_SQUARE_BRACKET = "]";
-    public static final String ARRAY_VALUE = "isArrayEmptyOrSeparatedByComma";
+    public static final String ARRAY_VALUE_WITH_PRIMITIVE_TYPES = "isArrayEmptyOrSeparatedByComma";
 
 }

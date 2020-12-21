@@ -14,7 +14,7 @@ public class ClassUtil extends ClassLoader {
 
     }
 
-    static <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
+    public static <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
         try {
             Constructor<T> constructor;
             if (constructorArgTypes == null || constructorArgs == null) {
@@ -64,6 +64,18 @@ public class ClassUtil extends ClassLoader {
             classToCreate = type;
         }
         return classToCreate;
+    }
+
+    public static ClassLoader getDefaultClassLoader() {
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+        if (null != classLoader) {
+            return classLoader;
+        } else {
+            return getSystemClassLoader();
+        }
+
     }
 
 }

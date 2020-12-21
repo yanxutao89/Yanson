@@ -5,7 +5,7 @@ import utils.ValidationUtils;
 
 import java.util.ArrayList;
 
-import static json.Constants.MAGIC;
+import static json.Constants.*;
 
 
 public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray> {
@@ -27,10 +27,10 @@ public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray
 		try {
 			StringBuilder sb = new StringBuilder();
 			ValidationUtils.isTrue(JsonUtil.isArray(json), String.format("Expect array, but found object"));
-			sb.append("\"").append(MAGIC).append("\"").append(":").append(json.trim());
+			sb.append("\"").append(MAGIC).append("\"").append(COLON).append(json.trim());
 			JsonObject jsonObject = new JsonObject();
-			JsonHelper.readJson(jsonObject, sb.toString());
-			return (json.JsonArray) jsonObject.get(MAGIC);
+			JsonHelper.readJson(sb.toString(), jsonObject);
+			return (JsonArray) jsonObject.get(MAGIC);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -41,10 +41,10 @@ public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray
 
 	public String toJson(JsonArray jsonArray) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[");
+		sb.append(LEFT_SQUARE_BRACKET);
 		sb.append(JsonHelper.toJsonSting(jsonArray, true));
-		sb.append("]");
-		String str = PatternUtils.commaRightCurlyBracket(sb.toString(), "}");
-		return PatternUtils.commaRightSquareBracket(str, "]");
+		sb.append(RIGHT_SQUARE_BRACKET);
+		String str = PatternUtils.commaRightCurlyBracket(sb.toString(), RIGHT_CURLY_BRACKET);
+		return PatternUtils.commaRightSquareBracket(str, RIGHT_SQUARE_BRACKET);
 	}
 }

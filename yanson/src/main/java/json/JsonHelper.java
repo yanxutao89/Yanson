@@ -1,6 +1,7 @@
 package json;
 
 import exception.InvalidJsonFormatException;
+import reflection.ClassUtil;
 import type.TypeUtil;
 import utils.CollectionUtils;
 import utils.StringUtils;
@@ -25,12 +26,12 @@ import static json.Constants.*;
  */
 public class JsonHelper {
 
-    public static void readJson(JsonObject jsonObject, String jsonStr) {
+    public static JsonObject readJson(String jsonStr, JsonObject jsonObject) {
 
-        if (!StringUtils.isEmpty(jsonStr) && !ARRAY_VALUE.equals(jsonStr)) {
+        if (!StringUtils.isEmpty(jsonStr) && !ARRAY_VALUE_WITH_PRIMITIVE_TYPES.equals(jsonStr)) {
 
             String nameValue = jsonStr.trim();
-            int separator = nameValue.indexOf(":");
+            int separator = JsonUtil.indexOfColon(nameValue);
             if (-1 == separator) {
                 throw new InvalidJsonFormatException(String.format("Expect name:value, but found %s", nameValue));
             }
@@ -49,46 +50,56 @@ public class JsonHelper {
                 }
 
                 value = value.substring(1, value.length() - 1);
-                List<String> keyValues = JsonUtil.formatNameValues(value);
-                for (String keyValue : keyValues) {
-
-                    readJson(currObject, keyValue);
+                List<String> nameValues = JsonUtil.formatNameValues(value);
+                for (String nv : nameValues) {
+                    readJson(nv, currObject);
                 }
 
             // Array data
             } else if (value.startsWith(LEFT_SQUARE_BRACKET) && value.endsWith(RIGHT_SQUARE_BRACKET)) {
 
-                List<String> keyValues = JsonUtil.formatNameValues(value);
-                if (!CollectionUtils.isEmpty(keyValues)) {
+                List<String> nameValues = JsonUtil.formatNameValues(value);
+                if (!CollectionUtils.isEmpty(nameValues)) {
 
-                    if (ARRAY_VALUE.equals(keyValues.get(0))) {
-
-                        jsonObject.put(currName, JsonUtil.getValue(keyValues.get(1)));
+                    if (ARRAY_VALUE_WITH_PRIMITIVE_TYPES.equals(nameValues.get(0))) {
+                        jsonObject.put(currName, JsonUtil.getValue(nameValues.get(1)));
                     } else {
-
                         JsonArray currArray = (JsonArray) jsonObject.get(currName);
                         if (CollectionUtils.isEmpty(currArray)) {
-                            currArray = new JsonArray(keyValues.size());
+                            currArray = new JsonArray(nameValues.size());
                             jsonObject.put(currName, currArray);
                         }
 
-                        for (int i = 0; i < keyValues.size(); i++) {
-
+                        for (int i = 0; i < nameValues.size(); ++i) {
                             currArray.add(new JsonObject());
                             StringBuilder arrayObject = new StringBuilder();
-                            arrayObject.append("\"").append(currName).append("\"").append(":").append(keyValues.get(i));
-                            readJson((JsonObject) currArray.get(i), arrayObject.toString());
+                            arrayObject.append("\"").append(currName).append("\"").append(COLON).append(nameValues.get(i));
+                            readJson(arrayObject.toString(), (JsonObject) currArray.get(i));
                         }
                     }
                 }
-
             // Non object data
             } else {
                 jsonObject.put(currName, JsonUtil.getValue(value));
             }
         } else {
-            return ;
+            return null;
         }
+
+        return jsonObject;
+
+    }
+
+    public static <T> T readJson(String jsonStr, Class<T> clazz) {
+
+        T instance = null;
+        try {
+            instance = new JsonObject().fromJson(jsonStr).toJavaObject(clazz);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return instance;
 
     }
 
@@ -97,7 +108,7 @@ public class JsonHelper {
 
         T instance = null;
         try {
-            instance = clazz.newInstance();
+            instance = ClassUtil.instantiateClass(clazz, null,  null);
             Field[] fields = clazz.getDeclaredFields();
             Method[] methods = clazz.getDeclaredMethods();
 
@@ -240,85 +251,85 @@ public class JsonHelper {
                 if (value instanceof Map) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(":");
+                        sb.append(COLON);
                     }
-                    sb.append("{");
+                    sb.append(LEFT_CURLY_BRACKET);
                     toJsonSting(value, false);
-                    sb.append("}");
+                    sb.append(RIGHT_CURLY_BRACKET);
                 } else if (value instanceof String) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(":");
+                        sb.append(COLON);
                     }
                     sb.append((String) value);
                 } else if (value instanceof Integer) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(":");
+                        sb.append(COLON);
                     }
                     sb.append(value);
                 } else if (value instanceof Short) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(":");
+                        sb.append(COLON);
                     }
                     sb.append(value);
                 } else if (value instanceof Long) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(":");
+                        sb.append(COLON);
                     }
                     sb.append(value);
                 } else if (value instanceof BigInteger) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(":");
+                        sb.append(COLON);
                     }
                     sb.append(value);
                 } else if (value instanceof Float) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(":");
+                        sb.append(COLON);
                     }
                     sb.append(value);
                 } else if (value instanceof Double) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(":");
+                        sb.append(COLON);
                     }
                     sb.append(value);
                 } else if (value instanceof BigDecimal) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(":");
+                        sb.append(COLON);
                     }
                     sb.append(value);
                 } else if (value instanceof Boolean) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(":");
+                        sb.append(COLON);
                     }
                     sb.append(value);
                 } else if (null == value) {
                     if (SET_ON_NONNULL) {
                         if (!isList) {
                             sb.append("\"" + entry.getKey() + "\"");
-                            sb.append(":");
+                            sb.append(COLON);
                         }
                     } else {
 
                     }
                 } else if (value instanceof Collection) {
                     sb.append("\"" + entry.getKey() + "\"");
-                    sb.append(":");
-                    sb.append("[");
+                    sb.append(COLON);
+                    sb.append(LEFT_SQUARE_BRACKET);
                     Collection<?> collection = (Collection) value;
                     for (Object o : collection) {
-                        toJsonSting(o, true);
+                        toJsonSting(o, o instanceof Collection || o instanceof Object[]);
                     }
-                    sb.append("]");
+                    sb.append(RIGHT_CURLY_BRACKET);
                 }
-                sb.append(",");
+                sb.append(COMMA);
             }
         } else if (object instanceof Collection){
             Collection collection = (Collection) object;
