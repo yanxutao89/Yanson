@@ -17,8 +17,8 @@ import static utils.ValidationUtils.isTrue;
 
 public class TypeUtil {
 
-	private TypeUtil() throws Exception {
-		throw new Exception("The constructor can not be called outside");
+	private TypeUtil() {
+		throw new UnsupportedOperationException("The constructor can not be called outside");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -112,7 +112,7 @@ public class TypeUtil {
 			if (clazz == Map.class) {
 				return (T) cast2Map(object, size);
 			}
-			if (clazz == List.class) {
+			if (clazz == List.class || clazz == Collection.class || clazz == Iterable.class) {
 				return (T) cast2List(object, size);
 			}
 		}
@@ -325,18 +325,21 @@ public class TypeUtil {
 
 		COLLECTION_TYPE_SET.add(Map.class);
 		COLLECTION_TYPE_SET.add(List.class);
+		COLLECTION_TYPE_SET.add(Collection.class);
+		COLLECTION_TYPE_SET.add(Iterable.class);
+
 	}
 
 	public static boolean isPrimitiveType(Class<?> clazz) {
-		return PRIMITIVE_TYPE_SET.contains(clazz);
+		return clazz.isPrimitive() || PRIMITIVE_TYPE_SET.contains(clazz);
 	}
 
 	public static boolean isElementType(Class<?> clazz) {
-		return ELEMENT_TYPE_SET.contains(clazz);
+		return isPrimitiveType(clazz) || ELEMENT_TYPE_SET.contains(clazz);
 	}
 
 	public static boolean isArrayType(Class<?> clazz) {
-		return ARRAY_TYPE_SET.contains(clazz);
+		return clazz.isArray() || null != clazz.getComponentType() || ARRAY_TYPE_SET.contains(clazz);
 	}
 
 	public static boolean isCollectionType(Class<?> clazz) {

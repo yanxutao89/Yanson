@@ -13,9 +13,8 @@ public class AnnotationUtils {
 	private static final int TABLE_LENGTH = 64;
 	private static boolean HEAD = false;
 	
-	// Prevent from being initialized by others because of all the methods are static
 	private AnnotationUtils() {
-		
+		throw new UnsupportedOperationException("The constructor can not be called outside");
 	}
 	
 	public static void getExecutedTime(String className, Object[] args) throws Exception{

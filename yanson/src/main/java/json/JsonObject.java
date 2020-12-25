@@ -10,12 +10,12 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
 
 	private static final long serialVersionUID = 4560188633954957114L;
 
-	public JsonObject fromJson(String json) {
+	public JsonObject fromJson(String jsonStr) {
 
         try {
-            ValidationUtils.isTrue(!JsonUtil.isArray(json), String.format("Expect object, but found array"));
+            ValidationUtils.isTrue(JsonUtil.isObject(jsonStr), String.format("Expect object, but found array"));
             StringBuilder sb = new StringBuilder();
-            sb.append("\"").append(MAGIC).append("\"").append(COLON).append(json.trim());
+            sb.append("\"").append(MAGIC).append("\"").append(COLON).append(jsonStr.trim());
             JsonObject jsonObject = new JsonObject();
             JsonHelper.readJson(sb.toString(), jsonObject);
             return (JsonObject) jsonObject.get(MAGIC);

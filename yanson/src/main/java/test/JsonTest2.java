@@ -51,7 +51,7 @@ public class JsonTest2 {
 			System.out.println(jsonArray);
 		} else {
 			BaseTypeVo baseTypeVo = Json.parseObject(jsonStr, BaseTypeVo.class);
-//			System.out.println(baseTypeVo);
+			System.out.println(baseTypeVo);
 		}
 
 	}
@@ -63,7 +63,7 @@ public class JsonTest2 {
 
 		} else {
 			BaseTypeVo baseTypeVo = JSONObject.parseObject(jsonStr, BaseTypeVo.class);
-//			System.out.println(baseTypeVo);
+			System.out.println(baseTypeVo);
 		}
 
 	}
@@ -76,7 +76,7 @@ public class JsonTest2 {
 
 		} else {
 			BaseTypeVo readValue = objectMapper.readValue(jsonStr, BaseTypeVo.class);
-//			System.out.println(readValue);
+			System.out.println(readValue);
 		}
 
 	}
@@ -89,7 +89,7 @@ public class JsonTest2 {
 
 		} else {
 			BaseTypeVo fromJson = gson.fromJson(jsonStr, BaseTypeVo.class);
-//			System.out.println(fromJson);
+			System.out.println(fromJson);
 		}
 
 	}

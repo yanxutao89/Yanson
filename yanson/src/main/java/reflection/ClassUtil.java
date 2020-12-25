@@ -1,7 +1,13 @@
 package reflection;
 
+import annotation.JsonFieldProcessor;
+
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
+
+import static json.Configuration.PREFER_FIELD_VALUE_SET;
 
 /**
  * @Author: Yanxt7
@@ -10,12 +16,27 @@ import java.util.*;
  */
 public class ClassUtil extends ClassLoader {
 
-    private ClassUtil(){
+    private ClassUtil() {
+        throw new UnsupportedOperationException("The constructor can not be called outside");
+    }
 
+    public static ClassLoader getDefaultClassLoader() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (null != classLoader) {
+            return classLoader;
+        }
+
+        classLoader = ClassUtil.class.getClassLoader();
+        if (null != classLoader) {
+            return classLoader;
+        }
+
+        return getSystemClassLoader();
     }
 
     public static <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
         try {
+            type = resolveInterface(type);
             Constructor<T> constructor;
             if (constructorArgTypes == null || constructorArgs == null) {
                 constructor = type.getDeclaredConstructor();
@@ -50,7 +71,7 @@ public class ClassUtil extends ClassLoader {
         }
     }
 
-    public static Class<?> resolveInterface(Class<?> type) {
+    public static <T> Class<T> resolveInterface(Class<T> type) {
         Class<?> classToCreate;
         if (type == List.class || type == Collection.class || type == Iterable.class) {
             classToCreate = ArrayList.class;
@@ -63,19 +84,65 @@ public class ClassUtil extends ClassLoader {
         } else {
             classToCreate = type;
         }
-        return classToCreate;
+        return (Class<T>) classToCreate;
     }
 
-    public static ClassLoader getDefaultClassLoader() {
+    public static Map<String, Invoker> getInvokerMap(Class<?> clazz) {
+        List<Invoker> fieldInvokers = getFieldInvokers(clazz);
+        List<Invoker> methodInvokers = getMethodInvokers(clazz);
 
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-        if (null != classLoader) {
-            return classLoader;
+        if (PREFER_FIELD_VALUE_SET) {
+            return getInvokerMap(fieldInvokers, methodInvokers);
         } else {
-            return getSystemClassLoader();
+            return getInvokerMap(methodInvokers, fieldInvokers);
+        }
+    }
+
+    private static Map<String, Invoker> getInvokerMap(List<Invoker> firstInvokers, List<Invoker> secondInvokers){
+        Map<String, Invoker> invokerMap = new HashMap<>();
+
+        for (Invoker invoker : firstInvokers) {
+            invokerMap.put(invoker.getName(), invoker);
+            invokerMap.putAll(JsonFieldProcessor.process(invoker));
         }
 
+        for (Invoker invoker : secondInvokers) {
+            if (invokerMap.containsKey(invoker.getName())) {
+                continue;
+            }
+            invokerMap.put(invoker.getName(), invoker);
+            invokerMap.putAll(JsonFieldProcessor.process(invoker));
+        }
+
+        return invokerMap;
+    }
+
+    private static List<Invoker> getFieldInvokers(Class<?> clazz){
+        Field[] fields = clazz.getDeclaredFields();
+        List<Invoker> invokers = new ArrayList<>();
+
+        for (Field field : fields) {
+            FieldInvoker invoker = new FieldInvoker(field);
+            if (null != invoker.getName()) {
+                invokers.add(invoker);
+            }
+        }
+
+        return invokers;
+    }
+
+    public static List<Invoker> getMethodInvokers(Class<?> clazz) {
+        Method[] methods = clazz.getDeclaredMethods();
+        List<Invoker> invokers = new ArrayList<>();
+
+        for (Method method : methods) {
+            MethodInvoker invoker = new MethodInvoker(method);
+            if (null != invoker.getName()) {
+                invokers.add(invoker);
+            }
+        }
+
+        return invokers;
     }
 
 }

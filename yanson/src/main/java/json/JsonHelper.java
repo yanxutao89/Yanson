@@ -2,6 +2,7 @@ package json;
 
 import exception.InvalidJsonFormatException;
 import reflection.ClassUtil;
+import reflection.Invoker;
 import type.TypeUtil;
 import utils.CollectionUtils;
 import utils.StringUtils;
@@ -108,9 +109,8 @@ public class JsonHelper {
 
         T instance = null;
         try {
+
             instance = ClassUtil.instantiateClass(clazz, null,  null);
-            Field[] fields = clazz.getDeclaredFields();
-            Method[] methods = clazz.getDeclaredMethods();
 
             if (object instanceof JsonObject) {
 
@@ -118,120 +118,17 @@ public class JsonHelper {
                 if (!StringUtils.isEmpty(parent)) {
                     jsonObject = (JsonObject) jsonObject.get(parent);
                 }
-                for (Field field : fields) {
 
-                    Class<?> type = field.getType();
-                    for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
-
-                        String key = entry.getKey();
-                        Object value = entry.getValue();
-                        for (Method method : methods) {
-
-                            if (TypeUtil.isFieldMatched(field, method, key)) {
-                                method.setAccessible(true);
-                                if (TypeUtil.isElementType(type)) {
-                                    Class<?>[] parameterTypes = method.getParameterTypes();
-                                    method.invoke(instance, TypeUtil.cast2Element(value, parameterTypes[0]));
-                                } else if (TypeUtil.isCollectionType(type)){
-                                    JsonArray jsonArray = (JsonArray) jsonObject.get(key);
-                                    int size = jsonArray.size();
-
-                                    Class<?> classType = null;
-                                    Type genericType = field.getGenericType();
-                                    if (genericType instanceof ParameterizedType) {
-                                        ParameterizedType parameterizedType = (ParameterizedType) genericType;
-                                        classType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-                                    }
-
-                                    Object o = TypeUtil.cast2Collection(value, type, size);
-                                    if (o instanceof List) {
-                                        List list = (List) o;
-                                        for (Object temp : jsonArray) {
-                                            list.add(toJavaObject(temp, classType, key));
-                                        }
-                                        method.invoke(instance, list);
-                                    } else if (o instanceof Map) {
-                                        Map map = (Map) o;
-                                        for (Object temp : jsonArray) {
-                                            map.putAll((Map) toJavaObject(temp, classType, key));
-                                        }
-                                        method.invoke(instance, map);
-                                    }
-                                } else if (TypeUtil.isArrayType(type)) {
-                                    Object o = jsonObject.get(key);
-                                    Object[] objects = (Object[]) o;
-                                    int size = objects.length;
-                                    if (o instanceof boolean[] || o instanceof Boolean[]) {
-                                        Boolean[] booleans = (Boolean[]) o;
-                                        for (int i = 0; i < size; ++i) {
-                                            booleans[i] = (Boolean) objects[i];
-                                        }
-                                        method.invoke(instance, new Object[]{booleans});
-                                    } else if (o instanceof int[] || o instanceof Integer[]) {
-                                        Integer[] integers = (Integer[]) o;
-                                        for (int i = 0; i < size; ++i) {
-                                            integers[i] = (Integer) objects[i];
-                                        }
-                                        method.invoke(instance, new Object[]{integers});
-                                    }  else if (o instanceof short[] || o instanceof Short[]) {
-                                        Short[] shorts = (Short[]) o;
-                                        for (int i = 0; i < size; ++i) {
-                                            shorts[i] = (Short) objects[i];
-                                        }
-                                        method.invoke(instance, new Object[]{shorts});
-                                    } else if (o instanceof long[] || o instanceof Long[]) {
-                                        Long[] longs = (Long[]) o;
-                                        for (int i = 0; i < size; ++i) {
-                                            longs[i] = (Long) objects[i];
-                                        }
-                                        method.invoke(instance, new Object[]{longs});
-                                    } else if (o instanceof BigInteger[]) {
-                                        BigInteger[] bigIntegers = (BigInteger[]) o;
-                                        for (int i = 0; i < size; ++i) {
-                                            bigIntegers[i] = (BigInteger) objects[i];
-                                        }
-                                        method.invoke(instance, new Object[]{bigIntegers});
-                                    } else if (o instanceof float[] || o instanceof Float[]) {
-                                        Float[] floats = (Float[]) o;
-                                        for (int i = 0; i < size; ++i) {
-                                            floats[i] = (Float) objects[i];
-                                        }
-                                        method.invoke(instance, new Object[]{floats});
-                                    } else if (o instanceof double[] || o instanceof Double[]) {
-                                        Double[] doubles = (Double[]) o;
-                                        for (int i = 0; i < size; ++i) {
-                                            doubles[i] = (Double) objects[i];
-                                        }
-                                        method.invoke(instance, new Object[]{doubles});
-                                    } else if (o instanceof BigDecimal[]) {
-                                        BigDecimal[] bigDecimals = (BigDecimal[]) o;
-                                        for (int i = 0; i < size; ++i) {
-                                            bigDecimals[i] = (BigDecimal) objects[i];
-                                        }
-                                        method.invoke(instance, new Object[]{bigDecimals});
-                                    } else if (o instanceof byte[] || o instanceof Byte[]) {
-                                        Byte[] bytes = (Byte[]) o;
-                                        for (int i = 0; i < size; ++i) {
-                                            bytes[i] = (Byte) objects[i];
-                                        }
-                                        method.invoke(instance, new Object[]{bytes});
-                                    } else if (o instanceof char[] || o instanceof Character[]) {
-                                        Character[] characters = (Character[]) o;
-                                        for (int i = 0; i < size; ++i) {
-                                            characters[i] = (Character) objects[i];
-                                        }
-                                        method.invoke(instance, new Object[]{characters});
-                                    } else {
-                                        method.invoke(instance, new Object[]{objects});
-                                    }
-                                }
-                                break;
-                            }
-                        }
+                Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(clazz);
+                for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    if (invokerMap.containsKey(key)) {
+                        invokerMap.get(key).setValue(instance, value);
                     }
                 }
-            }
 
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -6,6 +6,7 @@ import utils.StringUtils;
 import utils.ValidationUtils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -82,7 +83,7 @@ public class JsonUtil {
      * @return
      */
     public static boolean isValidJsonName(String name) {
-        return null != name;
+        return isString(name);
     }
 
     /**
@@ -96,37 +97,7 @@ public class JsonUtil {
      * @return
      */
     public static boolean isValidJsonValue(String value) {
-
-        value = value.trim();
-        if (value.startsWith("\"") && value.endsWith("\"")
-                || value.startsWith(LEFT_CURLY_BRACKET) && value.endsWith(RIGHT_CURLY_BRACKET)
-                || value.startsWith(LEFT_SQUARE_BRACKET) && value.endsWith(RIGHT_SQUARE_BRACKET)
-                || "null".equals(value)
-                || "true".equals(value)
-                || "false".equals(value)
-                || isNumber(value)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * check whether the json is array or object
-     * @param jsonStr the json text to be checked
-     * @return true if array false if object
-     * @throws Exception if the json text is neither array nor object
-     */
-    public static boolean isArray(String jsonStr) throws Exception {
-        ValidationUtils.isTrue(StringUtils.isNotEmpty(jsonStr), "Parameter 'jsonStr' must not be null or empty");
-        jsonStr = jsonStr.trim();
-        if (jsonStr.startsWith(LEFT_CURLY_BRACKET) && jsonStr.endsWith(RIGHT_CURLY_BRACKET)) {
-            return false;
-        }
-        if (jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET)) {
-            return true;
-        }
-        throw new InvalidJsonFormatException(String.format("Expected %s or %s at position 0, but found &s", LEFT_CURLY_BRACKET, LEFT_CURLY_BRACKET, jsonStr.charAt(0)));
+        return isString(value) || isNumber(value) || isBoolean(value) || isNull(value) || isObject(value) || isArray(value);
     }
 
     public static String getName(String jsonStr) {
@@ -136,25 +107,22 @@ public class JsonUtil {
 
     public static Object getValue(String jsonStr) throws InvalidJsonFormatException {
 
+        if (StringUtils.isEmpty(jsonStr)) {
+            return null;
+        }
+
         jsonStr = jsonStr.trim();
 
-        if (jsonStr.startsWith("\"") && jsonStr.endsWith("\"")) {
-            if (jsonStr.startsWith("\"\"")) {
-                jsonStr = jsonStr.substring(1);
+        if (isString(jsonStr)) {
+            while (isMarkedWithDoubleQuations(jsonStr)) {
+                jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
             }
-            if (jsonStr.endsWith("\"\"")) {
-                jsonStr = jsonStr.substring(0, jsonStr.length() - 1);
-            }
-            return jsonStr.substring(1, jsonStr.length() - 1);
-        } else if ("null".equals(jsonStr)) {
-            return null;
-        } else if ("true".equals(jsonStr)) {
-            return true;
-        } else if ("false".equals(jsonStr)) {
-            return false;
+            return jsonStr;
+        } else if (isNull(jsonStr)) {
+            return getNull(jsonStr);
         } else if (isNumber(jsonStr)) {
             return getNumber(jsonStr);
-        } else if (jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET)) {
+        } else if (isArray(jsonStr)) {
             String[] strings = jsonStr.substring(1, jsonStr.length() - 1).split(",");
             if (strings != null && strings.length > 0) {
                 Object[] objects = new Object[strings.length];
@@ -168,6 +136,48 @@ public class JsonUtil {
         }
 
         throw new InvalidJsonFormatException(String.format("Invalid json value type, supported types are %s, but found %s ",  Arrays.toString(SUPPORTED_VALUE_TYPES), jsonStr));
+    }
+
+    public static <T> T getValue(String jsonStr, Class<T> clazz) throws InvalidJsonFormatException {
+
+        if (StringUtils.isEmpty(jsonStr)) {
+            return null;
+        }
+
+        jsonStr = jsonStr.trim();
+
+        if (isString(jsonStr)) {
+            while (isMarkedWithDoubleQuations(jsonStr)) {
+                jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
+            }
+            return castString(jsonStr, clazz);
+        } else if (isNull(jsonStr)) {
+            return castString(jsonStr, clazz);
+        } else if (isNumber(jsonStr)) {
+            return castString(jsonStr, clazz);
+        } else if (isArray(jsonStr)) {
+            String[] strings = jsonStr.substring(1, jsonStr.length() - 1).split(",");
+            if (strings != null && strings.length > 0) {
+                Object[] objects = new Object[strings.length];
+                for (int i = 0; i < strings.length; ++i) {
+                    objects[i] = strings[i];
+                }
+                return castString(jsonStr, clazz);
+            } else {
+                return castString(jsonStr, clazz);
+            }
+        }
+
+        throw new InvalidJsonFormatException(String.format("Invalid json value type, supported types are %s, but found %s ",  Arrays.toString(SUPPORTED_VALUE_TYPES), jsonStr));
+    }
+
+    private static <T> T castString(String jsonStr, Class<T> clazz){
+
+        T instance = null;
+
+
+        return instance;
+
     }
 
     private static Class determineType4Array(String[] strings) {
@@ -188,7 +198,7 @@ public class JsonUtil {
             if (jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
             }
-            jsonStr = jsonStr + ',';
+            jsonStr = jsonStr + COMMA;
             int curlyBracketCount = 0;
             int squareBracketCount = -1;
 
@@ -220,14 +230,30 @@ public class JsonUtil {
     }
 
     private static boolean isArrayEmptyOrSeparatedByComma(String jsonStr) {
+        if (StringUtils.isEmpty(jsonStr)) {
+            return false;
+        }
 
         jsonStr = jsonStr.trim();
         if (jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET)) {
-
             jsonStr = jsonStr.substring(1, jsonStr.length() - 1).trim();
-            return jsonStr.charAt(0) != '{' && jsonStr.charAt(jsonStr.length() - 1) != '}';
+            return !jsonStr.startsWith(LEFT_CURLY_BRACKET) && !jsonStr.endsWith(RIGHT_CURLY_BRACKET);
         }
 
+        return false;
+    }
+
+    private static boolean isString(String jsonStr) {
+        if (StringUtils.isEmpty(jsonStr)) {
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean isMarkedWithDoubleQuations(String jsonStr) {
+        if (jsonStr.startsWith("\"") && jsonStr.endsWith("\"")) {
+            return true;
+        }
         return false;
     }
 
@@ -235,8 +261,96 @@ public class JsonUtil {
         return TypeUtil.isRealNumber(jsonStr);
     }
 
-    private static BigDecimal getNumber(String jsonStr) {
-        return new BigDecimal(jsonStr);
+    public static BigDecimal getNumber(String jsonStr) {
+        return isNumber(jsonStr) ? new BigDecimal(jsonStr) : null;
+    }
+
+    public static <T> T getNumber(String jsonStr, Class<T> clazz) {
+        BigDecimal number = getNumber(jsonStr);
+        if (null != number) {
+            if (clazz == byte.class || clazz == Byte.class) {
+                return (T) (Byte) number.byteValue();
+            }
+            if (clazz == short.class || clazz == Short.class) {
+                return (T) (Short) number.shortValue();
+            }
+            if (clazz == int.class || clazz == Integer.class) {
+                return (T) (Integer) number.intValue();
+            }
+            if (clazz == long.class || clazz == Long.class) {
+                return (T) (Long) number.longValue();
+            }
+            if (clazz == float.class || clazz == Float.class) {
+                return (T) (Float) number.floatValue();
+            }
+            if (clazz == double.class || clazz == Double.class) {
+                return (T) (Double) number.doubleValue();
+            }
+            if (clazz == BigInteger.class) {
+                return (T) number.toBigInteger();
+            }
+            if (clazz == BigDecimal.class) {
+                return (T) number;
+            }
+        }
+        return null;
+    }
+
+    public static boolean isBoolean(String jsonStr) {
+        return "true".equals(jsonStr) || "false".equals(jsonStr);
+    }
+
+    private static boolean getBoolean(String jsonStr) {
+        return isBoolean(jsonStr) ? Boolean.valueOf(jsonStr) : null;
+    }
+
+    public static boolean isNull(String jsonStr) {
+        return "null".equals(jsonStr);
+    }
+
+    public static Object getNull(String jsonStr) {
+        if (isNull(jsonStr)) {
+            return null;
+        }
+        throw new InvalidJsonFormatException(String.format("Expected 'null', but found %s", jsonStr));
+    }
+
+    /**
+     * check whether the json is object or not
+     * @param jsonStr the json text to be checked
+     * @return true if object otherwise false
+     * @throws Exception if the json text is object or not
+     */
+    public static boolean isObject(String jsonStr) {
+        if (StringUtils.isEmpty(jsonStr)) {
+            return false;
+        }
+
+        jsonStr = jsonStr.trim();
+        if (jsonStr.startsWith(LEFT_CURLY_BRACKET) && jsonStr.endsWith(RIGHT_CURLY_BRACKET)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * check whether the json is array or not
+     * @param jsonStr the json text to be checked
+     * @return true if array otherwise false
+     * @throws Exception if the json text is array or not
+     */
+    public static boolean isArray(String jsonStr) {
+        if (StringUtils.isEmpty(jsonStr)) {
+            return false;
+        }
+
+        jsonStr = jsonStr.trim();
+        if (jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET)) {
+            return true;
+        }
+
+        return false;
     }
 
     public static void main(String[] args) {

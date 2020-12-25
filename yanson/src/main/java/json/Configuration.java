@@ -8,5 +8,6 @@ package json;
 public class Configuration {
 
     public static final boolean SET_ON_NONNULL = true;
+    public static final boolean PREFER_FIELD_VALUE_SET = false;
 
 }
