@@ -1,5 +1,6 @@
 package test;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,10 +10,10 @@ import com.google.gson.annotations.SerializedName;
 
 import annotation.JsonField;
 
-public class BaseTypeVo {
+public class BaseTypeVo implements Serializable {
 
 	private String string;
-	private Integer integer;
+	private int integer;
 	@JsonField(value = "float2", aliasNames = {"float"})
 	@JSONField(alternateNames = {"float"})
 	@JsonAlias(value = {"float"})
@@ -29,8 +30,11 @@ public class BaseTypeVo {
 	public String getString() {
 		return string;
 	}
-	public void setString(String string) {
+	public String setString(String string) {
+		long l = System.nanoTime();
 		this.string = string;
+		System.out.println(System.nanoTime() - l);
+		return string;
 	}
 	public Integer getInteger() {
 		return integer;

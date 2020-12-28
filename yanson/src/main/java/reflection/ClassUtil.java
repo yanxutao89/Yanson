@@ -1,7 +1,12 @@
 package reflection;
 
 import annotation.JsonFieldProcessor;
+import asm.ClassPrinter;
+import asm.VersionAdapter;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
 
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -143,6 +148,16 @@ public class ClassUtil extends ClassLoader {
         }
 
         return invokers;
+    }
+
+    public static byte[] getBytesFromClass(Class clazz) throws Exception {
+
+        ClassReader cr = new ClassReader(clazz.getName());
+        ClassWriter cw = new ClassWriter(cr, 0);
+        VersionAdapter va = new VersionAdapter(cw);
+        cr.accept(va, 0);
+        return cw.toByteArray();
+
     }
 
 }
