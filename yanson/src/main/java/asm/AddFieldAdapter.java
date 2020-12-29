@@ -64,10 +64,11 @@ public class AddFieldAdapter extends ClassVisitor {
 	}
 
 	public static void main(String[] args) throws IOException {
-		ClassReader classReader = new ClassReader(BaseTypeVo.class.getName());
+		String name = BaseTypeVo.class.getName();
+		ClassReader classReader = new ClassReader(name);
 		ClassWriter classWriter = new ClassWriter(classReader, 0);
 		AddFieldAdapter addFieldAdapter = new AddFieldAdapter(classWriter, ACC_PRIVATE, "count", "J");
-		TraceClassVisitor traceClassVisitor = new TraceClassVisitor(addFieldAdapter, new Textifier(), new PrintWriter(new FileOutputStream("Test")));
+		TraceClassVisitor traceClassVisitor = new TraceClassVisitor(addFieldAdapter, new Textifier(), new PrintWriter(new FileOutputStream(name)));
 		CheckClassAdapter checkClassAdapter = new CheckClassAdapter(traceClassVisitor);
 		classReader.accept(checkClassAdapter, 0);
 		byte[] bytes = classWriter.toByteArray();
