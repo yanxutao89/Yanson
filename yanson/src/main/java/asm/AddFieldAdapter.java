@@ -4,9 +4,15 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.util.ASMifier;
+import org.objectweb.asm.util.CheckClassAdapter;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceClassVisitor;
 import test.BaseTypeVo;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 
 import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
@@ -60,8 +66,10 @@ public class AddFieldAdapter extends ClassVisitor {
 	public static void main(String[] args) throws IOException {
 		ClassReader classReader = new ClassReader(BaseTypeVo.class.getName());
 		ClassWriter classWriter = new ClassWriter(classReader, 0);
-			AddFieldAdapter addFieldAdapter = new AddFieldAdapter(classWriter, ACC_PRIVATE, "count", "J");
-		classReader.accept(addFieldAdapter, 0);
+		AddFieldAdapter addFieldAdapter = new AddFieldAdapter(classWriter, ACC_PRIVATE, "count", "J");
+		TraceClassVisitor traceClassVisitor = new TraceClassVisitor(addFieldAdapter, new Textifier(), new PrintWriter(new FileOutputStream("Test")));
+		CheckClassAdapter checkClassAdapter = new CheckClassAdapter(traceClassVisitor);
+		classReader.accept(checkClassAdapter, 0);
 		byte[] bytes = classWriter.toByteArray();
 		MyClassLoader myClassLoader = new MyClassLoader();
 		Class clazz = myClassLoader.defineClass(null, bytes);
