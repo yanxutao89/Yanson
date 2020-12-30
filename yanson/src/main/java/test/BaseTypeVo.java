@@ -31,14 +31,12 @@ public class BaseTypeVo implements Serializable {
 		return string;
 	}
 	public void setString(String string) {
-		long l = System.nanoTime();
 		this.string = string;
-		System.out.println(System.nanoTime() - l);
 	}
 	public void setStringWithTimer(String string) {
 		long l = System.nanoTime();
 		this.string = string;
-		System.out.println(System.nanoTime() - l);
+		System.out.println(String.format("Consumed time is %d with argument of %s", System.nanoTime() - l, string));
 	}
 	public Integer getInteger() {
 		return integer;
