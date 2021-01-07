@@ -113,6 +113,5 @@ class AddTimerMethodAdapter extends MethodVisitor {
 		setString.invoke(baseTypeVo, "setString");
 		Method setInteger = defineClass.getMethod("setInteger", Integer.class);
 		setInteger.invoke(baseTypeVo, 123456789);
-
 	}
 }
