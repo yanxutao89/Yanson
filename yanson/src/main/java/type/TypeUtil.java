@@ -9,16 +9,39 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import annotation.JsonField;
-import exception.InvalidJsonFormatException;
+import json.Constants;
 import utils.StringUtils;
 
-import static json.Constants.SUPPORTED_VALUE_TYPES;
 import static utils.ValidationUtils.isTrue;
 
 public class TypeUtil {
 
 	private TypeUtil() {
 		throw new UnsupportedOperationException("The constructor can not be called outside");
+	}
+
+	public static <T> T cast2Object(Object object, Class<T> clazz) {
+		T instance = null;
+
+		try {
+
+			if (isElementType(clazz)) {
+				instance = cast2Element(object, clazz);
+			}
+
+			if (TypeUtil.isCollectionType(clazz)) {
+				instance = cast2Collection(object, clazz, 16);
+			}
+
+			if (TypeUtil.isArrayType(clazz)) {
+				instance = cast2Array(object, clazz, 16);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return instance;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -121,40 +144,40 @@ public class TypeUtil {
 	}
 
 	public static String cast2String(Object object) {
-		return (String) object;
+		return object.toString();
 	}
 
 	public static Boolean cast2Boolean(Object object) {
-		return (Boolean) object;
+		return Boolean.valueOf(object.toString());
 	}
 
 	public static Integer cast2Integer(Object object) {
-		BigDecimal bd = (BigDecimal) object;
+		BigDecimal bd = new BigDecimal(object.toString());
 		return bd.intValue();
 	}
 
 	public static Long cast2Long(Object object) {
-		BigDecimal bd = (BigDecimal) object;
+		BigDecimal bd = new BigDecimal(object.toString());
 		return bd.longValue();
 	}
 
 	public static Short cast2Short(Object object) {
-		BigDecimal bd = (BigDecimal) object;
+		BigDecimal bd = new BigDecimal(object.toString());
 		return bd.shortValue();
 	}
 
 	public static BigInteger cast2BigInteger(Object object) {
-		BigDecimal bd = (BigDecimal) object;
+		BigDecimal bd = new BigDecimal(object.toString());
 		return bd.toBigInteger();
 	}
 
 	public static Float cast2Float(Object object) {
-		BigDecimal bd = (BigDecimal) object;
+		BigDecimal bd = new BigDecimal(object.toString());
 		return bd.floatValue();
 	}
 
 	public static Double cast2Double(Object object) {
-		BigDecimal bd = (BigDecimal) object;
+		BigDecimal bd = new BigDecimal(object.toString());
 		return bd.doubleValue();
 	}
 
@@ -163,7 +186,7 @@ public class TypeUtil {
 	}
 
 	public static Byte cast2Byte(Object object) {
-		BigDecimal bd = (BigDecimal) object;
+		BigDecimal bd = new BigDecimal(object.toString());
 		return bd.byteValue();
 	}
 
@@ -180,11 +203,21 @@ public class TypeUtil {
 	}
 
 	public static List cast2List(Object object, int size) {
+		if (object instanceof List) {
+			List objects = (List) object;
+			List list = new ArrayList(objects.size());
+			for (Object o : objects) {
+				Object o2 = TypeUtil.cast2Object(o, o.getClass());
+				list.add(o2);
+			}
+			return list;
+		}
 		return new ArrayList(size);
 	}
 
 	public static String[] cast2Strings(Object object, int size) {
-		String[] strings = new String[size];
+		String s = object.toString();
+		String[] strings = s.substring(1, s.length() - 1).split(Constants.COMMA);
 		return strings;
 	}
 

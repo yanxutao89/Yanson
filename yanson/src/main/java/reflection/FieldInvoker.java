@@ -1,5 +1,7 @@
 package reflection;
 
+import type.TypeUtil;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
@@ -25,11 +27,11 @@ public class FieldInvoker implements Invoker {
 		return name;
 	}
 
-	public void setValue(Object object, Object... value){
+	public void setValue(Object object, Object value){
 		checkPermission(delegate);
 		try {
 			Class type = getType();
-			delegate.set(object, castObject(value, type));
+			delegate.set(object, TypeUtil.cast2Object(value, type));
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
@@ -41,7 +43,7 @@ public class FieldInvoker implements Invoker {
 	}
 
 	@Override
-	public <T> T getValue(Object object, Class<T> clazz, Object... args) {
+	public <T> T getValue(Object object, Class<T> clazz, Object args) {
 		checkPermission(this.delegate);
 		try {
 			return (T) this.delegate.get(object);

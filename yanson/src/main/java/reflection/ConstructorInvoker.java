@@ -23,7 +23,7 @@ public class ConstructorInvoker implements Invoker {
 	}
 
 	@Override
-	public void setValue(Object object, Object... args) {
+	public void setValue(Object object, Object args) {
 		throw new UnsupportedOperationException("This method can not be called within ConstructorInvoker");
 	}
 
@@ -33,7 +33,7 @@ public class ConstructorInvoker implements Invoker {
 	}
 
 	@Override
-	public <T> T getValue(Object object, Class<T> clazz, Object... args) {
+	public <T> T getValue(Object object, Class<T> clazz, Object args) {
 		checkPermission(this.delegate);
 		try {
 			return (T) this.delegate.newInstance(args);

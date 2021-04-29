@@ -1,5 +1,6 @@
 package reflection;
 
+import type.TypeUtil;
 import utils.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -37,11 +38,11 @@ public class MethodInvoker implements Invoker {
 		return null;
 	}
 
-	public void setValue(Object object, Object... values){
+	public void setValue(Object object, Object values){
 		checkPermission(delegate);
 		try {
 			Class type = getType();
-			delegate.invoke(object, castObject(values[0], type));
+			delegate.invoke(object, TypeUtil.cast2Object(values, type));
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -55,7 +56,7 @@ public class MethodInvoker implements Invoker {
 	}
 
 	@Override
-	public <T> T getValue(Object object, Class<T> clazz, Object... args) {
+	public <T> T getValue(Object object, Class<T> clazz, Object args) {
 		checkPermission(this.delegate);
 		try {
 			return (T) this.delegate.invoke(object, args);
@@ -83,7 +84,7 @@ public class MethodInvoker implements Invoker {
 		for (WriteMethodPrefix prefix : prefixes) {
 			isWrite = name.startsWith(prefix.getValue());
 			if (isWrite) {
-				return isWrite;
+				break;
 			}
 		}
 

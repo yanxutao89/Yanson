@@ -7,9 +7,7 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 
 import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.*;
 
 import static json.Configuration.PREFER_FIELD_VALUE_SET;
@@ -112,9 +110,6 @@ public class ClassUtil extends ClassLoader {
         }
 
         for (Invoker invoker : secondInvokers) {
-            if (invokerMap.containsKey(invoker.getName())) {
-                continue;
-            }
             invokerMap.put(invoker.getName(), invoker);
             invokerMap.putAll(JsonFieldProcessor.process(invoker));
         }
@@ -158,6 +153,23 @@ public class ClassUtil extends ClassLoader {
         cr.accept(va, 0);
         return cw.toByteArray();
 
+    }
+
+
+    public static Class getSuperClassGenericType(Class clazz, int index)
+            throws IndexOutOfBoundsException {
+        Type genericType = clazz.getGenericSuperclass();
+        if (!(genericType instanceof ParameterizedType)) {
+            return Object.class;
+        }
+        Type[] params = ((ParameterizedType) genericType).getActualTypeArguments();
+        if (index >= params.length || index < 0) {
+            return Object.class;
+        }
+        if (!(params[index] instanceof Class)) {
+            return Object.class;
+        }
+        return (Class) params[index];
     }
 
 }
