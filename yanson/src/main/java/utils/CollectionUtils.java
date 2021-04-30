@@ -10,12 +10,11 @@ public class CollectionUtils {
 	}
 	
 	public static boolean isEmpty(Collection<?> collection) {
-		
-		if (null == collection || collection.size() == 0) {
-			return true;
-		}
-		
-		return false;
+		return null == collection || collection.size() == 0;
+	}
+
+	public static boolean isNotEmpty(Collection<?> collection) {
+		return !isEmpty(collection);
 	}
 	
 	public static boolean isEmpty(Object[] array) {

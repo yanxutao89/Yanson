@@ -32,7 +32,7 @@ public final class JsonHelper {
     }
 
     public static JsonObject readJson(String jsonStr, JsonObject jsonObject) {
-        if (!StringUtils.isEmpty(jsonStr) && !ARRAY_VALUE_WITH_PRIMITIVE_TYPES.equals(jsonStr)) {
+        if (!StringUtils.isEmpty(jsonStr)) {
 
             String nameValue = jsonStr.trim();
             int separator = JsonUtil.indexOfColon(nameValue);
@@ -76,17 +76,19 @@ public final class JsonHelper {
                         for (int i = 0; i < nameValues.size(); ++i) {
                             currArray.add(new JsonObject());
                             StringBuilder arrayObject = new StringBuilder();
-                            arrayObject.append("\"").append(currName).append("\"").append(COLON).append(nameValues.get(i));
+                            arrayObject.append(DOUBLE_QUOTATIONS).append(currName).append(DOUBLE_QUOTATIONS).append(COLON).append(nameValues.get(i));
                             readJson(arrayObject.toString(), (JsonObject) currArray.get(i));
                         }
                     }
                 }
-            // Non object data
             }
+
+            // Others
             else {
                 jsonObject.put(currName, JsonUtil.getValue(currValue));
             }
         }
+
         else {
             return null;
         }
