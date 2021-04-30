@@ -12,8 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static json.Constants.*;
-import static type.TypeUtil.getNumber;
-import static type.TypeUtil.isNumeric;
 
 /**
  * JSON can represent four primitive types (strings, numbers, booleans, and null) and two structured types (objects and arrays).
@@ -25,21 +23,18 @@ import static type.TypeUtil.isNumeric;
  * @Desc:
  * @Date: 2020/9/2 19:39
  */
-public class JsonUtil {
+public final class JsonUtil {
 
     private JsonUtil() {
-
+        throw new UnsupportedOperationException("The constructor can not be called outside");
     }
 
     public static int indexOfColon(String jsonStr) {
-
-        int index = -1;
-
         if (StringUtils.isEmpty(jsonStr)) {
-            return index;
+            return -1;
         }
 
-        index = jsonStr.indexOf(COLON);
+        int index = jsonStr.indexOf(COLON);
         if (index != -1) {
             String nameToCheck = jsonStr.substring(0, index);
             String valueToCheck = jsonStr.substring(index + 1);
@@ -51,7 +46,6 @@ public class JsonUtil {
         }
 
         return index;
-
     }
 
     public static int indexOfComma(String jsonStr) {
@@ -60,7 +54,6 @@ public class JsonUtil {
     }
 
     public static int indexOfBrace(String jsonStr) {
-
         if (StringUtils.isEmpty(jsonStr)) {
             return -1;
         }
@@ -69,7 +62,6 @@ public class JsonUtil {
     }
 
     public static int indexOfBracket(String jsonStr) {
-
         if (StringUtils.isEmpty(jsonStr)) {
             return -1;
         }
@@ -106,7 +98,6 @@ public class JsonUtil {
     }
 
     public static Object getValue(String jsonStr) throws InvalidJsonFormatException {
-
         if (StringUtils.isEmpty(jsonStr)) {
             return null;
         }
@@ -114,15 +105,18 @@ public class JsonUtil {
         jsonStr = jsonStr.trim();
 
         if (isString(jsonStr)) {
-            while (isMarkedWithDoubleQuations(jsonStr)) {
+            while (isMarkedWithDoubleQuotations(jsonStr)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
             }
             return jsonStr;
-        } else if (isNull(jsonStr)) {
+        }
+        else if (isNull(jsonStr)) {
             return getNull(jsonStr);
-        } else if (isNumber(jsonStr)) {
+        }
+        else if (isNumber(jsonStr)) {
             return getNumber(jsonStr);
-        } else if (isArray(jsonStr)) {
+        }
+        else if (isArray(jsonStr)) {
             String[] strings = jsonStr.substring(1, jsonStr.length() - 1).split(",");
             if (strings != null && strings.length > 0) {
                 Object[] objects = new Object[strings.length];
@@ -130,7 +124,8 @@ public class JsonUtil {
                     objects[i] = strings[i];
                 }
                 return objects;
-            } else {
+            }
+            else {
                 return new Object[0];
             }
         }
@@ -139,7 +134,6 @@ public class JsonUtil {
     }
 
     public static <T> T getValue(String jsonStr, Class<T> clazz) throws InvalidJsonFormatException {
-
         if (StringUtils.isEmpty(jsonStr)) {
             return null;
         }
@@ -147,15 +141,18 @@ public class JsonUtil {
         jsonStr = jsonStr.trim();
 
         if (isString(jsonStr)) {
-            while (isMarkedWithDoubleQuations(jsonStr)) {
+            while (isMarkedWithDoubleQuotations(jsonStr)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
             }
             return castString(jsonStr, clazz);
-        } else if (isNull(jsonStr)) {
+        }
+        else if (isNull(jsonStr)) {
             return castString(jsonStr, clazz);
-        } else if (isNumber(jsonStr)) {
+        }
+        else if (isNumber(jsonStr)) {
             return castString(jsonStr, clazz);
-        } else if (isArray(jsonStr)) {
+        }
+        else if (isArray(jsonStr)) {
             String[] strings = jsonStr.substring(1, jsonStr.length() - 1).split(",");
             if (strings != null && strings.length > 0) {
                 Object[] objects = new Object[strings.length];
@@ -163,7 +160,8 @@ public class JsonUtil {
                     objects[i] = strings[i];
                 }
                 return castString(jsonStr, clazz);
-            } else {
+            }
+            else {
                 return castString(jsonStr, clazz);
             }
         }
@@ -172,30 +170,25 @@ public class JsonUtil {
     }
 
     private static <T> T castString(String jsonStr, Class<T> clazz){
-
         T instance = null;
 
-
         return instance;
-
     }
 
     private static Class determineType4Array(String[] strings) {
-
         return Object.class;
     }
 
     public static List<String> formatNameValues(String jsonStr) {
-
         List<String> nameValues = new ArrayList<String>();
-        if (isArrayEmptyOrSeparatedByComma(jsonStr)) {
 
+        if (isArrayEmptyOrSeparatedByComma(jsonStr)) {
             nameValues.add(ARRAY_VALUE_WITH_PRIMITIVE_TYPES);
             nameValues.add(jsonStr);
-        } else {
-
+        }
+        else {
             jsonStr = jsonStr.trim();
-            if (jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET)) {
+            if (isArray(jsonStr)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
             }
             jsonStr = jsonStr + COMMA;
@@ -206,14 +199,17 @@ public class JsonUtil {
             for (char c : jsonStr.toCharArray()) {
                 if (c == '{') {
                     curlyBracketCount++;
-                } else if (c == '}') {
+                }
+                else if (c == '}') {
                     curlyBracketCount--;
-                } else if (c == '[') {
+                }
+                else if (c == '[') {
                     if (squareBracketCount == -1) {
                         squareBracketCount = 0;
                     }
                     squareBracketCount++;
-                } else if (c == ']') {
+                }
+                else if (c == ']') {
                     squareBracketCount--;
                 }
 
@@ -226,7 +222,6 @@ public class JsonUtil {
         }
 
         return nameValues;
-
     }
 
     private static boolean isArrayEmptyOrSeparatedByComma(String jsonStr) {
@@ -235,26 +230,20 @@ public class JsonUtil {
         }
 
         jsonStr = jsonStr.trim();
-        if (jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET)) {
+        if (isArray(jsonStr)) {
             jsonStr = jsonStr.substring(1, jsonStr.length() - 1).trim();
-            return !jsonStr.startsWith(LEFT_CURLY_BRACKET) && !jsonStr.endsWith(RIGHT_CURLY_BRACKET);
+            return !isObject(jsonStr);
         }
 
         return false;
     }
 
     private static boolean isString(String jsonStr) {
-        if (StringUtils.isEmpty(jsonStr)) {
-            return false;
-        }
-        return true;
+        return StringUtils.isNotEmpty(jsonStr);
     }
 
-    private static boolean isMarkedWithDoubleQuations(String jsonStr) {
-        if (jsonStr.startsWith("\"") && jsonStr.endsWith("\"")) {
-            return true;
-        }
-        return false;
+    private static boolean isMarkedWithDoubleQuotations(String jsonStr) {
+        return jsonStr.startsWith(DOUBLE_QUOTATIONS) && jsonStr.endsWith(DOUBLE_QUOTATIONS);
     }
 
     private static boolean isNumber(String jsonStr) {
@@ -327,11 +316,7 @@ public class JsonUtil {
         }
 
         jsonStr = jsonStr.trim();
-        if (jsonStr.startsWith(LEFT_CURLY_BRACKET) && jsonStr.endsWith(RIGHT_CURLY_BRACKET)) {
-            return true;
-        }
-
-        return false;
+        return jsonStr.startsWith(LEFT_CURLY_BRACKET) && jsonStr.endsWith(RIGHT_CURLY_BRACKET);
     }
 
     /**
@@ -345,17 +330,13 @@ public class JsonUtil {
             return false;
         }
 
-        jsonStr = jsonStr.trim();
-        if (jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET)) {
-            return true;
-        }
-
-        return false;
+        return jsonStr.startsWith(LEFT_SQUARE_BRACKET) && jsonStr.endsWith(RIGHT_SQUARE_BRACKET);
     }
 
     public static void main(String[] args) {
         String colon = "\"\\\"1\\\"\": 1";
         System.out.println(indexOfColon(colon));
+
         String comma = "\",";
         System.out.println(comma.length());
     }

@@ -25,10 +25,13 @@ import static json.Constants.*;
  * @Desc:
  * @Date: 2020/12/19 21:28
  */
-public class JsonHelper {
+public final class JsonHelper {
+
+    private JsonHelper() {
+        throw new UnsupportedOperationException("The constructor can not be called outside");
+    }
 
     public static JsonObject readJson(String jsonStr, JsonObject jsonObject) {
-
         if (!StringUtils.isEmpty(jsonStr) && !ARRAY_VALUE_WITH_PRIMITIVE_TYPES.equals(jsonStr)) {
 
             String nameValue = jsonStr.trim();
@@ -37,34 +40,33 @@ public class JsonHelper {
                 throw new InvalidJsonFormatException(String.format("Expect name:value, but found %s", nameValue));
             }
 
-            String name = nameValue.substring(0, separator);
-            String currName = JsonUtil.getName(name);
-            String value = nameValue.substring(separator + 1).trim();
+            String currName = JsonUtil.getName(nameValue.substring(0, separator));
+            String currValue = nameValue.substring(separator + 1).trim();
 
             // Object data
-            if (value.startsWith(LEFT_CURLY_BRACKET) && value.endsWith(RIGHT_CURLY_BRACKET)) {
-
+            if (JsonUtil.isObject(currValue)) {
                 JsonObject currObject = (JsonObject) jsonObject.get(currName);
                 if (null == currObject) {
                     currObject = new JsonObject();
                     jsonObject.put(currName, currObject);
                 }
 
-                value = value.substring(1, value.length() - 1);
-                List<String> nameValues = JsonUtil.formatNameValues(value);
+                currValue = currValue.substring(1, currValue.length() - 1);
+                List<String> nameValues = JsonUtil.formatNameValues(currValue);
                 for (String nv : nameValues) {
                     readJson(nv, currObject);
                 }
+            }
 
             // Array data
-            } else if (value.startsWith(LEFT_SQUARE_BRACKET) && value.endsWith(RIGHT_SQUARE_BRACKET)) {
+            else if (JsonUtil.isArray(currValue)) {
 
-                List<String> nameValues = JsonUtil.formatNameValues(value);
+                List<String> nameValues = JsonUtil.formatNameValues(currValue);
                 if (!CollectionUtils.isEmpty(nameValues)) {
-
                     if (ARRAY_VALUE_WITH_PRIMITIVE_TYPES.equals(nameValues.get(0))) {
                         jsonObject.put(currName, JsonUtil.getValue(nameValues.get(1)));
-                    } else {
+                    }
+                    else {
                         JsonArray currArray = (JsonArray) jsonObject.get(currName);
                         if (CollectionUtils.isEmpty(currArray)) {
                             currArray = new JsonArray(nameValues.size());
@@ -80,19 +82,19 @@ public class JsonHelper {
                     }
                 }
             // Non object data
-            } else {
-                jsonObject.put(currName, JsonUtil.getValue(value));
             }
-        } else {
+            else {
+                jsonObject.put(currName, JsonUtil.getValue(currValue));
+            }
+        }
+        else {
             return null;
         }
 
         return jsonObject;
-
     }
 
     public static <T> T readJson(String jsonStr, Class<T> clazz) {
-
         T instance = null;
         try {
             instance = new JsonObject().fromJson(jsonStr).toJavaObject(clazz);
@@ -101,12 +103,10 @@ public class JsonHelper {
         }
 
         return instance;
-
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T toJavaObject(Object object, Class<T> clazz, String parent) {
-
         T instance = null;
         try {
 
@@ -134,12 +134,10 @@ public class JsonHelper {
         }
 
         return instance;
-
     }
 
     @SuppressWarnings("unchecked")
     public static String toJsonSting(Object object, boolean isList) {
-
         StringBuilder sb = new StringBuilder();
         if (object instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) object;
@@ -238,7 +236,6 @@ public class JsonHelper {
         }
 
         return sb.toString();
-
     }
 
 }
