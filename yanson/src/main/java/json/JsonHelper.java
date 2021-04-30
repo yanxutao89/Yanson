@@ -67,17 +67,29 @@ public final class JsonHelper {
                         jsonObject.put(currName, JsonUtil.getValue(nameValues.get(1)));
                     }
                     else {
+                        JsonArray tempArray = (JsonArray) jsonObject.get(currName);
                         JsonArray currArray = (JsonArray) jsonObject.get(currName);
-                        if (CollectionUtils.isEmpty(currArray)) {
-                            currArray = new JsonArray(nameValues.size());
-                            jsonObject.put(currName, currArray);
+
+                        int arrSize = nameValues.size();
+                        if (CollectionUtils.isEmpty(tempArray)) {
+                            tempArray = new JsonArray(arrSize);
+                            jsonObject.put(currName, tempArray);
                         }
 
-                        for (int i = 0; i < nameValues.size(); ++i) {
-                            currArray.add(new JsonObject());
+                        if (CollectionUtils.isEmpty(currArray)) {
+                            currArray = new JsonArray(arrSize);
+                        }
+
+                        for (int i = 0; i < arrSize; ++i) {
+                            tempArray.add(new JsonObject());
                             StringBuilder arrayObject = new StringBuilder();
                             arrayObject.append(DOUBLE_QUOTATIONS).append(currName).append(DOUBLE_QUOTATIONS).append(COLON).append(nameValues.get(i));
-                            readJson(arrayObject.toString(), (JsonObject) currArray.get(i));
+                            readJson(arrayObject.toString(), (JsonObject) tempArray.get(i));
+                            currArray.add(((JsonObject)((JsonArray)jsonObject.get(currName)).get(i)).get(currName));
+                            if (i == arrSize - 1) {
+                                jsonObject.remove(currName);
+                                jsonObject.put(currName, currArray);
+                            }
                         }
                     }
                 }
