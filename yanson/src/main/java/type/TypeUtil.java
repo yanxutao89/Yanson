@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import annotation.JsonField;
 import json.Constants;
+import reflection.ClassUtil;
 import utils.StringUtils;
 
 import static utils.ValidationUtils.isTrue;
@@ -20,21 +21,22 @@ public class TypeUtil {
 		throw new UnsupportedOperationException("The constructor can not be called outside");
 	}
 
-	public static <T> T cast2Object(Object object, Class<T> clazz) {
+	public static <T> T cast2Object(Object object, Class<T> type, Class<T> clazz) {
 		T instance = null;
 
 		try {
 
-			if (isElementType(clazz)) {
-				instance = cast2Element(object, clazz);
+			if (isElementType(type)) {
+				instance = cast2Element(object, type);
 			}
-
-			if (TypeUtil.isCollectionType(clazz)) {
-				instance = cast2Collection(object, clazz, 16);
+			else if (TypeUtil.isCollectionType(type)) {
+				instance = cast2Collection(object, type, clazz, 16);
 			}
-
-			if (TypeUtil.isArrayType(clazz)) {
-				instance = cast2Array(object, clazz, 16);
+			else if (TypeUtil.isArrayType(type)) {
+				instance = cast2Array(object, type, 16);
+			}
+			else {
+				instance = ClassUtil.instantiateClass(type, null, null);
 			}
 
 		} catch (Exception e) {
@@ -129,14 +131,14 @@ public class TypeUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T cast2Collection(Object object, Class<T> clazz, int size) throws Exception {
+	public static <T> T cast2Collection(Object object, Class<T> type, Class<T> clazz, int size) throws Exception {
 
 		if (object != null) {
-			if (clazz == Map.class) {
+			if (type == Map.class) {
 				return (T) cast2Map(object, size);
 			}
-			if (clazz == List.class || clazz == Collection.class || clazz == Iterable.class) {
-				return (T) cast2List(object, size);
+			if (type == List.class || type == Collection.class || type == Iterable.class) {
+				return (T) cast2List(object, clazz, size);
 			}
 		}
 
@@ -202,12 +204,12 @@ public class TypeUtil {
 		return new HashMap(size);
 	}
 
-	public static List cast2List(Object object, int size) {
-		if (object instanceof List) {
-			List objects = (List) object;
+	public static List cast2List(Object type, Class clazz, int size) {
+		if (type instanceof List) {
+			List objects = (List) type;
 			List list = new ArrayList(objects.size());
 			for (Object o : objects) {
-				Object o2 = TypeUtil.cast2Object(o, o.getClass());
+				Object o2 = TypeUtil.cast2Object(o, clazz, null);
 				list.add(o2);
 			}
 			return list;

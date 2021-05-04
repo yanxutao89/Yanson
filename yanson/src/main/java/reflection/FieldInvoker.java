@@ -1,5 +1,6 @@
 package reflection;
 
+import test.EmployeeVo;
 import type.TypeUtil;
 
 import java.lang.annotation.Annotation;
@@ -31,7 +32,8 @@ public class FieldInvoker implements Invoker {
 		checkPermission(delegate);
 		try {
 			Class type = getType();
-			delegate.set(object, TypeUtil.cast2Object(value, type));
+			Class<?> clazz = EmployeeVo.class;
+			delegate.set(object, TypeUtil.cast2Object(value, type, clazz));
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}

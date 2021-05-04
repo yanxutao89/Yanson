@@ -42,7 +42,7 @@ public class MethodInvoker implements Invoker {
 		checkPermission(delegate);
 		try {
 			Class type = getType();
-			delegate.invoke(object, TypeUtil.cast2Object(values, type));
+			delegate.invoke(object, TypeUtil.cast2Object(values, type, null));
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
