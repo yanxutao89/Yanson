@@ -165,61 +165,71 @@ public final class JsonHelper {
                     sb.append(LEFT_CURLY_BRACKET);
                     toJsonSting(value, false);
                     sb.append(RIGHT_CURLY_BRACKET);
-                } else if (value instanceof String) {
+                }
+                else if (value instanceof String) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
                         sb.append(COLON);
                     }
                     sb.append((String) value);
-                } else if (value instanceof Integer) {
+                }
+                else if (value instanceof Integer) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
                         sb.append(COLON);
                     }
                     sb.append(value);
-                } else if (value instanceof Short) {
+                }
+                else if (value instanceof Short) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
                         sb.append(COLON);
                     }
                     sb.append(value);
-                } else if (value instanceof Long) {
+                }
+                else if (value instanceof Long) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
                         sb.append(COLON);
                     }
                     sb.append(value);
-                } else if (value instanceof BigInteger) {
+                }
+                else if (value instanceof BigInteger) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
                         sb.append(COLON);
                     }
                     sb.append(value);
-                } else if (value instanceof Float) {
+                }
+                else if (value instanceof Float) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
                         sb.append(COLON);
                     }
                     sb.append(value);
-                } else if (value instanceof Double) {
+                }
+                else if (value instanceof Double) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
                         sb.append(COLON);
                     }
                     sb.append(value);
-                } else if (value instanceof BigDecimal) {
+                }
+                else if (value instanceof BigDecimal) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
                         sb.append(COLON);
                     }
                     sb.append(value);
-                } else if (value instanceof Boolean) {
+                }
+                else if (value instanceof Boolean) {
                     if (!isList) {
                         sb.append("\"" + entry.getKey() + "\"");
                         sb.append(COLON);
                     }
                     sb.append(value);
-                } else if (null == value) {
+                }
+                else if (null == value) {
                     if (SET_ON_NONNULL) {
                         if (!isList) {
                             sb.append("\"" + entry.getKey() + "\"");
@@ -228,7 +238,8 @@ public final class JsonHelper {
                     } else {
 
                     }
-                } else if (value instanceof Collection) {
+                }
+                else if (value instanceof Collection) {
                     sb.append("\"" + entry.getKey() + "\"");
                     sb.append(COLON);
                     sb.append(LEFT_SQUARE_BRACKET);
@@ -240,12 +251,14 @@ public final class JsonHelper {
                 }
                 sb.append(COMMA);
             }
-        } else if (object instanceof Collection){
+        }
+        else if (object instanceof Collection){
             Collection collection = (Collection) object;
             for (Object element : collection) {
                 toJsonSting(element, false);
             }
-        } else {
+        }
+        else {
             return "";
         }
 
