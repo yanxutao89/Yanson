@@ -5,17 +5,15 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import annotation.MyTest;
+import yanson.annotation.MyTest;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import json.Json;
-import json.JsonArray;
-import json.JsonObject;
-import utils.AnnotationUtils;
+import yanson.json.Json;
+import yanson.json.JsonArray;
 
 
 public class JsonTest2 {

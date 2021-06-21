@@ -18,13 +18,13 @@ public class DeprecatedDump implements Opcodes {
                 "java/lang/Object",
                 new String[]{"java/lang/annotation/Annotation"});
         {
-            av = cw.visitAnnotation("Ljava/lang/annotation/Documented;",
+            av = cw.visitAnnotation("Ljava/lang/com.annotation/Documented;",
                     true);
             av.visitEnd();
         }
         {
-            av = cw.visitAnnotation("Ljava/lang/annotation/Retention;", true);
-            av.visitEnum("value", "Ljava/lang/annotation/RetentionPolicy;",
+            av = cw.visitAnnotation("Ljava/lang/com.annotation/Retention;", true);
+            av.visitEnum("value", "Ljava/lang/com.annotation/RetentionPolicy;",
                     "RUNTIME");
             av.visitEnd();
         }

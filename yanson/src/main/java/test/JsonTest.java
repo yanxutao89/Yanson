@@ -12,12 +12,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import annotation.MyTest;
-import json.Json;
-import json.JsonArray;
-import json.JsonObject;
-import reflection.ClassUtil;
-import utils.AnnotationUtils;
+import yanson.annotation.MyTest;
+import yanson.json.Json;
+import yanson.json.JsonArray;
+import yanson.json.JsonObject;
+import yanson.reflection.ClassUtil;
 
 
 public class JsonTest {

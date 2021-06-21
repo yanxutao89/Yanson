@@ -8,7 +8,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.gson.annotations.SerializedName;
 
-import annotation.JsonField;
+import yanson.annotation.JsonField;
 
 public class BaseTypeVo implements Serializable {
 

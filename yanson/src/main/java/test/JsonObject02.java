@@ -1,11 +1,11 @@
-//package json;
+//package com.json;
 //
-//import exception.InvalidJsonKeyValueFormatException;
-//import type.TypeUtil;
-//import utils.CollectionUtils;
-//import utils.PatternUtils;
-//import utils.StringUtils;
-//import utils.ValidationUtils;
+//import com.exception.InvalidJsonKeyValueFormatException;
+//import com.type.TypeUtil;
+//import com.utils.CollectionUtils;
+//import com.utils.PatternUtils;
+//import com.utils.StringUtils;
+//import com.utils.ValidationUtils;
 //
 //import java.lang.reflect.Field;
 //import java.lang.reflect.Method;
@@ -39,7 +39,7 @@
 //		return (JsonObject02) jsonObject.get(MAGIC);
 //	}
 //
-//	public static json.JsonArray parseArray(String jsonStr) {
+//	public static com.json.JsonArray parseArray(String jsonStr) {
 //
 //		JsonObject02 jsonObject = new JsonObject02();
 //		StringBuilder sb = new StringBuilder();
@@ -51,14 +51,14 @@
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-//		return (json.JsonArray) jsonObject.get(MAGIC);
+//		return (com.json.JsonArray) jsonObject.get(MAGIC);
 //
 //	}
 //
 //	private static boolean isArray(String jsonStr) {
 //		boolean isArray = false;
-//		String json = jsonStr.trim();
-//		if (json.startsWith("[") && json.endsWith("]")) {
+//		String com.json = jsonStr.trim();
+//		if (com.json.startsWith("[") && com.json.endsWith("]")) {
 //			isArray = true;
 //		}
 //		return isArray;
@@ -106,9 +106,9 @@
 //						jsonObject.put(currKey, TypeUtil.getValue(keyValues.get(1)));
 //					} else {
 //
-//						json.JsonArray currArray = (json.JsonArray) jsonObject.get(currKey);
+//						com.json.JsonArray currArray = (com.json.JsonArray) jsonObject.get(currKey);
 //						if (CollectionUtils.isEmpty(currArray)) {
-//							currArray = new json.JsonArray(keyValues.size());
+//							currArray = new com.json.JsonArray(keyValues.size());
 //							jsonObject.put(currKey, currArray);
 //						}
 //
@@ -150,7 +150,7 @@
 //			}
 //			for (Field field : fields) {
 //
-//				Class<?> type = field.getType();
+//				Class<?> com.type = field.getType();
 //				for (Entry<String, Object> entry : jsonObject.entrySet()) {
 //
 //					String key = entry.getKey();
@@ -159,11 +159,11 @@
 //
 //						if (TypeUtil.isFieldMatched(field, method, key)) {
 //							method.setAccessible(true);
-//							if (TypeUtil.isElementType(type)) {
+//							if (TypeUtil.isElementType(com.type)) {
 //								Class<?>[] parameterTypes = method.getParameterTypes();
 //								method.invoke(instance, TypeUtil.cast2Element(value, parameterTypes[0]));
-//							} else if (TypeUtil.isCollectionType(type)){
-//								json.JsonArray jsonArray = (json.JsonArray)jsonObject.get(key);
+//							} else if (TypeUtil.isCollectionType(com.type)){
+//								com.json.JsonArray jsonArray = (com.json.JsonArray)jsonObject.get(key);
 //								int size = jsonArray.size();
 //
 //								Class<?> classType = null;
@@ -173,7 +173,7 @@
 //									classType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 //								}
 //
-//								Object o = TypeUtil.cast2Collection(value, type, size);
+//								Object o = TypeUtil.cast2Collection(value, com.type, size);
 //								if (o instanceof List) {
 //									List list = (List) o;
 //									for (Object temp : jsonArray) {
@@ -187,7 +187,7 @@
 //									}
 //									method.invoke(instance, map);
 //								}
-//							} else if (TypeUtil.isArrayType(type)) {
+//							} else if (TypeUtil.isArrayType(com.type)) {
 //								Object o = jsonObject.get(key);
 //								Object[] objects = (Object[]) o;
 //								int size = objects.length;

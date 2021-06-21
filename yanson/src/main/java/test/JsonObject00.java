@@ -1,4 +1,4 @@
-//package json;
+//package com.json;
 //
 //import java.lang.reflect.Field;
 //import java.lang.reflect.Method;
@@ -8,8 +8,8 @@
 //import java.util.List;
 //import java.util.Map;
 //
-//import type.TypeUtil;
-//import utils.PatternUtils;
+//import com.type.TypeUtil;
+//import com.utils.PatternUtils;
 //
 //public class JsonObject00 extends HashMap<String, Object> {
 //
@@ -22,11 +22,11 @@
 //		JsonObject00 jsonObject = new JsonObject00();
 //		StringBuffer sb = new StringBuffer();
 //		boolean isArray = false;
-//		String json = jsonStr.trim();
-//		if (json.startsWith("[") && json.endsWith("]")) {
+//		String com.json = jsonStr.trim();
+//		if (com.json.startsWith("[") && com.json.endsWith("]")) {
 //			isArray = true;
 //		}
-//		sb.append("\"").append(MAGIC).append("\"").append(":").append(json);
+//		sb.append("\"").append(MAGIC).append("\"").append(":").append(com.json);
 //
 //		try {
 //			generateObject(jsonObject, sb.toString());
@@ -34,7 +34,7 @@
 //			e.printStackTrace();
 //		}
 //		JsonObject00 retObj = (JsonObject00) jsonObject.get(MAGIC);
-//		return isArray == false ? retObj : (json.JsonArray) retObj.get(MAGIC);
+//		return isArray == false ? retObj : (com.json.JsonArray) retObj.get(MAGIC);
 //	}
 //
 //	public static <T> T toJavaObject(String jsonStr, Class<T> clazz) throws Exception {
@@ -97,7 +97,7 @@
 //				for (String keyValue : keyValues) {
 //					keyStr = "\"" + currKey + "\"";
 //					List<String> kvs = formatKVs(valueStr.substring(1, keyValue.length() - 1));
-//					json.JsonArray currArray = new json.JsonArray(kvs.size());
+//					com.json.JsonArray currArray = new com.json.JsonArray(kvs.size());
 //					currObject.put(currKey, currArray);
 //
 //					for (int i = 0; i < kvs.size(); i++) {
@@ -128,7 +128,7 @@
 //						currKey = getKey(keyStr);
 //						valueStr = keyValue.substring(separator + 1).trim();
 //						List<String> kvs = formatKVs(valueStr.substring(1, valueStr.length() - 1));
-//						json.JsonArray currArray = new json.JsonArray(kvs.size());
+//						com.json.JsonArray currArray = new com.json.JsonArray(kvs.size());
 //						currObject.put(currKey, currArray);
 //
 //						for (int i = 0; i < kvs.size(); i++) {
@@ -162,18 +162,18 @@
 //
 //	private static String getKey(String jsonStr) throws Exception {
 //
-//		String json = jsonStr.trim();
+//		String com.json = jsonStr.trim();
 //
-//		return json.substring(1, json.length() - 1);
+//		return com.json.substring(1, com.json.length() - 1);
 //	}
 //
 //	private static List<String> formatKVs(String jsonStr) {
 //
 //		List<String> list = new ArrayList<String>();
-//		String json = jsonStr.trim() + ',';
+//		String com.json = jsonStr.trim() + ',';
 //		int bracketCount = 0;
 //		StringBuffer sb = new StringBuffer();
-//		for (char c : json.toCharArray()) {
+//		for (char c : com.json.toCharArray()) {
 //			if (c == '{') {
 //				bracketCount++;
 //			} else if (c == '}') {
