@@ -1,9 +1,6 @@
 package yanson.reflection;
 
 import yanson.annotation.JsonFieldProcessor;
-import yanson.asm.VersionAdapter;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
 import yanson.json.Configuration;
 
 import java.lang.reflect.*;
@@ -50,7 +47,8 @@ public class ClassUtil extends ClassLoader {
                 constructor.setAccessible(true);
             }
             return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             StringBuilder argTypes = new StringBuilder();
             if (constructorArgTypes != null && !constructorArgTypes.isEmpty()) {
                 for (Class<?> argType : constructorArgTypes) {
@@ -75,13 +73,17 @@ public class ClassUtil extends ClassLoader {
         Class<?> classToCreate;
         if (type == List.class || type == Collection.class || type == Iterable.class) {
             classToCreate = ArrayList.class;
-        } else if (type == Map.class) {
+        }
+        else if (type == Map.class) {
             classToCreate = HashMap.class;
-        } else if (type == SortedSet.class) {
+        }
+        else if (type == SortedSet.class) {
             classToCreate = TreeSet.class;
-        } else if (type == Set.class) {
+        }
+        else if (type == Set.class) {
             classToCreate = HashSet.class;
-        } else {
+        }
+        else {
             classToCreate = type;
         }
         return (Class<T>) classToCreate;
@@ -93,7 +95,8 @@ public class ClassUtil extends ClassLoader {
 
         if (Configuration.PREFER_FIELD_VALUE_SET) {
             return getInvokerMap(fieldInvokers, methodInvokers);
-        } else {
+        }
+        else {
             return getInvokerMap(methodInvokers, fieldInvokers);
         }
     }
@@ -142,19 +145,7 @@ public class ClassUtil extends ClassLoader {
         return invokers;
     }
 
-    public static byte[] getBytesFromClass(Class clazz) throws Exception {
-
-        ClassReader cr = new ClassReader(clazz.getName());
-        ClassWriter cw = new ClassWriter(cr, 0);
-        VersionAdapter va = new VersionAdapter(cw);
-        cr.accept(va, 0);
-        return cw.toByteArray();
-
-    }
-
-
-    public static Class getSuperClassGenericType(Class clazz, int index)
-            throws IndexOutOfBoundsException {
+    public static Class getSuperClassGenericType(Class clazz, int index) throws IndexOutOfBoundsException {
         Type genericType = clazz.getGenericSuperclass();
         if (!(genericType instanceof ParameterizedType)) {
             return Object.class;

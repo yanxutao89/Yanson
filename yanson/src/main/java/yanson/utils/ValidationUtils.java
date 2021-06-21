@@ -1,6 +1,6 @@
 package yanson.utils;
 
-public class ValidationUtils {
+public final class ValidationUtils {
 
 	public static void notNull(Object object, String message) throws IllegalArgumentException {
 		if (null == object) {

@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 import yanson.annotation.JsonField;
 import yanson.json.Constants;
-import yanson.reflection.ClassUtil;
+import yanson.json.JsonHelper;
 import yanson.utils.StringUtils;
 import yanson.utils.ValidationUtils;
 
@@ -35,7 +35,7 @@ public class TypeUtil {
 				instance = cast2Array(object, type, 16);
 			}
 			else {
-				instance = ClassUtil.instantiateClass(type, null, null);
+				instance = JsonHelper.toJavaObject(object, type, "");
 			}
 
 		} catch (Exception e) {

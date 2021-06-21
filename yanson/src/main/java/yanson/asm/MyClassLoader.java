@@ -22,7 +22,11 @@ public class MyClassLoader extends ClassLoader {
 	public static void main(String[] args) throws Exception {
 		MyClassLoader myClassLoader = new MyClassLoader();
 
-		byte[] bytes1 = ClassUtil.getBytesFromClass(BaseTypeVo.class);
+		ClassReader cr = new ClassReader(BaseTypeVo.class.getName());
+		ClassWriter cw = new ClassWriter(cr, 0);
+		VersionAdapter va = new VersionAdapter(cw);
+		cr.accept(va, 0);
+		byte[] bytes1 = cw.toByteArray();
 		System.out.println(Arrays.toString(bytes1));
 
 		ClassReader classReader = new ClassReader(bytes1);

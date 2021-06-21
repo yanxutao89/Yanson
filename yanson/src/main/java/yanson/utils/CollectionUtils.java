@@ -3,7 +3,7 @@ package yanson.utils;
 import java.util.Arrays;
 import java.util.Collection;
 
-public class CollectionUtils {
+public final class CollectionUtils {
 
 	private CollectionUtils() {
 		throw new UnsupportedOperationException("The constructor can not be called outside");

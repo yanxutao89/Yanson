@@ -5,6 +5,8 @@ import yanson.type.TypeUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 /**
  * @Author: Yanxt7
@@ -31,9 +33,16 @@ public class FieldInvoker implements Invoker {
 		checkPermission(delegate);
 		try {
 			Class type = getType();
-			Class<?> clazz = EmployeeVo.class;
+			Class clazz = null;
+			if (delegate.getGenericType() instanceof ParameterizedType) {
+				Type[] actualTypeArguments = ((ParameterizedType) delegate.getGenericType()).getActualTypeArguments();
+				if (actualTypeArguments != null && actualTypeArguments.length > 0) {
+					clazz = (Class) actualTypeArguments[0];
+				}
+			}
 			delegate.set(object, TypeUtil.cast2Object(value, type, clazz));
-		} catch (IllegalAccessException e) {
+		}
+		catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
 	}
@@ -48,7 +57,8 @@ public class FieldInvoker implements Invoker {
 		checkPermission(this.delegate);
 		try {
 			return (T) this.delegate.get(object);
-		} catch (IllegalAccessException e) {
+		}
+		catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
 		return null;

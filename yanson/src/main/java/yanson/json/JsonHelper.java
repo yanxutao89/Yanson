@@ -121,7 +121,6 @@ public final class JsonHelper {
             instance = ClassUtil.instantiateClass(clazz, null,  null);
 
             if (object instanceof JsonObject) {
-
                 JsonObject jsonObject = (JsonObject) object;
                 if (!StringUtils.isEmpty(parent)) {
                     jsonObject = (JsonObject) jsonObject.get(parent);
@@ -135,7 +134,6 @@ public final class JsonHelper {
                         invokerMap.get(key).setValue(instance, value);
                     }
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();
