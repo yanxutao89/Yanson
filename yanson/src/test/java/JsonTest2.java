@@ -1,16 +1,13 @@
-package test;
-
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import model.BaseTypeVo;
 import yanson.annotation.MyTest;
 import yanson.json.Json;
 import yanson.json.JsonArray;
-import yanson.json.JsonObject;
-import yanson.reflection.ClassUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class JsonTest {
+public class JsonTest2 {
 
 	public static final List<String> JSON_LIST = new ArrayList<String>();
 	private static String jsonStr;
 
 	static {
-		StringBuffer sb = new StringBuffer();
-		InputStream is = ClassUtil.getDefaultClassLoader().getResourceAsStream("JsonTest.txt");
+		StringBuilder sb = new StringBuilder();
+		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("JsonTest.txt");
 		byte[] buffer = new byte[1024 * 8];
 		int len;
 		try {
@@ -39,7 +36,7 @@ public class JsonTest {
 		for (String json : jsons) {
 			JSON_LIST.add(json.trim());
 		}
-		jsonStr = JSON_LIST.get(0);
+		jsonStr = JSON_LIST.get(1);
 	}
 
 	@MyTest
@@ -48,8 +45,8 @@ public class JsonTest {
 			JsonArray jsonArray = Json.parseArray(jsonStr);
 			System.out.println(jsonArray);
 		} else {
-			JsonObject jsonObject = Json.parseObject(jsonStr);
-			System.out.println(jsonObject);
+			BaseTypeVo baseTypeVo = Json.parseObject(jsonStr, BaseTypeVo.class);
+			System.out.println(baseTypeVo);
 		}
 	}
 
@@ -58,8 +55,8 @@ public class JsonTest {
 		if (jsonStr.startsWith("[")) {
 
 		} else {
-			JSONObject jsonObject = JSONObject.parseObject(jsonStr);
-			System.out.println(jsonObject);
+			BaseTypeVo baseTypeVo = JSONObject.parseObject(jsonStr, BaseTypeVo.class);
+			System.out.println(baseTypeVo);
 		}
 	}
 
@@ -69,8 +66,8 @@ public class JsonTest {
 		if (jsonStr.startsWith("[")) {
 
 		} else {
-			JsonObject jsonObject = objectMapper.readValue(jsonStr, JsonObject.class);
-			System.out.println(jsonObject);
+			BaseTypeVo readValue = objectMapper.readValue(jsonStr, BaseTypeVo.class);
+			System.out.println(readValue);
 		}
 	}
 
@@ -80,13 +77,13 @@ public class JsonTest {
 		if (jsonStr.startsWith("[")) {
 
 		} else {
-			JsonObject jsonObject = gson.fromJson(jsonStr, JsonObject.class);
-			System.out.println(jsonObject);
+			BaseTypeVo fromJson = gson.fromJson(jsonStr, BaseTypeVo.class);
+			System.out.println(fromJson);
 		}
 	}
 
 	public static void main(String[] args) throws Exception {
-		AnnotationUtils.getExecutedTime("test.JsonTest", args);
+		AnnotationUtils.getExecutedTime("JsonTest2", args);
 	}
 }
 

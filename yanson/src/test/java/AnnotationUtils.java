@@ -1,5 +1,3 @@
-package test;
-
 import yanson.annotation.MyTest;
 
 import java.lang.reflect.Constructor;

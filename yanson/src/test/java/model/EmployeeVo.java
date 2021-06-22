@@ -1,4 +1,4 @@
-package test.model;
+package model;
 
 public class EmployeeVo {
 

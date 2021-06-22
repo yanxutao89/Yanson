@@ -1,4 +1,4 @@
-package test.model;
+package model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonAlias;
