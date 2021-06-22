@@ -5,7 +5,6 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
-import test.BaseTypeVo;
 
 import java.lang.reflect.Method;
 
@@ -42,7 +41,7 @@ public class RemoveMethodAdapter extends ClassVisitor {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ClassReader classReader = new ClassReader(BaseTypeVo.class.getName());
+		ClassReader classReader = new ClassReader("");
 		ClassWriter classWriter = new ClassWriter(classReader, 0);
 		RemoveMethodAdapter removeMethodAdapter = new RemoveMethodAdapter(classWriter, "getString", "()Ljava/lang/String;");
 		RemoveMethodAdapter removeMethodAdapter2 = new RemoveMethodAdapter(removeMethodAdapter, "setString", "(Ljava/lang/String;)Ljava/lang/String;");

@@ -1,6 +1,5 @@
 package yanson.reflection;
 
-import test.EmployeeVo;
 import yanson.type.TypeUtil;
 
 import java.lang.annotation.Annotation;

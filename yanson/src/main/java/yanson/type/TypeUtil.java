@@ -20,22 +20,22 @@ public class TypeUtil {
 		throw new UnsupportedOperationException("The constructor can not be called outside");
 	}
 
-	public static <T> T cast2Object(Object object, Class<T> type, Class<T> clazz) {
+	public static <T> T cast2Object(Object valueObject, Class<T> targetClass, Class<T>... genericClasses) {
 		T instance = null;
 
 		try {
 
-			if (isElementType(type)) {
-				instance = cast2Element(object, type);
+			if (isElementType(targetClass)) {
+				instance = cast2Element(valueObject, targetClass);
 			}
-			else if (TypeUtil.isCollectionType(type)) {
-				instance = cast2Collection(object, type, clazz, 16);
+			else if (TypeUtil.isCollectionType(targetClass)) {
+				instance = cast2Collection(valueObject, 16, targetClass, genericClasses);
 			}
-			else if (TypeUtil.isArrayType(type)) {
-				instance = cast2Array(object, type, 16);
+			else if (TypeUtil.isArrayType(targetClass)) {
+				instance = cast2Array(valueObject, targetClass, 16);
 			}
 			else {
-				instance = JsonHelper.toJavaObject(object, type, "");
+				instance = JsonHelper.toJavaObject(valueObject, targetClass, "");
 			}
 
 		} catch (Exception e) {
@@ -46,41 +46,41 @@ public class TypeUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T cast2Element(Object object, Class<T> clazz) throws Exception {
+	public static <T> T cast2Element(Object valueObject, Class<T> targetClass) throws Exception {
 
-		if (object != null) {
-			if (clazz == String.class) {
-				return (T) cast2String(object);
+		if (valueObject != null) {
+			if (targetClass == String.class) {
+				return (T) cast2String(valueObject);
 			}
-			if (clazz == boolean.class || clazz == Boolean.class) {
-				return (T) cast2Boolean(object);
+			if (targetClass == boolean.class || targetClass == Boolean.class) {
+				return (T) cast2Boolean(valueObject);
 			}
-			if (clazz == int.class || clazz == Integer.class) {
-				return (T) cast2Integer(object);
+			if (targetClass == int.class || targetClass == Integer.class) {
+				return (T) cast2Integer(valueObject);
 			}
-			if (clazz == short.class || clazz == Short.class) {
-				return (T) cast2Short(object);
+			if (targetClass == short.class || targetClass == Short.class) {
+				return (T) cast2Short(valueObject);
 			}
-			if (clazz == long.class || clazz == Long.class) {
-				return (T) cast2Long(object);
+			if (targetClass == long.class || targetClass == Long.class) {
+				return (T) cast2Long(valueObject);
 			}
-			if (clazz == BigInteger.class) {
-				return (T) cast2BigInteger(object);
+			if (targetClass == BigInteger.class) {
+				return (T) cast2BigInteger(valueObject);
 			}
-			if (clazz == float.class || clazz == Float.class) {
-				return (T) cast2Float(object);
+			if (targetClass == float.class || targetClass == Float.class) {
+				return (T) cast2Float(valueObject);
 			}
-			if (clazz == double.class || clazz == Double.class) {
-				return (T) cast2Double(object);
+			if (targetClass == double.class || targetClass == Double.class) {
+				return (T) cast2Double(valueObject);
 			}
-			if (clazz == BigDecimal.class) {
-				return (T) cast2BigDecimal(object);
+			if (targetClass == BigDecimal.class) {
+				return (T) cast2BigDecimal(valueObject);
 			}
-			if (clazz == byte.class || clazz == Byte.class) {
-				return (T) cast2Byte(object);
+			if (targetClass == byte.class || targetClass == Byte.class) {
+				return (T) cast2Byte(valueObject);
 			}
-			if (clazz == char.class || clazz == Character.class) {
-				return (T) cast2Character(object);
+			if (targetClass == char.class || targetClass == Character.class) {
+				return (T) cast2Character(valueObject);
 			}
 		}
 
@@ -88,41 +88,41 @@ public class TypeUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T cast2Array(Object object, Class<T> clazz, int size) throws Exception {
+	public static <T> T cast2Array(Object valueObject, Class<T> targetClass, int size) throws Exception {
 
-		if (object != null) {
-			if (clazz == Object[].class) {
-				return (T) cast2Strings(object, size);
+		if (valueObject != null) {
+			if (targetClass == Object[].class) {
+				return (T) cast2Objects(valueObject, size);
 			}
-			if (clazz == boolean[].class || clazz == Boolean[].class) {
-				return (T) cast2Booleans(object, size);
+			if (targetClass == boolean[].class || targetClass == Boolean[].class) {
+				return (T) cast2Booleans(valueObject, size);
 			}
-			if (clazz == int[].class || clazz == Integer[].class) {
-				return (T) cast2Integers(object, size);
+			if (targetClass == int[].class || targetClass == Integer[].class) {
+				return (T) cast2Integers(valueObject, size);
 			}
-			if (clazz == long[].class || clazz == Long[].class) {
-				return (T) cast2Longs(object, size);
+			if (targetClass == long[].class || targetClass == Long[].class) {
+				return (T) cast2Longs(valueObject, size);
 			}
-			if (clazz == short[].class || clazz == Short[].class) {
-				return (T) cast2Shorts(object, size);
+			if (targetClass == short[].class || targetClass == Short[].class) {
+				return (T) cast2Shorts(valueObject, size);
 			}
-			if (clazz == BigInteger[].class) {
-				return (T) cast2BigIntegers(object, size);
+			if (targetClass == BigInteger[].class) {
+				return (T) cast2BigIntegers(valueObject, size);
 			}
-			if (clazz == float[].class || clazz == Float[].class) {
-				return (T) cast2Float(object);
+			if (targetClass == float[].class || targetClass == Float[].class) {
+				return (T) cast2Float(valueObject);
 			}
-			if (clazz == double[].class || clazz == Double[].class) {
-				return (T) cast2Doubles(object, size);
+			if (targetClass == double[].class || targetClass == Double[].class) {
+				return (T) cast2Doubles(valueObject, size);
 			}
-			if (clazz == BigDecimal[].class) {
-				return (T) cast2BigDecimals(object, size);
+			if (targetClass == BigDecimal[].class) {
+				return (T) cast2BigDecimals(valueObject, size);
 			}
-			if (clazz == byte[].class || clazz == Byte[].class) {
-				return (T) cast2Bytes(object, size);
+			if (targetClass == byte[].class || targetClass == Byte[].class) {
+				return (T) cast2Bytes(valueObject, size);
 			}
-			if (clazz == char[].class || clazz == Character[].class) {
-				return (T) cast2Characters(object, size);
+			if (targetClass == char[].class || targetClass == Character[].class) {
+				return (T) cast2Characters(valueObject, size);
 			}
 		}
 
@@ -130,85 +130,85 @@ public class TypeUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T cast2Collection(Object object, Class<T> type, Class<T> clazz, int size) throws Exception {
+	public static <T> T cast2Collection(Object valueObject, int size, Class<T> targetClass, Class<T>... genericClasses) throws Exception {
 
-		if (object != null) {
-			if (type == Map.class) {
-				return (T) cast2Map(object, size);
+		if (valueObject != null) {
+			if (targetClass == Map.class) {
+				return (T) cast2Map(valueObject, size);
 			}
-			if (type == List.class || type == Collection.class || type == Iterable.class) {
-				return (T) cast2List(object, clazz, size);
+			if (targetClass == List.class || targetClass == Collection.class || targetClass == Iterable.class) {
+				return (T) cast2List(valueObject, size, genericClasses);
 			}
 		}
 
 		return null;
 	}
 
-	public static String cast2String(Object object) {
-		return object.toString();
+	public static String cast2String(Object valueObject) {
+		return valueObject.toString();
 	}
 
-	public static Boolean cast2Boolean(Object object) {
-		return Boolean.valueOf(object.toString());
+	public static Boolean cast2Boolean(Object valueObject) {
+		return Boolean.valueOf(valueObject.toString());
 	}
 
-	public static Integer cast2Integer(Object object) {
-		BigDecimal bd = new BigDecimal(object.toString());
+	public static Integer cast2Integer(Object valueObject) {
+		BigDecimal bd = new BigDecimal(valueObject.toString());
 		return bd.intValue();
 	}
 
-	public static Long cast2Long(Object object) {
-		BigDecimal bd = new BigDecimal(object.toString());
+	public static Long cast2Long(Object valueObject) {
+		BigDecimal bd = new BigDecimal(valueObject.toString());
 		return bd.longValue();
 	}
 
-	public static Short cast2Short(Object object) {
-		BigDecimal bd = new BigDecimal(object.toString());
+	public static Short cast2Short(Object valueObject) {
+		BigDecimal bd = new BigDecimal(valueObject.toString());
 		return bd.shortValue();
 	}
 
-	public static BigInteger cast2BigInteger(Object object) {
-		BigDecimal bd = new BigDecimal(object.toString());
+	public static BigInteger cast2BigInteger(Object valueObject) {
+		BigDecimal bd = new BigDecimal(valueObject.toString());
 		return bd.toBigInteger();
 	}
 
-	public static Float cast2Float(Object object) {
-		BigDecimal bd = new BigDecimal(object.toString());
+	public static Float cast2Float(Object valueObject) {
+		BigDecimal bd = new BigDecimal(valueObject.toString());
 		return bd.floatValue();
 	}
 
-	public static Double cast2Double(Object object) {
-		BigDecimal bd = new BigDecimal(object.toString());
+	public static Double cast2Double(Object valueObject) {
+		BigDecimal bd = new BigDecimal(valueObject.toString());
 		return bd.doubleValue();
 	}
 
-	public static BigDecimal cast2BigDecimal(Object object) {
-		return new BigDecimal(object.toString());
+	public static BigDecimal cast2BigDecimal(Object valueObject) {
+		return new BigDecimal(valueObject.toString());
 	}
 
-	public static Byte cast2Byte(Object object) {
-		BigDecimal bd = new BigDecimal(object.toString());
+	public static Byte cast2Byte(Object valueObject) {
+		BigDecimal bd = new BigDecimal(valueObject.toString());
 		return bd.byteValue();
 	}
 
-	public static Character cast2Character(Object object) {
-		return (Character) object;
+	public static Character cast2Character(Object valueObject) {
+		return (Character) valueObject;
 	}
 
-	public static Date cast2Date(Object object) {
-		return (Date) object;
+	public static Date cast2Date(Object valueObject) {
+		return (Date) valueObject;
 	}
 
-	public static Map cast2Map(Object object, int size) {
+	public static Map cast2Map(Object valueObject, int size) {
 		return new HashMap(size);
 	}
 
-	public static List cast2List(Object type, Class clazz, int size) {
-		if (type instanceof List) {
-			List objects = (List) type;
+	public static List cast2List(Object valueObject, int size, Class... genericClasses) {
+		if (valueObject instanceof List) {
+			List objects = (List) valueObject;
 			List list = new ArrayList(objects.size());
 			for (Object o : objects) {
-				Object o2 = TypeUtil.cast2Object(o, clazz, null);
+				Object o2 = TypeUtil.cast2Object(o, genericClasses[0], null);
 				list.add(o2);
 			}
 			return list;
@@ -216,63 +216,70 @@ public class TypeUtil {
 		return new ArrayList(size);
 	}
 
-	public static String[] cast2Strings(Object object, int size) {
-		String s = object.toString();
+	public static Object[] cast2Objects(Object valueObject, int size) {
+		if (valueObject instanceof Object[]) {
+			return (Object[]) valueObject;
+		}
+		return null;
+	}
+
+	public static String[] cast2Strings(Object valueObject, int size) {
+		String s = valueObject.toString();
 		String[] strings = s.substring(1, s.length() - 1).split(Constants.COMMA);
 		return strings;
 	}
 
-	public static Boolean[] cast2Booleans(Object object, int size) {
+	public static Boolean[] cast2Booleans(Object valueObject, int size) {
 		Boolean[] booleans = new Boolean[size];
 		return booleans;
 	}
 
-	public static Integer[] cast2Integers(Object object, int size) {
+	public static Integer[] cast2Integers(Object valueObject, int size) {
 		Integer[] integers = new Integer[size];
 		return integers;
 	}
 
-	public static Long[] cast2Longs(Object object, int size) {
+	public static Long[] cast2Longs(Object valueObject, int size) {
 		Long[] longs = new Long[size];
 		return longs;
 	}
 
-	public static Short[] cast2Shorts(Object object, int size) {
+	public static Short[] cast2Shorts(Object valueObject, int size) {
 		Short[] shorts = new Short[size];
 		return shorts;
 	}
 
-	public static BigInteger[] cast2BigIntegers(Object object, int size) {
+	public static BigInteger[] cast2BigIntegers(Object valueObject, int size) {
 		BigInteger[] bigIntegers = new BigInteger[size];
 		return bigIntegers;
 	}
 
-	public static Float[] cast2Floats(Object object, int size) {
+	public static Float[] cast2Floats(Object valueObject, int size) {
 		Float[] floats = new Float[size];
 		return floats;
 	}
 
-	public static Double[] cast2Doubles(Object object, int size) {
+	public static Double[] cast2Doubles(Object valueObject, int size) {
 		Double[] doubles = new Double[size];
 		return doubles;
 	}
 
-	public static BigDecimal[] cast2BigDecimals(Object object, int size) {
+	public static BigDecimal[] cast2BigDecimals(Object valueObject, int size) {
 		BigDecimal[] bigDecimals = new BigDecimal[size];
 		return bigDecimals;
 	}
 
-	public static Byte[] cast2Bytes(Object object, int size) {
+	public static Byte[] cast2Bytes(Object valueObject, int size) {
 		Byte[] bytes = new Byte[size];
 		return bytes;
 	}
 
-	public static Character[] cast2Characters(Object object, int size) {
+	public static Character[] cast2Characters(Object valueObject, int size) {
 		Character[] characters = new Character[size];
 		return characters;
 	}
 
-	public static Date[] cast2Dates(Object object, int size) {
+	public static Date[] cast2Dates(Object valueObject, int size) {
 		Date[] dates = new Date[size];
 		return dates;
 	}

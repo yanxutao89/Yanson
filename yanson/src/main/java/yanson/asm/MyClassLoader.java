@@ -3,8 +3,6 @@ package yanson.asm;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import yanson.reflection.ClassUtil;
-import test.BaseTypeVo;
 
 import java.util.Arrays;
 
@@ -22,7 +20,7 @@ public class MyClassLoader extends ClassLoader {
 	public static void main(String[] args) throws Exception {
 		MyClassLoader myClassLoader = new MyClassLoader();
 
-		ClassReader cr = new ClassReader(BaseTypeVo.class.getName());
+		ClassReader cr = new ClassReader("");
 		ClassWriter cw = new ClassWriter(cr, 0);
 		VersionAdapter va = new VersionAdapter(cw);
 		cr.accept(va, 0);

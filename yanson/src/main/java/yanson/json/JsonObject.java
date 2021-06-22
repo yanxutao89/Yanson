@@ -10,7 +10,6 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
 	private static final long serialVersionUID = 4560188633954957114L;
 
 	public JsonObject fromJson(String jsonStr) {
-
         try {
             ValidationUtils.isTrue(JsonUtil.isObject(jsonStr), String.format("Expect object, but found array"));
             StringBuilder sb = new StringBuilder();
@@ -23,7 +22,6 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
         }
 
         return new JsonObject();
-
 	}
 
 	public String toJson(JsonObject jsonObject) {

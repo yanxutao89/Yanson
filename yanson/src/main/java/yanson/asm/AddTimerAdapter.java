@@ -7,7 +7,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.util.ASMifier;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.objectweb.asm.util.TraceClassVisitor;
-import test.BaseTypeVo;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -97,7 +96,7 @@ class AddTimerMethodAdapter extends MethodVisitor {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String name = BaseTypeVo.class.getName();
+		String name = "";
 		ClassReader classReader = new ClassReader(name);
 		ClassWriter classWriter = new ClassWriter(0);
 		CheckClassAdapter checkClassAdapter = new CheckClassAdapter(classWriter);

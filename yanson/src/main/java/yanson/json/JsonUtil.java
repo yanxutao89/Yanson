@@ -46,7 +46,6 @@ public final class JsonUtil {
     }
 
     public static int indexOfComma(String jsonStr) {
-
         return -1;
     }
 
@@ -54,7 +53,6 @@ public final class JsonUtil {
         if (StringUtils.isEmpty(jsonStr)) {
             return -1;
         }
-
         return -1;
     }
 
@@ -62,7 +60,6 @@ public final class JsonUtil {
         if (StringUtils.isEmpty(jsonStr)) {
             return -1;
         }
-
         return -1;
     }
 
@@ -86,7 +83,11 @@ public final class JsonUtil {
      * @return
      */
     public static boolean isValidJsonValue(String value) {
-        return isString(value) || isNumber(value) || isBoolean(value) || isNull(value) || isObject(value) || isArray(value);
+        if (value == null) {
+            return true;
+        }
+        value = value.trim();
+        return isNull(value) || isString(value) || isNumber(value) || isBoolean(value) || isObject(value) || isArray(value);
     }
 
     public static String getName(String jsonStr) {
@@ -100,18 +101,20 @@ public final class JsonUtil {
         }
 
         jsonStr = jsonStr.trim();
-
-        if (isString(jsonStr)) {
+        if (isNull(jsonStr)) {
+            return getNull(jsonStr);
+        }
+        else if (isString(jsonStr)) {
             while (isMarkedWithDoubleQuotations(jsonStr)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
             }
             return jsonStr;
         }
-        else if (isNull(jsonStr)) {
-            return getNull(jsonStr);
-        }
         else if (isNumber(jsonStr)) {
             return getNumber(jsonStr);
+        }
+        else if (isBoolean(jsonStr)) {
+            return getBoolean(jsonStr);
         }
         else if (isArray(jsonStr)) {
             String[] strings = jsonStr.substring(1, jsonStr.length() - 1).split(",");
@@ -136,7 +139,6 @@ public final class JsonUtil {
         }
 
         jsonStr = jsonStr.trim();
-
         if (isString(jsonStr)) {
             while (isMarkedWithDoubleQuotations(jsonStr)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
@@ -168,7 +170,6 @@ public final class JsonUtil {
 
     private static <T> T castString(String jsonStr, Class<T> clazz){
         T instance = null;
-
         return instance;
     }
 
@@ -236,7 +237,7 @@ public final class JsonUtil {
     }
 
     private static boolean isString(String jsonStr) {
-        return StringUtils.isNotEmpty(jsonStr);
+        return StringUtils.isNotEmpty(jsonStr) && isMarkedWithDoubleQuotations(jsonStr);
     }
 
     private static boolean isMarkedWithDoubleQuotations(String jsonStr) {
@@ -244,7 +245,7 @@ public final class JsonUtil {
     }
 
     private static boolean isNumber(String jsonStr) {
-        return TypeUtil.isRealNumber(jsonStr);
+        return TypeUtil.isRealNumber(jsonStr.trim());
     }
 
     public static BigDecimal getNumber(String jsonStr) {
@@ -329,13 +330,4 @@ public final class JsonUtil {
 
         return jsonStr.startsWith(Constants.LEFT_SQUARE_BRACKET) && jsonStr.endsWith(Constants.RIGHT_SQUARE_BRACKET);
     }
-
-    public static void main(String[] args) {
-        String colon = "\"\\\"1\\\"\": 1";
-        System.out.println(indexOfColon(colon));
-
-        String comma = "\",";
-        System.out.println(comma.length());
-    }
-
 }

@@ -7,7 +7,6 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.util.CheckClassAdapter;
 import org.objectweb.asm.util.Textifier;
 import org.objectweb.asm.util.TraceClassVisitor;
-import test.BaseTypeVo;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -63,7 +62,7 @@ public class AddFieldAdapter extends ClassVisitor {
 	}
 
 	public static void main(String[] args) throws IOException {
-		String name = BaseTypeVo.class.getName();
+		String name = "";
 		ClassReader classReader = new ClassReader(name);
 		ClassWriter classWriter = new ClassWriter(classReader, 0);
 		AddFieldAdapter addFieldAdapter = new AddFieldAdapter(classWriter, ACC_PRIVATE, "count", "J");

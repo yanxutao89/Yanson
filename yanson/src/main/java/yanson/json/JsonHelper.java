@@ -114,19 +114,19 @@ public final class JsonHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T toJavaObject(Object object, Class<T> clazz, String parent) {
+    public static <T> T toJavaObject(Object valueObject, Class<T> targetClass, String parent) {
         T instance = null;
         try {
 
-            instance = ClassUtil.instantiateClass(clazz, null,  null);
+            instance = ClassUtil.instantiateClass(targetClass, null,  null);
 
-            if (object instanceof JsonObject) {
-                JsonObject jsonObject = (JsonObject) object;
+            if (valueObject instanceof JsonObject) {
+                JsonObject jsonObject = (JsonObject) valueObject;
                 if (!StringUtils.isEmpty(parent)) {
                     jsonObject = (JsonObject) jsonObject.get(parent);
                 }
 
-                Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(clazz);
+                Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(targetClass);
                 for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
                     String key = entry.getKey();
                     Object value = entry.getValue();
@@ -135,7 +135,8 @@ public final class JsonHelper {
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 
