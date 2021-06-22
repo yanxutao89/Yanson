@@ -1,22 +1,21 @@
 package test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import yanson.annotation.MyTest;
 import yanson.json.Json;
 import yanson.json.JsonArray;
 import yanson.json.JsonObject;
 import yanson.reflection.ClassUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class JsonTest {
@@ -25,7 +24,6 @@ public class JsonTest {
 	private static String jsonStr;
 
 	static {
-
 		StringBuffer sb = new StringBuffer();
 		InputStream is = ClassUtil.getDefaultClassLoader().getResourceAsStream("JsonTest.txt");
 		byte[] buffer = new byte[1024 * 8];
@@ -46,7 +44,6 @@ public class JsonTest {
 
 	@MyTest
 	public void yanson() throws Exception {
-
 		if (jsonStr.startsWith("[")) {
 			JsonArray jsonArray = Json.parseArray(jsonStr);
 			System.out.println(jsonArray);
@@ -54,24 +51,20 @@ public class JsonTest {
 			JsonObject jsonObject = Json.parseObject(jsonStr);
 			System.out.println(jsonObject);
 		}
-
 	}
 
 	@MyTest
 	public void fastJson() {
-
 		if (jsonStr.startsWith("[")) {
 
 		} else {
 			JSONObject jsonObject = JSONObject.parseObject(jsonStr);
 			System.out.println(jsonObject);
 		}
-
 	}
 
 	@MyTest
 	public void jackson() throws JsonMappingException, JsonProcessingException {
-
 		ObjectMapper objectMapper = new ObjectMapper();
 		if (jsonStr.startsWith("[")) {
 
@@ -79,12 +72,10 @@ public class JsonTest {
 			JsonObject jsonObject = objectMapper.readValue(jsonStr, JsonObject.class);
 			System.out.println(jsonObject);
 		}
-
 	}
 
 	@MyTest
 	public void gson() {
-
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		if (jsonStr.startsWith("[")) {
 
@@ -92,11 +83,9 @@ public class JsonTest {
 			JsonObject jsonObject = gson.fromJson(jsonStr, JsonObject.class);
 			System.out.println(jsonObject);
 		}
-
 	}
 
 	public static void main(String[] args) throws Exception {
-
 		AnnotationUtils.getExecutedTime("test.JsonTest", args);
 	}
 }

@@ -1,11 +1,11 @@
 package test;
 
+import yanson.annotation.MyTest;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import yanson.annotation.MyTest;
 
 
 public class AnnotationUtils {
