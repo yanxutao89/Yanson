@@ -20,26 +20,29 @@ public class FieldInvoker implements Invoker {
 		this.delegate = delegate;
 	}
 
-	public String getName() {
-		String name = this.delegate.getName();
-		if ("serialVersionUID".equals(name)) {
+	public String getProperty() {
+		String property = this.delegate.getName();
+		if ("serialVersionUID".equals(property)) {
 			return null;
 		}
-		return name;
+		return property;
 	}
 
-	public void setValue(Object object, Object value){
+	public void setValue(Object instance, Object value){
 		checkPermission(delegate);
 		try {
 			Class type = getType();
-			Class clazz = null;
+			Class[] classes = null;
 			if (delegate.getGenericType() instanceof ParameterizedType) {
 				Type[] actualTypeArguments = ((ParameterizedType) delegate.getGenericType()).getActualTypeArguments();
 				if (actualTypeArguments != null && actualTypeArguments.length > 0) {
-					clazz = (Class) actualTypeArguments[0];
+					classes = new Class[actualTypeArguments.length];
+					for (int i = 0; i < actualTypeArguments.length; ++i) {
+						classes[i] = (Class) actualTypeArguments[i];
+					}
 				}
 			}
-			delegate.set(object, TypeUtil.cast2Object(value, type, clazz));
+			delegate.set(instance, TypeUtil.cast2Object(value, type, classes));
 		}
 		catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -52,10 +55,10 @@ public class FieldInvoker implements Invoker {
 	}
 
 	@Override
-	public <T> T getValue(Object object, Class<T> clazz, Object args) {
+	public <T> T getValue(Object instance, Class<T> clazz, Object value) {
 		checkPermission(this.delegate);
 		try {
-			return (T) this.delegate.get(object);
+			return (T) this.delegate.get(instance);
 		}
 		catch (IllegalAccessException e) {
 			e.printStackTrace();

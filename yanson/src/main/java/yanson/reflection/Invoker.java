@@ -9,14 +9,13 @@ import java.lang.reflect.AccessibleObject;
  * @Date: 2020/12/24 20:24
  */
 public interface Invoker {
+	String getProperty();
 
-	String getName();
-
-	void setValue(Object object, Object args);
+	void setValue(Object instance, Object value);
 
 	Class getType();
 
-	<T> T getValue(Object object, Class<T> clazz, Object args);
+	<T> T getValue(Object instance, Class<T> clazz, Object value);
 
 	<T extends Annotation> T getAnnotation(Class<T> clazz);
 
@@ -25,5 +24,4 @@ public interface Invoker {
 			accessibleObject.setAccessible(true);
 		}
 	}
-
 }

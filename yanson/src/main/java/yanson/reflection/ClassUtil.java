@@ -12,7 +12,6 @@ import java.util.*;
  * @Date: 2020/12/20 18:14
  */
 public class ClassUtil extends ClassLoader {
-
     private ClassUtil() {
         throw new UnsupportedOperationException("The constructor can not be called outside");
     }
@@ -105,12 +104,12 @@ public class ClassUtil extends ClassLoader {
         Map<String, Invoker> invokerMap = new HashMap<>();
 
         for (Invoker invoker : firstInvokers) {
-            invokerMap.put(invoker.getName(), invoker);
+            invokerMap.put(invoker.getProperty(), invoker);
             invokerMap.putAll(JsonFieldProcessor.process(invoker));
         }
 
         for (Invoker invoker : secondInvokers) {
-            invokerMap.put(invoker.getName(), invoker);
+            invokerMap.put(invoker.getProperty(), invoker);
             invokerMap.putAll(JsonFieldProcessor.process(invoker));
         }
 
@@ -123,7 +122,7 @@ public class ClassUtil extends ClassLoader {
 
         for (Field field : fields) {
             FieldInvoker invoker = new FieldInvoker(field);
-            if (null != invoker.getName()) {
+            if (null != invoker.getProperty()) {
                 invokers.add(invoker);
             }
         }
@@ -137,7 +136,7 @@ public class ClassUtil extends ClassLoader {
 
         for (Method method : methods) {
             MethodInvoker invoker = new MethodInvoker(method);
-            if (null != invoker.getName()) {
+            if (null != invoker.getProperty()) {
                 invokers.add(invoker);
             }
         }
@@ -159,5 +158,4 @@ public class ClassUtil extends ClassLoader {
         }
         return (Class) params[index];
     }
-
 }

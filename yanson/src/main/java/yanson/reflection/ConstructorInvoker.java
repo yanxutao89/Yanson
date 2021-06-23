@@ -10,7 +10,6 @@ import java.lang.reflect.InvocationTargetException;
  * @Date: 2020/12/25 13:54
  */
 public class ConstructorInvoker implements Invoker {
-
 	private Constructor delegate;
 
 	public ConstructorInvoker(Constructor delegate) {
@@ -18,12 +17,12 @@ public class ConstructorInvoker implements Invoker {
 	}
 
 	@Override
-	public String getName() {
+	public String getProperty() {
 		return this.delegate.getName();
 	}
 
 	@Override
-	public void setValue(Object object, Object args) {
+	public void setValue(Object instance, Object value) {
 		throw new UnsupportedOperationException("This method can not be called within ConstructorInvoker");
 	}
 
@@ -33,15 +32,18 @@ public class ConstructorInvoker implements Invoker {
 	}
 
 	@Override
-	public <T> T getValue(Object object, Class<T> clazz, Object args) {
+	public <T> T getValue(Object instance, Class<T> clazz, Object value) {
 		checkPermission(this.delegate);
 		try {
-			return (T) this.delegate.newInstance(args);
-		} catch (InstantiationException e) {
+			return (T) this.delegate.newInstance(value);
+		}
+		catch (InstantiationException e) {
 			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		}
+		catch (IllegalAccessException e) {
 			e.printStackTrace();
-		} catch (InvocationTargetException e) {
+		}
+		catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
 

@@ -20,17 +20,17 @@ public class MethodInvoker implements Invoker {
 		this.delegate = delegate;
 	}
 
-	public String getName() {
+	public String getProperty() {
 		if (isWriteMethod()) {
-			String name = this.delegate.getName();
+			String property = this.delegate.getName();
 			WriteMethodPrefix[] prefixes = WriteMethodPrefix.values();
 			for (WriteMethodPrefix prefix : prefixes) {
 				String prefixValue = prefix.getValue();
-				if (name.startsWith(prefixValue)) {
-					name = name.substring(prefixValue.length());
-					if (null != name && name.length() > 0) {
-						name = name.substring(0, 1).toLowerCase() + name.substring(1);
-						return name;
+				if (property.startsWith(prefixValue)) {
+					property = property.substring(prefixValue.length());
+					if (!StringUtils.isEmpty(property)) {
+						property = property.substring(0, 1).toLowerCase() + property.substring(1);
+						return property;
 					}
 				}
 			}
@@ -38,14 +38,16 @@ public class MethodInvoker implements Invoker {
 		return null;
 	}
 
-	public void setValue(Object object, Object values){
+	public void setValue(Object instance, Object value){
 		checkPermission(delegate);
 		try {
 			Class type = getType();
-			delegate.invoke(object, TypeUtil.cast2Object(values, type, null));
-		} catch (IllegalAccessException e) {
+			delegate.invoke(instance, TypeUtil.cast2Object(value, type, null));
+		}
+		catch (IllegalAccessException e) {
 			e.printStackTrace();
-		} catch (InvocationTargetException e) {
+		}
+		catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
 	}
@@ -56,10 +58,10 @@ public class MethodInvoker implements Invoker {
 	}
 
 	@Override
-	public <T> T getValue(Object object, Class<T> clazz, Object args) {
+	public <T> T getValue(Object instance, Class<T> clazz, Object value) {
 		checkPermission(this.delegate);
 		try {
-			return (T) this.delegate.invoke(object, args);
+			return (T) this.delegate.invoke(instance, value);
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
