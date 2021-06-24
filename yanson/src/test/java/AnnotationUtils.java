@@ -19,7 +19,7 @@ public class AnnotationUtils {
 		// Construct the target object
 		Constructor<?>[] constructors = clazz.getDeclaredConstructors();
 		if(constructors.length == 0) {
-			throw new Exception("The target must not be an interface, a primitive com.type, an array class or a void method.");
+			throw new Exception("The target must not be an interface, a primitive type, an array class or a void method.");
 		}
 		boolean canCallNewInstance = false;
 		for (Constructor<?> constructor : constructors) {
@@ -69,7 +69,8 @@ public class AnnotationUtils {
 					System.out.println(methodName + sb.toString() + totalTime / countOfCall);
 				}
 			} 
-		} else {
+		}
+		else {
 			throw new Exception("The target class must be provided with a empty constructor");
 		}
 	}
