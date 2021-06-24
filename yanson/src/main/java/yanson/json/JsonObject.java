@@ -2,7 +2,6 @@ package yanson.json;
 
 import java.util.*;
 
-import yanson.utils.PatternUtils;
 import yanson.utils.ValidationUtils;
 
 public class JsonObject extends HashMap<String, Object> implements JsonParser<JsonObject> {
@@ -12,7 +11,11 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
         try {
             ValidationUtils.isTrue(JsonUtil.isObject(jsonStr), String.format("Expect object, but found array"));
             StringBuilder sb = new StringBuilder();
-            sb.append("\"").append(Constants.MAGIC).append("\"").append(Constants.COLON).append(jsonStr.trim());
+            sb.append(Constants.DOUBLE_QUOTATIONS)
+					.append(Constants.MAGIC)
+					.append(Constants.DOUBLE_QUOTATIONS)
+					.append(Constants.COLON)
+					.append(jsonStr.trim());
             JsonObject jsonObject = new JsonObject();
             JsonHelper.readJson(sb.toString(), jsonObject);
             return (JsonObject) jsonObject.get(Constants.MAGIC);
@@ -24,11 +27,7 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
 	}
 
 	public String toJson(JsonObject jsonObject) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(Constants.LEFT_CURLY_BRACKET);
-		sb.append(JsonHelper.toJsonSting(this, new StringBuilder(), true));
-		sb.append(Constants.RIGHT_CURLY_BRACKET);
-		return sb.toString();
+		return JsonHelper.toJsonSting(jsonObject, new StringBuilder());
 	}
 
 	public String toJsonStr() {

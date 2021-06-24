@@ -229,7 +229,12 @@ public final class JsonUtil {
         jsonStr = jsonStr.trim();
         if (isArray(jsonStr)) {
             jsonStr = jsonStr.substring(1, jsonStr.length() - 1).trim();
-            return !isObject(jsonStr);
+            if (isArray(jsonStr)) {
+                return isMarkedWithDoubleQuotations(jsonStr);
+            }
+            else {
+                return !isObject(jsonStr);
+            }
         }
 
         return false;

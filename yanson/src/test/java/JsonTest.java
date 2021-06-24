@@ -24,6 +24,7 @@ public class JsonTest {
 		StringBuffer sb = new StringBuffer();
 		InputStream is = ClassUtil.getDefaultClassLoader().getResourceAsStream("JsonTest.txt");
 		byte[] buffer = new byte[1024 * 8];
+
 		int len;
 		try {
 			while ((len = is.read(buffer)) != -1) {
@@ -36,7 +37,7 @@ public class JsonTest {
 		for (String json : jsons) {
 			JSON_LIST.add(json.trim());
 		}
-		jsonStr = JSON_LIST.get(1);
+		jsonStr = JSON_LIST.get(8);
 	}
 
 	@MyTest
@@ -46,7 +47,8 @@ public class JsonTest {
 			System.out.println(jsonArray);
 		} else {
 			JsonObject jsonObject = Json.parseObject(jsonStr);
-			System.out.println(jsonObject.toJsonStr());
+			String jsonStr = jsonObject.toJsonStr();
+			System.out.println(jsonStr.length() + ":" + jsonStr);
 		}
 	}
 
@@ -56,7 +58,8 @@ public class JsonTest {
 
 		} else {
 			JSONObject jsonObject = JSONObject.parseObject(jsonStr);
-			System.out.println(jsonObject.toJSONString());
+			String jsonStr = jsonObject.toJSONString();
+			System.out.println(jsonStr.length() + ":" + jsonStr);
 		}
 	}
 
@@ -67,7 +70,8 @@ public class JsonTest {
 
 		} else {
 			JsonObject jsonObject = objectMapper.readValue(jsonStr, JsonObject.class);
-			System.out.println(objectMapper.writeValueAsString(jsonObject));
+			String jsonStr = objectMapper.writeValueAsString(jsonObject);
+			System.out.println(jsonStr.length() + ":" + jsonStr);
 		}
 	}
 
@@ -78,7 +82,8 @@ public class JsonTest {
 
 		} else {
 			com.google.gson.JsonObject jsonObject = gson.fromJson(jsonStr, com.google.gson.JsonObject.class);
-			System.out.println(jsonObject.toString());
+			String jsonStr = jsonObject.toString();
+			System.out.println(jsonStr.length() + ":" + jsonStr);
 		}
 	}
 

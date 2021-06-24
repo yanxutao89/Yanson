@@ -10,6 +10,7 @@ import yanson.utils.StringUtils;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -140,50 +141,64 @@ public final class JsonHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public static String toJsonSting(Object object, StringBuilder jsonStr, boolean isLast) {
-        if (object instanceof Map) {
-            Map<String, Object> map = (Map<String, Object>) object;
-            int index = 0;
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                jsonStr.append(Constants.DOUBLE_QUOTATIONS)
-                        .append(entry.getKey())
-                        .append(Constants.DOUBLE_QUOTATIONS)
-                        .append(Constants.COLON);
-                toJsonSting(entry.getValue(), jsonStr, index++ == map.size() - 1);
-            }
+    public static String toJsonSting(Object object, StringBuilder jsonStr) {
+        if (object == null) {
+            jsonStr.append("null");
         }
-        else if (object.getClass().isArray()) {
-            Object[] array = (Object[]) object;
-            jsonStr.append(Constants.LEFT_SQUARE_BRACKET);
-            for (int i = 0; i < array.length; ++i) {
-                toJsonSting(array[i], jsonStr, i == array.length - 1);
+        else {
+            if (object.getClass().isArray() || object instanceof Collection) {
+                jsonStr.append(Constants.LEFT_SQUARE_BRACKET);
             }
-            jsonStr.append(Constants.RIGHT_SQUARE_BRACKET);
-            jsonStr.append(Constants.COMMA);
-        }
-        else if (object instanceof List) {
-            List list = (List) object;
-            jsonStr.append(Constants.LEFT_SQUARE_BRACKET);
-            for (int i = 0; i < list.size(); ++i) {
+            if (object instanceof Map) {
                 jsonStr.append(Constants.LEFT_CURLY_BRACKET);
-                toJsonSting(list.get(i), jsonStr, i == list.size() - 1);
-                jsonStr.append(Constants.RIGHT_CURLY_BRACKET);
-                if (i < list.size() - 1) {
-                    jsonStr.append(Constants.COMMA);
+            }
+            if (object instanceof Map) {
+                Map<String, Object> map = (Map<String, Object>) object;
+                ArrayList<Map.Entry<String, Object>> entries = new ArrayList<>(map.entrySet());
+                for (int i = 0; i < entries.size(); ++i) {
+                    Map.Entry<String, Object> entry = entries.get(i);
+                    jsonStr.append(Constants.DOUBLE_QUOTATIONS)
+                            .append(entry.getKey())
+                            .append(Constants.DOUBLE_QUOTATIONS)
+                            .append(Constants.COLON);
+                    toJsonSting(entry.getValue(), jsonStr);
+                    if (i < entries.size() - 1) {
+                        jsonStr.append(Constants.COMMA);
+                    }
                 }
             }
-            jsonStr.append(Constants.RIGHT_SQUARE_BRACKET);
-        }
-        else if (TypeUtil.isElementType(object.getClass())) {
-            if (object instanceof String) {
-                jsonStr.append(Constants.DOUBLE_QUOTATIONS);
+            else if (object.getClass().isArray()) {
+                Object[] array = (Object[]) object;
+                for (int i = 0; i < array.length; ++i) {
+                    toJsonSting(array[i], jsonStr);
+                    if (i < array.length - 1) {
+                        jsonStr.append(Constants.COMMA);
+                    }
+                }
             }
-            jsonStr.append(object);
-            if (object instanceof String) {
-                jsonStr.append(Constants.DOUBLE_QUOTATIONS);
+            else if (object instanceof List) {
+                List list = (List) object;
+                for (int i = 0; i < list.size(); ++i) {
+                    toJsonSting(list.get(i), jsonStr);
+                    if (i < list.size() - 1) {
+                        jsonStr.append(Constants.COMMA);
+                    }
+                }
             }
-            if (!isLast) {
-                jsonStr.append(Constants.COMMA);
+            else if (TypeUtil.isElementType(object.getClass())) {
+                if (object instanceof String) {
+                    jsonStr.append(Constants.DOUBLE_QUOTATIONS);
+                }
+                jsonStr.append(object);
+                if (object instanceof String) {
+                    jsonStr.append(Constants.DOUBLE_QUOTATIONS);
+                }
+            }
+            if (object instanceof Map) {
+                jsonStr.append(Constants.RIGHT_CURLY_BRACKET);
+            }
+            if (object.getClass().isArray() || object instanceof Collection) {
+                jsonStr.append(Constants.RIGHT_SQUARE_BRACKET);
             }
         }
         return jsonStr.toString();

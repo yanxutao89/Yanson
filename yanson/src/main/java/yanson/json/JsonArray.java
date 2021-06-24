@@ -39,11 +39,7 @@ public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray
 	}
 
 	public String toJson(JsonArray jsonArray) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(Constants.LEFT_SQUARE_BRACKET);
-		sb.append(JsonHelper.toJsonSting(jsonArray, new StringBuilder(), true));
-		sb.append(Constants.RIGHT_SQUARE_BRACKET);
-		return sb.toString();
+		return JsonHelper.toJsonSting(this, new StringBuilder());
 	}
 
 	public String toJsonStr() {

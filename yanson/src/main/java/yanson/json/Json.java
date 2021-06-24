@@ -27,6 +27,6 @@ public class Json {
             return "{}";
         }
 
-        return JsonHelper.toJsonSting(object, new StringBuilder(), true);
+        return JsonHelper.toJsonSting(object, new StringBuilder());
     }
 }
