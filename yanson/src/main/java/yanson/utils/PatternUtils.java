@@ -16,7 +16,6 @@ public final class PatternUtils {
 	}
 
 	public static String commaRightSquareBracket(String message, String replacement) {
-
 		if (StringUtils.isEmpty(message)) {
 			return "";
 		}

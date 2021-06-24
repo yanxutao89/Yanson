@@ -26,10 +26,9 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
 	public String toJson(JsonObject jsonObject) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(Constants.LEFT_CURLY_BRACKET);
-		sb.append(JsonHelper.toJsonSting(jsonObject, false));
+		sb.append(JsonHelper.toJsonSting(this, new StringBuilder(), true));
 		sb.append(Constants.RIGHT_CURLY_BRACKET);
-		String str = PatternUtils.commaRightCurlyBracket(sb.toString(), Constants.RIGHT_CURLY_BRACKET);
-		return PatternUtils.commaRightSquareBracket(str, Constants.RIGHT_SQUARE_BRACKET);
+		return sb.toString();
 	}
 
 	public String toJsonStr() {

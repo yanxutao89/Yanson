@@ -1,6 +1,5 @@
 package yanson.json;
 
-import java.util.Collection;
 
 /**
  * @Author: Yanxt7
@@ -24,12 +23,10 @@ public class Json {
     }
 
     public static String toJsonString(Object object){
-
         if (null == object) {
             return "{}";
         }
 
-        return JsonHelper.toJsonSting(object, object instanceof Collection ? true : false);
-
+        return JsonHelper.toJsonSting(object, new StringBuilder(), true);
     }
 }

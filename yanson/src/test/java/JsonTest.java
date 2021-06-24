@@ -36,7 +36,7 @@ public class JsonTest {
 		for (String json : jsons) {
 			JSON_LIST.add(json.trim());
 		}
-		jsonStr = JSON_LIST.get(0);
+		jsonStr = JSON_LIST.get(1);
 	}
 
 	@MyTest

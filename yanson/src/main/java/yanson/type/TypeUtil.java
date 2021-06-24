@@ -380,10 +380,10 @@ public final class TypeUtil {
 		return property;
 	}
 
-	private static final Set<Class<?>> PRIMITIVE_TYPE_SET = new HashSet<Class<?>>();
-	private static final Set<Class<?>> ELEMENT_TYPE_SET = new HashSet<Class<?>>();
-	private static final Set<Class<?>> ARRAY_TYPE_SET = new HashSet<Class<?>>();
-	private static final Set<Class<?>> COLLECTION_TYPE_SET = new HashSet<Class<?>>();
+	private static final Set<Class> PRIMITIVE_TYPE_SET = new HashSet<Class>();
+	private static final Set<Class> ELEMENT_TYPE_SET = new HashSet<Class>();
+	private static final Set<Class> ARRAY_TYPE_SET = new HashSet<Class>();
+	private static final Set<Class> COLLECTION_TYPE_SET = new HashSet<Class>();
 
 	static {
 		PRIMITIVE_TYPE_SET.add(byte.class);

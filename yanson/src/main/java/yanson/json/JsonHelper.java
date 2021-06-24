@@ -3,9 +3,11 @@ package yanson.json;
 import yanson.exception.InvalidJsonFormatException;
 import yanson.reflection.ClassUtil;
 import yanson.reflection.Invoker;
+import yanson.type.TypeUtil;
 import yanson.utils.CollectionUtils;
 import yanson.utils.StringUtils;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -138,117 +140,52 @@ public final class JsonHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public static String toJsonSting(Object object, boolean isList) {
-        StringBuilder sb = new StringBuilder();
+    public static String toJsonSting(Object object, StringBuilder jsonStr, boolean isLast) {
         if (object instanceof Map) {
             Map<String, Object> map = (Map<String, Object>) object;
+            int index = 0;
             for (Map.Entry<String, Object> entry : map.entrySet()) {
-                Object value = entry.getValue();
-                if (value instanceof Map) {
-                    if (!isList) {
-                        sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(Constants.COLON);
-                    }
-                    sb.append(Constants.LEFT_CURLY_BRACKET);
-                    toJsonSting(value, false);
-                    sb.append(Constants.RIGHT_CURLY_BRACKET);
-                }
-                else if (value instanceof String) {
-                    if (!isList) {
-                        sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(Constants.COLON);
-                    }
-                    sb.append((String) value);
-                }
-                else if (value instanceof Integer) {
-                    if (!isList) {
-                        sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(Constants.COLON);
-                    }
-                    sb.append(value);
-                }
-                else if (value instanceof Short) {
-                    if (!isList) {
-                        sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(Constants.COLON);
-                    }
-                    sb.append(value);
-                }
-                else if (value instanceof Long) {
-                    if (!isList) {
-                        sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(Constants.COLON);
-                    }
-                    sb.append(value);
-                }
-                else if (value instanceof BigInteger) {
-                    if (!isList) {
-                        sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(Constants.COLON);
-                    }
-                    sb.append(value);
-                }
-                else if (value instanceof Float) {
-                    if (!isList) {
-                        sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(Constants.COLON);
-                    }
-                    sb.append(value);
-                }
-                else if (value instanceof Double) {
-                    if (!isList) {
-                        sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(Constants.COLON);
-                    }
-                    sb.append(value);
-                }
-                else if (value instanceof BigDecimal) {
-                    if (!isList) {
-                        sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(Constants.COLON);
-                    }
-                    sb.append(value);
-                }
-                else if (value instanceof Boolean) {
-                    if (!isList) {
-                        sb.append("\"" + entry.getKey() + "\"");
-                        sb.append(Constants.COLON);
-                    }
-                    sb.append(value);
-                }
-                else if (null == value) {
-                    if (SET_ON_NONNULL) {
-                        if (!isList) {
-                            sb.append("\"" + entry.getKey() + "\"");
-                            sb.append(Constants.COLON);
-                        }
-                    } else {
-
-                    }
-                }
-                else if (value instanceof Collection) {
-                    sb.append("\"" + entry.getKey() + "\"");
-                    sb.append(Constants.COLON);
-                    sb.append(Constants.LEFT_SQUARE_BRACKET);
-                    Collection<?> collection = (Collection) value;
-                    for (Object o : collection) {
-                        toJsonSting(o, o instanceof Collection || o instanceof Object[]);
-                    }
-                    sb.append(Constants.RIGHT_CURLY_BRACKET);
-                }
-                sb.append(Constants.COMMA);
+                jsonStr.append(Constants.DOUBLE_QUOTATIONS)
+                        .append(entry.getKey())
+                        .append(Constants.DOUBLE_QUOTATIONS)
+                        .append(Constants.COLON);
+                toJsonSting(entry.getValue(), jsonStr, index++ == map.size() - 1);
             }
         }
-        else if (object instanceof Collection){
-            Collection collection = (Collection) object;
-            for (Object element : collection) {
-                toJsonSting(element, false);
+        else if (object.getClass().isArray()) {
+            Object[] array = (Object[]) object;
+            jsonStr.append(Constants.LEFT_SQUARE_BRACKET);
+            for (int i = 0; i < array.length; ++i) {
+                toJsonSting(array[i], jsonStr, i == array.length - 1);
+            }
+            jsonStr.append(Constants.RIGHT_SQUARE_BRACKET);
+            jsonStr.append(Constants.COMMA);
+        }
+        else if (object instanceof List) {
+            List list = (List) object;
+            jsonStr.append(Constants.LEFT_SQUARE_BRACKET);
+            for (int i = 0; i < list.size(); ++i) {
+                jsonStr.append(Constants.LEFT_CURLY_BRACKET);
+                toJsonSting(list.get(i), jsonStr, i == list.size() - 1);
+                jsonStr.append(Constants.RIGHT_CURLY_BRACKET);
+                if (i < list.size() - 1) {
+                    jsonStr.append(Constants.COMMA);
+                }
+            }
+            jsonStr.append(Constants.RIGHT_SQUARE_BRACKET);
+        }
+        else if (TypeUtil.isElementType(object.getClass())) {
+            if (object instanceof String) {
+                jsonStr.append(Constants.DOUBLE_QUOTATIONS);
+            }
+            jsonStr.append(object);
+            if (object instanceof String) {
+                jsonStr.append(Constants.DOUBLE_QUOTATIONS);
+            }
+            if (!isLast) {
+                jsonStr.append(Constants.COMMA);
             }
         }
-        else {
-            return "";
-        }
-
-        return sb.toString();
+        return jsonStr.toString();
     }
 }
