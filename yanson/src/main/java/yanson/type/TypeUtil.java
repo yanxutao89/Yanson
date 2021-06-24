@@ -251,11 +251,14 @@ public final class TypeUtil {
 		throw new InvalidTypeCastException(valueObject.getClass().getName(), Collection.class.getName());
 	}
 
-	public static Object[] cast2Objects(Object valueObject) {
+	public static Object cast2Objects(Object valueObject) {
 		if (valueObject instanceof Object[]) {
 			return (Object[]) valueObject;
 		}
-		throw new InvalidTypeCastException(valueObject.getClass().getName(), Object[].class.getName());
+		else if (valueObject instanceof Collection) {
+			return (Collection) valueObject;
+		}
+		throw new InvalidTypeCastException(valueObject.getClass().getName(), Object[].class.getName() + "or" + Collection.class.getName());
 	}
 
 	public static String[] cast2Strings(Object valueObject, int size) {

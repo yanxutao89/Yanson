@@ -44,4 +44,8 @@ public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray
 		String str = PatternUtils.commaRightCurlyBracket(sb.toString(), Constants.RIGHT_CURLY_BRACKET);
 		return PatternUtils.commaRightSquareBracket(str, Constants.RIGHT_SQUARE_BRACKET);
 	}
+
+	public String toJsonStr() {
+		return toJson(this);
+	}
 }

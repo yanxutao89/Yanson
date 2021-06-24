@@ -26,7 +26,6 @@ public final class JsonHelper {
 
     public static JsonObject readJson(String jsonStr, JsonObject jsonObject) {
         if (!StringUtils.isEmpty(jsonStr)) {
-
             String nameValue = jsonStr.trim();
             int separator = JsonUtil.indexOfColon(nameValue);
             if (-1 == separator) {
@@ -35,7 +34,6 @@ public final class JsonHelper {
 
             String currName = JsonUtil.getName(nameValue.substring(0, separator));
             String currValue = nameValue.substring(separator + 1).trim();
-
             // Object data
             if (JsonUtil.isObject(currValue)) {
                 JsonObject currObject = (JsonObject) jsonObject.get(currName);
@@ -50,7 +48,6 @@ public final class JsonHelper {
                     readJson(nv, currObject);
                 }
             }
-
             // Array data
             else if (JsonUtil.isArray(currValue)) {
 
@@ -87,13 +84,11 @@ public final class JsonHelper {
                     }
                 }
             }
-
             // Others
             else {
                 jsonObject.put(currName, JsonUtil.getValue(currValue));
             }
         }
-
         else {
             return null;
         }

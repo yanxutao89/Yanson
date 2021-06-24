@@ -32,6 +32,10 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
 		return PatternUtils.commaRightSquareBracket(str, Constants.RIGHT_SQUARE_BRACKET);
 	}
 
+	public String toJsonStr() {
+		return toJson(this);
+	}
+
 	public <T> T toJavaObject(Class<T> clazz) {
 		return JsonHelper.toJavaObject(this, clazz, "");
 	}

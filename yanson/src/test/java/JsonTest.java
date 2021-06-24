@@ -46,7 +46,7 @@ public class JsonTest {
 			System.out.println(jsonArray);
 		} else {
 			JsonObject jsonObject = Json.parseObject(jsonStr);
-			System.out.println(jsonObject);
+			System.out.println(jsonObject.toJsonStr());
 		}
 	}
 
@@ -56,7 +56,7 @@ public class JsonTest {
 
 		} else {
 			JSONObject jsonObject = JSONObject.parseObject(jsonStr);
-			System.out.println(jsonObject);
+			System.out.println(jsonObject.toJSONString());
 		}
 	}
 
@@ -67,7 +67,7 @@ public class JsonTest {
 
 		} else {
 			JsonObject jsonObject = objectMapper.readValue(jsonStr, JsonObject.class);
-			System.out.println(jsonObject);
+			System.out.println(objectMapper.writeValueAsString(jsonObject));
 		}
 	}
 
@@ -77,8 +77,8 @@ public class JsonTest {
 		if (jsonStr.startsWith("[")) {
 
 		} else {
-			JsonObject jsonObject = gson.fromJson(jsonStr, JsonObject.class);
-			System.out.println(jsonObject);
+			com.google.gson.JsonObject jsonObject = gson.fromJson(jsonStr, com.google.gson.JsonObject.class);
+			System.out.println(jsonObject.toString());
 		}
 	}
 

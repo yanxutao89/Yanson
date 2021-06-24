@@ -116,11 +116,11 @@ public final class JsonUtil {
             return getBoolean(jsonStr);
         }
         else if (isArray(jsonStr)) {
-            String[] strings = jsonStr.substring(1, jsonStr.length() - 1).split(",");
-            if (strings != null && strings.length > 0) {
-                Object[] objects = new Object[strings.length];
-                for (int i = 0; i < strings.length; ++i) {
-                    objects[i] = strings[i];
+            String[] array = jsonStr.substring(1, jsonStr.length() - 1).split(Constants.COMMA);
+            if (array != null && array.length > 0) {
+                Object[] objects = new Object[array.length];
+                for (int i = 0; i < array.length; ++i) {
+                    objects[i] = getValue(array[i]);
                 }
                 return objects;
             }
@@ -151,16 +151,16 @@ public final class JsonUtil {
             return castString(jsonStr, clazz);
         }
         else if (isArray(jsonStr)) {
-            String[] strings = jsonStr.substring(1, jsonStr.length() - 1).split(",");
-            if (strings != null && strings.length > 0) {
-                Object[] objects = new Object[strings.length];
-                for (int i = 0; i < strings.length; ++i) {
-                    objects[i] = strings[i];
+            String[] array = jsonStr.substring(1, jsonStr.length() - 1).split(",");
+            if (array != null && array.length > 0) {
+                Object[] objects = new Object[array.length];
+                for (int i = 0; i < array.length; ++i) {
+                    objects[i] = getValue(array[i]);
                 }
-                return castString(jsonStr, clazz);
+                return (T)objects;
             }
             else {
-                return castString(jsonStr, clazz);
+                return (T)new Object[0];
             }
         }
 
