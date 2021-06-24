@@ -22,7 +22,6 @@ import static org.objectweb.asm.Opcodes.ASM4;
  * @Date: 2020/12/28 18:40
  */
 public class AddFieldAdapter extends ClassVisitor {
-
 	private int fieldAcc;
 	private String fieldName;
 	private String fieldDesc;
@@ -75,5 +74,4 @@ public class AddFieldAdapter extends ClassVisitor {
 		System.out.println(Arrays.toString(clazz.getDeclaredFields()));
 
 	}
-
 }

@@ -6,7 +6,6 @@ package yanson.json;
  * @Date: 2020/12/24 16:26
  */
 public enum JsonType {
-
 	STRING("string", MetaType.PRIMITIVE),
 	NUMBER("number", MetaType.PRIMITIVE),
 	BOOLEAN("boolean", MetaType.PRIMITIVE),
@@ -21,5 +20,4 @@ public enum JsonType {
 		this.value = value;
 		this.type = type;
 	}
-
 }

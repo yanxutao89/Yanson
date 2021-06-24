@@ -1,7 +1,6 @@
 package model;
 
 public class EmployeeVo {
-
 	private String firstName;
 	private String lastName;
 	
@@ -22,5 +21,4 @@ public class EmployeeVo {
 	public String toString() {
 		return "EmployeeVo [firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
-	
 }

@@ -16,7 +16,6 @@ import java.util.List;
 
 
 public class JsonTest2 {
-
 	public static final List<String> JSON_LIST = new ArrayList<String>();
 	private static String jsonStr;
 

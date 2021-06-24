@@ -6,7 +6,6 @@ package yanson.json;
  * @Date: 2020/12/24 17:18
  */
 public enum MetaType {
-
 	PRIMITIVE("primitive"),
 	STRUCTURED("structure");
 
@@ -15,5 +14,4 @@ public enum MetaType {
 	MetaType(String value) {
 		this.value = value;
 	}
-
 }

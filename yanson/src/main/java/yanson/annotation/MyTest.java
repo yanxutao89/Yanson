@@ -13,7 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface MyTest {
-
 	/**
 	 * target method name
 	 * @return
@@ -25,5 +24,4 @@ public @interface MyTest {
 	 * @return
 	 */
 	int count() default 1;
-
 }

@@ -20,7 +20,6 @@ import static yanson.json.Configuration.SET_ON_NONNULL;
  * @Date: 2020/12/19 21:28
  */
 public final class JsonHelper {
-
     private JsonHelper() {
         throw new UnsupportedOperationException("The constructor can not be called outside");
     }
@@ -257,5 +256,4 @@ public final class JsonHelper {
 
         return sb.toString();
     }
-
 }

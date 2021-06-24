@@ -13,7 +13,6 @@ import java.lang.reflect.Type;
  * @Date: 2020/12/24 20:24
  */
 public class FieldInvoker implements Invoker {
-
 	private Field delegate;
 
 	public FieldInvoker(Field delegate) {

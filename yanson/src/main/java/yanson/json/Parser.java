@@ -6,4 +6,5 @@ package yanson.json;
  * @Date: 2020/12/19 18:52
  */
 public interface Parser {
+
 }

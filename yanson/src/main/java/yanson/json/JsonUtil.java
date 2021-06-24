@@ -21,7 +21,6 @@ import java.util.List;
  * @Date: 2020/9/2 19:39
  */
 public final class JsonUtil {
-
     private JsonUtil() {
         throw new UnsupportedOperationException("The constructor can not be called outside");
     }

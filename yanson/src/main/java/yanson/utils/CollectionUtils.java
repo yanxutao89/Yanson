@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public final class CollectionUtils {
-
 	private CollectionUtils() {
 		throw new UnsupportedOperationException("The constructor can not be called outside");
 	}
@@ -20,5 +19,4 @@ public final class CollectionUtils {
 	public static boolean isEmpty(Object[] array) {
 		return isEmpty(Arrays.asList(array));
 	}
-
 }

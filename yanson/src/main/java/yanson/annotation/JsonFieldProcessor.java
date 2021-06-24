@@ -25,5 +25,4 @@ public class JsonFieldProcessor implements Processor {
 
 		return invokerMap;
 	}
-
 }

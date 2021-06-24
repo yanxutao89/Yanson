@@ -8,7 +8,6 @@ import java.util.Collection;
  * @Date: 2020/12/19 21:23
  */
 public class Json {
-
     private static final JsonObject jsonObject = new JsonObject();
     private static final JsonArray jsonArray = new JsonArray();
 
@@ -33,5 +32,4 @@ public class Json {
         return JsonHelper.toJsonSting(object, object instanceof Collection ? true : false);
 
     }
-
 }

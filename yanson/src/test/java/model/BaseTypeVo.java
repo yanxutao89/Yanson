@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BaseTypeVo implements Serializable {
-
 	private String string;
 	private int integer;
 	@JsonField(value = "float2", aliasNames = {"float"})
@@ -82,5 +81,4 @@ public class BaseTypeVo implements Serializable {
 				", employees=" + employees +
 				'}';
 	}
-
 }

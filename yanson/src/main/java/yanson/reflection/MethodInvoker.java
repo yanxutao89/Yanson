@@ -13,7 +13,6 @@ import java.lang.reflect.Method;
  * @Date: 2020/12/24 20:26
  */
 public class MethodInvoker implements Invoker {
-
 	private Method delegate;
 
 	public MethodInvoker(Method delegate) {

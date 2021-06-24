@@ -11,7 +11,6 @@ import static org.objectweb.asm.Opcodes.ASM4;
  * @Date: 2020/12/28 11:42
  */
 public class ClassPrinter extends ClassVisitor {
-
 	public ClassPrinter() {
 		super(ASM4);
 	}
