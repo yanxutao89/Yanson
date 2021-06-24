@@ -9,7 +9,7 @@ import java.lang.reflect.AccessibleObject;
  * @Date: 2020/12/24 20:24
  */
 public interface Invoker {
-	String getProperty();
+	String getName();
 
 	void setValue(Object instance, Object value);
 

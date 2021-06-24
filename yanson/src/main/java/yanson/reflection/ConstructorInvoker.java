@@ -17,7 +17,7 @@ public class ConstructorInvoker implements Invoker {
 	}
 
 	@Override
-	public String getProperty() {
+	public String getName() {
 		return this.delegate.getName();
 	}
 

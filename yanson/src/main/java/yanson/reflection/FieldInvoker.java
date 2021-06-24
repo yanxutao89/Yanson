@@ -19,12 +19,12 @@ public class FieldInvoker implements Invoker {
 		this.delegate = delegate;
 	}
 
-	public String getProperty() {
-		String property = this.delegate.getName();
-		if ("serialVersionUID".equals(property)) {
+	public String getName() {
+		String name = this.delegate.getName();
+		if ("serialVersionUID".equals(name)) {
 			return null;
 		}
-		return property;
+		return name;
 	}
 
 	public void setValue(Object instance, Object value){

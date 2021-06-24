@@ -104,12 +104,12 @@ public class ClassUtil extends ClassLoader {
         Map<String, Invoker> invokerMap = new HashMap<>();
 
         for (Invoker invoker : firstInvokers) {
-            invokerMap.put(invoker.getProperty(), invoker);
+            invokerMap.put(invoker.getName(), invoker);
             invokerMap.putAll(JsonFieldProcessor.process(invoker));
         }
 
         for (Invoker invoker : secondInvokers) {
-            invokerMap.put(invoker.getProperty(), invoker);
+            invokerMap.put(invoker.getName(), invoker);
             invokerMap.putAll(JsonFieldProcessor.process(invoker));
         }
 
@@ -122,7 +122,7 @@ public class ClassUtil extends ClassLoader {
 
         for (Field field : fields) {
             FieldInvoker invoker = new FieldInvoker(field);
-            if (null != invoker.getProperty()) {
+            if (null != invoker.getName()) {
                 invokers.add(invoker);
             }
         }
@@ -136,7 +136,7 @@ public class ClassUtil extends ClassLoader {
 
         for (Method method : methods) {
             MethodInvoker invoker = new MethodInvoker(method);
-            if (null != invoker.getProperty()) {
+            if (null != invoker.getName()) {
                 invokers.add(invoker);
             }
         }

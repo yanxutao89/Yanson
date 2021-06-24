@@ -7,7 +7,7 @@ package yanson.json;
  */
 public enum MetaType {
 	PRIMITIVE("primitive"),
-	STRUCTURED("structure");
+	STRUCTURED("structured");
 
 	private String value;
 

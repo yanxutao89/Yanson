@@ -19,17 +19,17 @@ public class MethodInvoker implements Invoker {
 		this.delegate = delegate;
 	}
 
-	public String getProperty() {
+	public String getName() {
 		if (isWriteMethod()) {
-			String property = this.delegate.getName();
+			String name = this.delegate.getName();
 			WriteMethodPrefix[] prefixes = WriteMethodPrefix.values();
 			for (WriteMethodPrefix prefix : prefixes) {
 				String prefixValue = prefix.getValue();
-				if (property.startsWith(prefixValue)) {
-					property = property.substring(prefixValue.length());
-					if (!StringUtils.isEmpty(property)) {
-						property = property.substring(0, 1).toLowerCase() + property.substring(1);
-						return property;
+				if (name.startsWith(prefixValue)) {
+					name = name.substring(prefixValue.length());
+					if (!StringUtils.isEmpty(name)) {
+						name = name.substring(0, 1).toLowerCase() + name.substring(1);
+						return name;
 					}
 				}
 			}
