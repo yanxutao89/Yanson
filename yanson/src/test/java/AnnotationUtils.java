@@ -29,7 +29,7 @@ public class AnnotationUtils {
 		}
 		if(canCallNewInstance) {
 			Object instance = clazz.newInstance();
-			// Find the methods annotated with the com.annotation
+			// Find the methods annotated with the annotation
 			for (Method method : clazz.getDeclaredMethods()) {
 				if(method.isAnnotationPresent(MyTest.class)) {
 					MyTest myTest = method.getAnnotation(MyTest.class);

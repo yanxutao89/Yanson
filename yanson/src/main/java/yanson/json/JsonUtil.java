@@ -127,7 +127,7 @@ public final class JsonUtil {
             }
         }
 
-        throw new InvalidJsonFormatException(String.format("Invalid com.json value com.type, supported types are %s, but found %s ",  Arrays.toString(Constants.SUPPORTED_VALUE_TYPES), jsonStr));
+        throw new InvalidJsonFormatException(String.format("Invalid json value type, supported types are %s, but found %s ",  Arrays.toString(Constants.SUPPORTED_VALUE_TYPES), jsonStr));
     }
 
     public static <T> T getValue(String jsonStr, Class<T> clazz) throws InvalidJsonFormatException {
@@ -161,7 +161,7 @@ public final class JsonUtil {
             }
         }
 
-        throw new InvalidJsonFormatException(String.format("Invalid com.json value com.type, supported types are %s, but found %s ",  Arrays.toString(Constants.SUPPORTED_VALUE_TYPES), jsonStr));
+        throw new InvalidJsonFormatException(String.format("Invalid json value type, supported types are %s, but found %s ",  Arrays.toString(Constants.SUPPORTED_VALUE_TYPES), jsonStr));
     }
 
     private static <T> T castString(String jsonStr, Class<T> clazz){
@@ -303,10 +303,10 @@ public final class JsonUtil {
     }
 
     /**
-     * check whether the com.json is object or not
-     * @param jsonStr the com.json text to be checked
+     * check whether the json is object or not
+     * @param jsonStr the json text to be checked
      * @return true if object otherwise false
-     * @throws Exception if the com.json text is object or not
+     * @throws Exception if the json text is object or not
      */
     public static boolean isObject(String jsonStr) {
         if (StringUtils.isEmpty(jsonStr)) {
@@ -317,10 +317,10 @@ public final class JsonUtil {
     }
 
     /**
-     * check whether the com.json is array or not
-     * @param jsonStr the com.json text to be checked
+     * check whether the json is array or not
+     * @param jsonStr the json text to be checked
      * @return true if array otherwise false
-     * @throws Exception if the com.json text is array or not
+     * @throws Exception if the json text is array or not
      */
     public static boolean isArray(String jsonStr) {
         if (StringUtils.isEmpty(jsonStr)) {

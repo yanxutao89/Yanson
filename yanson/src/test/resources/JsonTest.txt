@@ -226,7 +226,7 @@
                         "rating_users": 0,
                         "name_zh": "奈良市",
                         "name_en": "Nara",
-                        "com.type": 3,
+                        "type": 3,
                         "id": 10052,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/city.png"
@@ -247,7 +247,7 @@
                         "rating_users": 0,
                         "name_zh": "小樽市",
                         "name_en": "Otaru",
-                        "com.type": 3,
+                        "type": 3,
                         "id": 26772,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/city.png"
@@ -268,7 +268,7 @@
                         "rating_users": 0,
                         "name_zh": "槟城",
                         "name_en": "Penang",
-                        "com.type": 2,
+                        "type": 2,
                         "id": 8257,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/province.png"
@@ -289,7 +289,7 @@
                         "rating_users": 0,
                         "name_zh": "墨尔本",
                         "name_en": "Melbourne",
-                        "com.type": 3,
+                        "type": 3,
                         "id": 47810,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/city.png"
@@ -310,7 +310,7 @@
                         "rating_users": 0,
                         "name_zh": "广岛县",
                         "name_en": "Hiroshima Prefecture",
-                        "com.type": 2,
+                        "type": 2,
                         "id": 9474,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/province.png"
@@ -329,7 +329,7 @@
                         },
                         "has_experience": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/country.png",
-                        "com.type": 1,
+                        "type": 1,
                         "id": "TH",
                         "has_route_maps": false,
                         "rating_users": 0
@@ -348,7 +348,7 @@
                         },
                         "has_experience": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/country.png",
-                        "com.type": 1,
+                        "type": 1,
                         "id": "FI",
                         "has_route_maps": false,
                         "rating_users": 0
@@ -367,7 +367,7 @@
                         },
                         "has_experience": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/country.png",
-                        "com.type": 1,
+                        "type": 1,
                         "id": "US",
                         "has_route_maps": false,
                         "rating_users": 0
@@ -386,7 +386,7 @@
                         },
                         "has_experience": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/country.png",
-                        "com.type": 1,
+                        "type": 1,
                         "id": "MY",
                         "has_route_maps": false,
                         "rating_users": 0
@@ -405,7 +405,7 @@
                         },
                         "has_experience": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/country.png",
-                        "com.type": 1,
+                        "type": 1,
                         "id": "IT",
                         "has_route_maps": false,
                         "rating_users": 0
@@ -424,7 +424,7 @@
                         },
                         "has_experience": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/country.png",
-                        "com.type": 1,
+                        "type": 1,
                         "id": "SG",
                         "has_route_maps": false,
                         "rating_users": 0
@@ -443,13 +443,13 @@
                         },
                         "has_experience": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/country.png",
-                        "com.type": 1,
+                        "type": 1,
                         "id": "NO",
                         "has_route_maps": false,
                         "rating_users": 0
                     }
                 ],
-                "com.type": "destination",
+                "type": "destination",
                 "title": "国外热门目的地"
             },
             {
@@ -468,7 +468,7 @@
                         },
                         "has_experience": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/country.png",
-                        "com.type": 1,
+                        "type": 1,
                         "id": "TW",
                         "has_route_maps": false,
                         "rating_users": 0
@@ -487,7 +487,7 @@
                         },
                         "has_experience": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/country.png",
-                        "com.type": 1,
+                        "type": 1,
                         "id": "HK",
                         "has_route_maps": true,
                         "rating_users": 0
@@ -508,7 +508,7 @@
                         "rating_users": 0,
                         "name_zh": "厦门",
                         "name_en": "Xiamen",
-                        "com.type": 3,
+                        "type": 3,
                         "id": 65012,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/city.png"
@@ -529,7 +529,7 @@
                         "rating_users": 0,
                         "name_zh": "北京",
                         "name_en": "Beijing",
-                        "com.type": 3,
+                        "type": 3,
                         "id": 8248,
                         "has_route_maps": true,
                         "icon": "http://media.breadtrip.com/images/icons/2/city.png"
@@ -550,7 +550,7 @@
                         "rating_users": 0,
                         "name_zh": "丽江市",
                         "name_en": "Lijiang",
-                        "com.type": 3,
+                        "type": 3,
                         "id": 65362,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/city.png"
@@ -571,7 +571,7 @@
                         "rating_users": 0,
                         "name_zh": "成都",
                         "name_en": "Chengdu",
-                        "com.type": 3,
+                        "type": 3,
                         "id": 14209,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/city.png"
@@ -592,7 +592,7 @@
                         "rating_users": 0,
                         "name_zh": "上海",
                         "name_en": "Shanghai",
-                        "com.type": 3,
+                        "type": 3,
                         "id": 13961,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/city.png"
@@ -613,7 +613,7 @@
                         "rating_users": 0,
                         "name_zh": "拉萨",
                         "name_en": "Lhasa",
-                        "com.type": 3,
+                        "type": 3,
                         "id": 5249,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/city.png"
@@ -634,7 +634,7 @@
                         "rating_users": 0,
                         "name_zh": "大理",
                         "name_en": "Dali",
-                        "com.type": 3,
+                        "type": 3,
                         "id": 43908,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/city.png"
@@ -655,20 +655,20 @@
                         "rating_users": 0,
                         "name_zh": "三亚",
                         "name_en": "Sanya",
-                        "com.type": 3,
+                        "type": 3,
                         "id": 65557,
                         "has_route_maps": false,
                         "icon": "http://media.breadtrip.com/images/icons/2/city.png"
                     }
                 ],
-                "com.type": "destination",
+                "type": "destination",
                 "title": "国内热门目的地"
             }
         ],
         "date_time": "2017-09-11 10:52:27.811321",
         "elements": [
             {
-                "com.type": 1,
+                "type": 1,
                 "data": [
                     [
                         {
@@ -706,7 +706,7 @@
                 "desc": "广告banner"
             },
             {
-                "com.type": 11,
+                "type": 11,
                 "data": [
                     {
                         "title": "每日精选故事"
@@ -715,7 +715,7 @@
                 "desc": ""
             },
             {
-                "com.type": 10,
+                "type": 10,
                 "data": [
                     {
                         "text": "halo 雷猴嘛\n我猜你是个妹纸\n我猜你是个爱美的妹纸\n我猜你是个喜欢首饰and爱美的妹纸\n我猜你是个喜欢手作首饰and爱美的妹纸\n我猜…你是个亲手做首饰给女票的汉纸!\n\n\n\n我是个喜欢手工喜欢首饰喜欢发现美的美男纸，来吃我一安利呗!",
@@ -782,7 +782,7 @@
                 "desc": ""
             },
             {
-                "com.type": 10,
+                "type": 10,
                 "data": [
                     {
                         "text": "挑战极限和心跳，让自己成为一个有趣的人。\n2016月5月在面包旅行，偶然下兼职做一个猎人哈哈（活动名字上帝之眼），感觉挺酷的。\n重庆最具特色的，当然是城市里最耀眼的高楼夜景，曾经有一部电影“重庆森林”，故事很多场景，以及城市展现出重庆这座奇葩一样的城市，独具特色话3D话，很多电影都有在重庆取景。",
@@ -808,7 +808,7 @@
                                 "lng": 106.586696
                             },
                             "opening_time": "全天",
-                            "com.type": 5,
+                            "type": 5,
                             "time_consuming_min": 0,
                             "website": "",
                             "description": "长江索道起于渝中区长安寺，横跨长江至南岸区上新街。乘坐过江索道，除了可以欣赏两江美景外，还可以从索道上俯瞰洪崖洞、湖广会馆、南滨路等著名景观。",
@@ -880,7 +880,7 @@
                 "desc": ""
             },
             {
-                "com.type": 10,
+                "type": 10,
                 "data": [
                     {
                         "text": "很有幸能有王老这样的人让我们能睹旧物思旧人旧事，陈列室虽不大，却也充斥了老北京饮食医用居的方方面面，可以亲手触摸历史，了解自己现在工作城市的过去现在让人倍感亲切！",
@@ -944,7 +944,7 @@
                 "desc": ""
             },
             {
-                "com.type": 10,
+                "type": 10,
                 "data": [
                     {
                         "text": "献给爱我们的女神",
@@ -1008,7 +1008,7 @@
                 "desc": ""
             },
             {
-                "com.type": 9,
+                "type": 9,
                 "data": [
                     {
                         "title": "精彩原创和专题"
