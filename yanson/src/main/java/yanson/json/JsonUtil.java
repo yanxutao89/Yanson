@@ -32,8 +32,8 @@ public final class JsonUtil {
 
         int index = jsonStr.indexOf(Constants.COLON);
         if (index != -1) {
-            String nameToCheck = jsonStr.substring(0, index);
-            String valueToCheck = jsonStr.substring(index + 1);
+            String nameToCheck = jsonStr.substring(0, index).trim();
+            String valueToCheck = jsonStr.substring(index + 1).trim();
             while (!(isValidJsonName(nameToCheck) && isValidJsonValue(valueToCheck))) {
                 index = jsonStr.indexOf(Constants.COLON, index);
                 nameToCheck = jsonStr.substring(0, index);
@@ -85,12 +85,10 @@ public final class JsonUtil {
         if (value == null) {
             return true;
         }
-        value = value.trim();
         return isNull(value) || isString(value) || isNumber(value) || isBoolean(value) || isObject(value) || isArray(value);
     }
 
     public static String getName(String jsonStr) {
-        jsonStr = jsonStr.trim();
         return jsonStr.substring(1, jsonStr.length() - 1);
     }
 
@@ -137,7 +135,6 @@ public final class JsonUtil {
             return null;
         }
 
-        jsonStr = jsonStr.trim();
         if (isString(jsonStr)) {
             while (isMarkedWithDoubleQuotations(jsonStr)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
@@ -184,7 +181,6 @@ public final class JsonUtil {
             nameValues.add(jsonStr);
         }
         else {
-            jsonStr = jsonStr.trim();
             if (isArray(jsonStr)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
             }
@@ -249,7 +245,7 @@ public final class JsonUtil {
     }
 
     private static boolean isNumber(String jsonStr) {
-        return TypeUtil.isRealNumber(jsonStr.trim());
+        return TypeUtil.isRealNumber(jsonStr);
     }
 
     public static BigDecimal getNumber(String jsonStr) {
@@ -317,7 +313,6 @@ public final class JsonUtil {
             return false;
         }
 
-        jsonStr = jsonStr.trim();
         return jsonStr.startsWith(Constants.LEFT_CURLY_BRACKET) && jsonStr.endsWith(Constants.RIGHT_CURLY_BRACKET);
     }
 

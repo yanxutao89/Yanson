@@ -35,7 +35,7 @@ public final class JsonHelper {
                 throw new InvalidJsonFormatException(String.format("Expect name:value, but found %s", nameValue));
             }
 
-            String currName = JsonUtil.getName(nameValue.substring(0, separator));
+            String currName = JsonUtil.getName(nameValue.substring(0, separator).trim());
             String currValue = nameValue.substring(separator + 1).trim();
             // Object data
             if (JsonUtil.isObject(currValue)) {
@@ -46,7 +46,7 @@ public final class JsonHelper {
                 }
 
                 currValue = currValue.substring(1, currValue.length() - 1);
-                List<String> nameValues = JsonUtil.formatNameValues(currValue);
+                List<String> nameValues = JsonUtil.formatNameValues(currValue.trim());
                 for (String nv : nameValues) {
                     readJson(nv, currObject);
                 }
@@ -54,10 +54,10 @@ public final class JsonHelper {
             // Array data
             else if (JsonUtil.isArray(currValue)) {
 
-                List<String> nameValues = JsonUtil.formatNameValues(currValue);
+                List<String> nameValues = JsonUtil.formatNameValues(currValue.trim());
                 if (!CollectionUtils.isEmpty(nameValues)) {
                     if (Constants.ARRAY_VALUE_WITH_PRIMITIVE_TYPES.equals(nameValues.get(0))) {
-                        jsonObject.put(currName, JsonUtil.getValue(nameValues.get(1)));
+                        jsonObject.put(currName, JsonUtil.getValue(nameValues.get(1).trim()));
                     }
                     else {
                         JsonArray tempArray = (JsonArray) jsonObject.get(currName);
@@ -89,7 +89,7 @@ public final class JsonHelper {
             }
             // Others
             else {
-                jsonObject.put(currName, JsonUtil.getValue(currValue));
+                jsonObject.put(currName, JsonUtil.getValue(currValue.trim()));
             }
         }
         else {
