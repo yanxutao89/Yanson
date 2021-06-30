@@ -159,12 +159,18 @@ public final class TypeUtil {
 		if (valueObject instanceof Boolean) {
 			return (Boolean) valueObject;
 		}
+		if (valueObject instanceof String) {
+			return Boolean.parseBoolean((String) valueObject);
+		}
 		throw new InvalidTypeCastException(valueObject.getClass().getName(), Boolean.class.getName());
 	}
 
 	public static Integer cast2Integer(Object valueObject) {
 		if (valueObject instanceof BigDecimal) {
 			return ((BigDecimal) valueObject).intValue();
+		}
+		if (valueObject instanceof String) {
+			return Integer.parseInt((String) valueObject);
 		}
 		throw new InvalidTypeCastException(valueObject.getClass().getName(), BigDecimal.class.getName());
 	}
@@ -173,12 +179,18 @@ public final class TypeUtil {
 		if (valueObject instanceof BigDecimal) {
 			return ((BigDecimal) valueObject).longValue();
 		}
+		if (valueObject instanceof String) {
+			return Long.parseLong((String) valueObject);
+		}
 		throw new InvalidTypeCastException(valueObject.getClass().getName(), BigDecimal.class.getName());
 	}
 
 	public static Short cast2Short(Object valueObject) {
 		if (valueObject instanceof BigDecimal) {
 			return ((BigDecimal) valueObject).shortValue();
+		}
+		if (valueObject instanceof String) {
+			return Short.parseShort((String) valueObject);
 		}
 		throw new InvalidTypeCastException(valueObject.getClass().getName(), BigDecimal.class.getName());
 	}
@@ -187,12 +199,18 @@ public final class TypeUtil {
 		if (valueObject instanceof BigDecimal) {
 			return ((BigDecimal) valueObject).toBigInteger();
 		}
+		if (valueObject instanceof String) {
+			return new BigDecimal((String) valueObject).toBigInteger();
+		}
 		throw new InvalidTypeCastException(valueObject.getClass().getName(), BigDecimal.class.getName());
 	}
 
 	public static Float cast2Float(Object valueObject) {
 		if (valueObject instanceof BigDecimal) {
 			return ((BigDecimal) valueObject).floatValue();
+		}
+		if (valueObject instanceof String) {
+			return Float.parseFloat((String) valueObject);
 		}
 		throw new InvalidTypeCastException(valueObject.getClass().getName(), BigDecimal.class.getName());
 	}
@@ -201,6 +219,9 @@ public final class TypeUtil {
 		if (valueObject instanceof BigDecimal) {
 			return ((BigDecimal) valueObject).doubleValue();
 		}
+		if (valueObject instanceof String) {
+			return Double.parseDouble((String) valueObject);
+		}
 		throw new InvalidTypeCastException(valueObject.getClass().getName(), BigDecimal.class.getName());
 	}
 
@@ -208,12 +229,18 @@ public final class TypeUtil {
 		if (valueObject instanceof BigDecimal) {
 			return (BigDecimal) valueObject;
 		}
+		if (valueObject instanceof String) {
+			return new BigDecimal((String) valueObject);
+		}
 		throw new InvalidTypeCastException(valueObject.getClass().getName(), BigDecimal.class.getName());
 	}
 
 	public static Byte cast2Byte(Object valueObject) {
 		if (valueObject instanceof BigDecimal) {
 			return ((BigDecimal) valueObject).byteValue();
+		}
+		if (valueObject instanceof String) {
+			return Byte.parseByte((String) valueObject);
 		}
 		throw new InvalidTypeCastException(valueObject.getClass().getName(), BigDecimal.class.getName());
 	}
