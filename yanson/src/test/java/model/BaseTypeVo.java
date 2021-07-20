@@ -8,6 +8,7 @@ import yanson.annotation.JsonField;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class BaseTypeVo implements Serializable {
 	private String string;
@@ -80,5 +81,20 @@ public class BaseTypeVo implements Serializable {
 				", array=" + Arrays.toString(array) +
 				", employees=" + employees +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		BaseTypeVo that = (BaseTypeVo) o;
+		return integer == that.integer && Objects.equals(string, that.string) && Objects.equals(float2, that.float2) && Objects.equals(boolean2, that.boolean2) && Arrays.equals(array, that.array) && Objects.equals(employees, that.employees);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Objects.hash(string, integer, float2, boolean2, employees);
+		result = 31 * result + Arrays.hashCode(array);
+		return result;
 	}
 }

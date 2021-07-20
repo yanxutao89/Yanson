@@ -54,7 +54,7 @@ public class FieldInvoker implements Invoker {
 	}
 
 	@Override
-	public <T> T getValue(Object instance, Class<T> clazz, Object value) {
+	public <T> T getValue(Object instance) {
 		checkPermission(this.delegate);
 		try {
 			return (T) this.delegate.get(instance);

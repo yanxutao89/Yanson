@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class JsonTest {
+public class JsonBaseTest {
 	public static final List<String> JSON_LIST = new ArrayList<String>();
 	private static String jsonStr;
 
@@ -88,7 +88,7 @@ public class JsonTest {
 	}
 
 	public static void main(String[] args) throws Exception {
-		AnnotationUtils.getExecutedTime("JsonTest", args);
+		AnnotationUtils.getExecutedTime("JsonBaseTest", args);
 	}
 }
 

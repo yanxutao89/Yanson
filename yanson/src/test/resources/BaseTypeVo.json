@@ -1,0 +1,21 @@
+{
+  "string": "111",
+  "integer": 111,
+  "float": 1.11,
+  "boolean": true,
+  "array": [1,2,3,4],
+  "employees": [
+    {
+      "firstName": "Bill",
+      "lastName": "Gates"
+    },
+    {
+      "firstName": "George",
+      "lastName": "Bush"
+    },
+    {
+      "firstName": "Thomas",
+      "lastName": "Carter"
+    }
+  ]
+}

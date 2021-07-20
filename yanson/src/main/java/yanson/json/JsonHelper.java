@@ -3,6 +3,7 @@ package yanson.json;
 import yanson.exception.InvalidJsonFormatException;
 import yanson.reflection.ClassUtil;
 import yanson.reflection.Invoker;
+import yanson.reflection.InvokerType;
 import yanson.type.TypeUtil;
 import yanson.utils.CollectionUtils;
 import yanson.utils.StringUtils;
@@ -123,7 +124,7 @@ public final class JsonHelper {
                     jsonObject = (JsonObject) jsonObject.get(parent);
                 }
 
-                Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(targetClass);
+                Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(targetClass, InvokerType.ALL);
                 for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
                     String key = entry.getKey();
                     Object value = entry.getValue();
@@ -152,6 +153,7 @@ public final class JsonHelper {
             if (object instanceof Map) {
                 jsonStr.append(Constants.LEFT_CURLY_BRACKET);
             }
+
             if (object instanceof Map) {
                 Map<String, Object> map = (Map<String, Object>) object;
                 ArrayList<Map.Entry<String, Object>> entries = new ArrayList<>(map.entrySet());
@@ -194,6 +196,15 @@ public final class JsonHelper {
                     jsonStr.append(Constants.DOUBLE_QUOTATIONS);
                 }
             }
+            else {
+                Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(object.getClass(), InvokerType.FIELD);
+                JsonObject jsonObject = new JsonObject();
+                for (Map.Entry<String, Invoker> entry : invokerMap.entrySet()) {
+                    jsonObject.put(entry.getKey(), entry.getValue().getValue(object));
+                }
+                toJsonSting(jsonObject, jsonStr);
+            }
+
             if (object instanceof Map) {
                 jsonStr.append(Constants.RIGHT_CURLY_BRACKET);
             }

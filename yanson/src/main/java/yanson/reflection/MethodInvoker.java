@@ -40,8 +40,10 @@ public class MethodInvoker implements Invoker {
 	public void setValue(Object instance, Object value){
 		checkPermission(delegate);
 		try {
-			Class type = getType();
-			delegate.invoke(instance, TypeUtil.cast2Object(value, type, null));
+			if (isWriteMethod()) {
+				Class type = getType();
+				delegate.invoke(instance, TypeUtil.cast2Object(value, type, null));
+			}
 		}
 		catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -57,10 +59,12 @@ public class MethodInvoker implements Invoker {
 	}
 
 	@Override
-	public <T> T getValue(Object instance, Class<T> clazz, Object value) {
+	public <T> T getValue(Object instance) {
 		checkPermission(this.delegate);
 		try {
-			return (T) this.delegate.invoke(instance, value);
+			if (isReadMethod()) {
+				return (T) this.delegate.invoke(instance);
+			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
@@ -73,9 +77,8 @@ public class MethodInvoker implements Invoker {
 		return this.delegate.getAnnotation(clazz);
 	}
 
-	public boolean isWriteMethod() {
+	private boolean isWriteMethod() {
 		String name = this.delegate.getName();
-
 		if (StringUtils.isEmpty(name)) {
 			return false;
 		}
@@ -88,7 +91,23 @@ public class MethodInvoker implements Invoker {
 				break;
 			}
 		}
-
 		return isWrite;
+	}
+
+	private boolean isReadMethod() {
+		String name = this.delegate.getName();
+		if (StringUtils.isEmpty(name)) {
+			return false;
+		}
+
+		boolean isRead = false;
+		ReadMethodPrefix[] prefixes = ReadMethodPrefix.values();
+		for (ReadMethodPrefix prefix : prefixes) {
+			isRead = name.startsWith(prefix.getValue());
+			if (isRead) {
+				break;
+			}
+		}
+		return isRead;
 	}
 }

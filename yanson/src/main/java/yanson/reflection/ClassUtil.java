@@ -88,9 +88,22 @@ public class ClassUtil extends ClassLoader {
         return (Class<T>) classToCreate;
     }
 
-    public static Map<String, Invoker> getInvokerMap(Class<?> clazz) {
-        List<Invoker> fieldInvokers = getFieldInvokers(clazz);
-        List<Invoker> methodInvokers = getMethodInvokers(clazz);
+    public static Map<String, Invoker> getInvokerMap(Class<?> clazz, InvokerType invokerType) {
+        List<Invoker> fieldInvokers = new ArrayList<>();
+        List<Invoker> methodInvokers = new ArrayList<>();
+        switch (invokerType) {
+            case ALL:
+                fieldInvokers = getFieldInvokers(clazz);
+                methodInvokers = getMethodInvokers(clazz);
+                break;
+            case FIELD:
+                fieldInvokers = getFieldInvokers(clazz);
+                break;
+            case METHOD:
+                methodInvokers = getMethodInvokers(clazz);
+                break;
+            default:
+        }
 
         if (Configuration.PREFER_FIELD_VALUE_SET) {
             return getInvokerMap(fieldInvokers, methodInvokers);

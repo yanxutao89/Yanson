@@ -15,7 +15,7 @@ public interface Invoker {
 
 	Class getType();
 
-	<T> T getValue(Object instance, Class<T> clazz, Object value);
+	<T> T getValue(Object instance);
 
 	<T extends Annotation> T getAnnotation(Class<T> clazz);
 

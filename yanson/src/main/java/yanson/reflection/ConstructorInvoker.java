@@ -32,10 +32,10 @@ public class ConstructorInvoker implements Invoker {
 	}
 
 	@Override
-	public <T> T getValue(Object instance, Class<T> clazz, Object value) {
+	public <T> T getValue(Object instance) {
 		checkPermission(this.delegate);
 		try {
-			return (T) this.delegate.newInstance(value);
+			return (T) this.delegate.newInstance();
 		}
 		catch (InstantiationException e) {
 			e.printStackTrace();
