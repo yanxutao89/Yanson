@@ -11,7 +11,7 @@ public class Json {
     private static final JsonArray jsonArray = new JsonArray();
 
     public static JsonObject parseObject(String jsonStr) {
-        return jsonObject.fromJson(jsonStr);
+        return jsonStr == null ? null : jsonObject.fromJson(jsonStr);
     }
 
     public static <T> T parseObject(String jsonStr, Class<T> clazz) {
@@ -19,7 +19,7 @@ public class Json {
     }
 
     public static JsonArray parseArray(String jsonStr) {
-        return jsonArray.fromJson(jsonStr);
+        return jsonStr == null ? null : jsonArray.fromJson(jsonStr);
     }
 
     public static String toJsonString(Object object){
