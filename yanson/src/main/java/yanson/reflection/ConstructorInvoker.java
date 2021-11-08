@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
  * @Date: 2020/12/25 13:54
  */
 public class ConstructorInvoker implements Invoker {
+
 	private Constructor delegate;
 
 	public ConstructorInvoker(Constructor delegate) {
@@ -46,7 +47,6 @@ public class ConstructorInvoker implements Invoker {
 		catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 
@@ -55,4 +55,5 @@ public class ConstructorInvoker implements Invoker {
 		checkPermission(this.delegate);
 		return (T) this.delegate.getAnnotation(clazz);
 	}
+
 }

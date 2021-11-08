@@ -5,6 +5,7 @@ import java.util.*;
 import yanson.utils.ValidationUtils;
 
 public class JsonObject extends HashMap<String, Object> implements JsonParser<JsonObject> {
+
 	private static final long serialVersionUID = 4560188633954957114L;
 
 	public JsonObject fromJson(String jsonStr) {
@@ -37,4 +38,5 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
 	public <T> T toJavaObject(Class<T> clazz) {
 		return JsonHelper.toJavaObject(this, clazz, "");
 	}
+
 }

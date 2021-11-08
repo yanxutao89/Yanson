@@ -6,6 +6,7 @@ package yanson.reflection;
  * @Date: 2020/12/25 11:17
  */
 public enum ReadMethodPrefix {
+
 	GET("get"),
 	IS("is");
 
@@ -18,4 +19,5 @@ public enum ReadMethodPrefix {
 	public String getValue(){
 		return this.value;
 	}
+
 }

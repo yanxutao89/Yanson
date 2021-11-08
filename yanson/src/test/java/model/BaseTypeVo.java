@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class BaseTypeVo implements Serializable {
+
 	private String string;
 	private int integer;
 	@JsonField(value = "float2", aliasNames = {"float"})
@@ -97,4 +98,5 @@ public class BaseTypeVo implements Serializable {
 		result = 31 * result + Arrays.hashCode(array);
 		return result;
 	}
+
 }

@@ -21,6 +21,7 @@ import static org.objectweb.asm.Opcodes.*;
  * @Date: 2020/12/29 10:59
  */
 public class AddTimerAdapter extends ClassVisitor {
+
 	private String owner;
 	private boolean isInterface;
 
@@ -48,7 +49,9 @@ public class AddTimerAdapter extends ClassVisitor {
 		return methodVisitor;
 	}
 }
+
 class AddTimerMethodAdapter extends MethodVisitor {
+
 	public AddTimerMethodAdapter() {
 		super(ASM4);
 	}
@@ -110,4 +113,5 @@ class AddTimerMethodAdapter extends MethodVisitor {
 		Method setInteger = defineClass.getMethod("setInteger", Integer.class);
 		setInteger.invoke(baseTypeVo, 123456789);
 	}
+
 }

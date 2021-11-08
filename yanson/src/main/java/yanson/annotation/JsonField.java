@@ -16,6 +16,7 @@ import java.lang.annotation.ElementType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
 public @interface JsonField {
+
 	/**
 	 * target property name
 	 * @return
@@ -27,4 +28,5 @@ public @interface JsonField {
 	 * @return
 	 */
 	String[] aliasNames() default {};
+
 }

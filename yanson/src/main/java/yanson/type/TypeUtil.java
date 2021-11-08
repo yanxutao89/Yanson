@@ -16,6 +16,7 @@ import yanson.utils.StringUtils;
 import yanson.utils.ValidationUtils;
 
 public final class TypeUtil {
+
 	private TypeUtil() {
 		throw new UnsupportedOperationException("The constructor can not be called outside");
 	}
@@ -30,7 +31,6 @@ public final class TypeUtil {
 	 */
 	public static <T> T cast2Object(Object valueObject, Class<T> targetClass, Class<T>... genericClasses) {
 		T instance = null;
-
 		try {
 			if (isElementType(targetClass)) {
 				instance = cast2Element(valueObject, targetClass);
@@ -48,7 +48,6 @@ public final class TypeUtil {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return instance;
 	}
 
@@ -89,7 +88,6 @@ public final class TypeUtil {
 				return (T) cast2Character(valueObject);
 			}
 		}
-
 		return null;
 	}
 
@@ -130,7 +128,6 @@ public final class TypeUtil {
 				return (T) cast2Characters(valueObject);
 			}
 		}
-
 		return null;
 	}
 
@@ -144,7 +141,6 @@ public final class TypeUtil {
 				return (T) cast2List(valueObject, genericClasses);
 			}
 		}
-
 		return null;
 	}
 
@@ -588,4 +584,5 @@ public final class TypeUtil {
 	public static boolean isPositiveRealNumber(String original) {
 		return null == isPositiveDouble(original) || null == isPositiveLong(original);
 	}
+
 }

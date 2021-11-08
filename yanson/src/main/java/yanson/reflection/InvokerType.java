@@ -1,6 +1,7 @@
 package yanson.reflection;
 
 public enum InvokerType {
+
     FIELD("field"),
     METHOD("method"),
     ALL("all");
@@ -14,4 +15,5 @@ public enum InvokerType {
     InvokerType(String value) {
         this.value = value;
     }
+
 }

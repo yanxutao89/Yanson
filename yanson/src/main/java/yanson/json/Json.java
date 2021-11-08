@@ -23,10 +23,6 @@ public class Json {
     }
 
     public static String toJsonString(Object object){
-        if (null == object) {
-            return "{}";
-        }
-
-        return JsonHelper.toJsonSting(object, new StringBuilder());
+        return null == object ? "{}" : JsonHelper.toJsonSting(object, new StringBuilder());
     }
 }

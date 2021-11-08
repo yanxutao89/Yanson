@@ -6,9 +6,9 @@ package yanson.json;
  * @Date: 2020/12/20 17:27
  */
 public class Constants {
+
     public static final String MAGIC = "luxkui";
     public static final String DOUBLE_QUOTATIONS = "\"";
-
     public static final String[] SUPPORTED_VALUE_TYPES = { "string", "number", "boolean", "null", "object", "array"};
 
     /**
@@ -34,4 +34,5 @@ public class Constants {
     public static final String LEFT_SQUARE_BRACKET = "[";
     public static final String RIGHT_SQUARE_BRACKET = "]";
     public static final String ARRAY_VALUE_WITH_PRIMITIVE_TYPES = "IsArrayEmptyOrNonObjectSeparatedByComma";
+
 }

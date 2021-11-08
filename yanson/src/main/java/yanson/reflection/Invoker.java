@@ -9,6 +9,7 @@ import java.lang.reflect.AccessibleObject;
  * @Date: 2020/12/24 20:24
  */
 public interface Invoker {
+
 	String getName();
 
 	void setValue(Object instance, Object value);
@@ -24,4 +25,5 @@ public interface Invoker {
 			accessibleObject.setAccessible(true);
 		}
 	}
+
 }

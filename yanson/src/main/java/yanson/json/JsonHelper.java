@@ -8,15 +8,10 @@ import yanson.type.TypeUtil;
 import yanson.utils.CollectionUtils;
 import yanson.utils.StringUtils;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
-import static yanson.json.Configuration.SET_ON_NONNULL;
 
 /**
  * @Author: Yanxt7
@@ -24,6 +19,7 @@ import static yanson.json.Configuration.SET_ON_NONNULL;
  * @Date: 2020/12/19 21:28
  */
 public final class JsonHelper {
+
     private JsonHelper() {
         throw new UnsupportedOperationException("The constructor can not be called outside");
     }
@@ -35,7 +31,6 @@ public final class JsonHelper {
             if (-1 == separator) {
                 throw new InvalidJsonFormatException(String.format("Expect name:value, but found %s", nameValue));
             }
-
             String currName = JsonUtil.getName(nameValue.substring(0, separator).trim());
             String currValue = nameValue.substring(separator + 1).trim();
             // Object data
@@ -45,7 +40,6 @@ public final class JsonHelper {
                     currObject = new JsonObject();
                     jsonObject.put(currName, currObject);
                 }
-
                 currValue = currValue.substring(1, currValue.length() - 1);
                 List<String> nameValues = JsonUtil.formatNameValues(currValue.trim());
                 for (String nv : nameValues) {
@@ -54,7 +48,6 @@ public final class JsonHelper {
             }
             // Array data
             else if (JsonUtil.isArray(currValue)) {
-
                 List<String> nameValues = JsonUtil.formatNameValues(currValue.trim());
                 if (!CollectionUtils.isEmpty(nameValues)) {
                     if (Constants.ARRAY_VALUE_WITH_PRIMITIVE_TYPES.equals(nameValues.get(0))) {
@@ -63,17 +56,14 @@ public final class JsonHelper {
                     else {
                         JsonArray tempArray = (JsonArray) jsonObject.get(currName);
                         JsonArray currArray = (JsonArray) jsonObject.get(currName);
-
                         int arrSize = nameValues.size();
                         if (CollectionUtils.isEmpty(tempArray)) {
                             tempArray = new JsonArray(arrSize);
                             jsonObject.put(currName, tempArray);
                         }
-
                         if (CollectionUtils.isEmpty(currArray)) {
                             currArray = new JsonArray(arrSize);
                         }
-
                         for (int i = 0; i < arrSize; ++i) {
                             tempArray.add(new JsonObject());
                             StringBuilder arrayObject = new StringBuilder();
@@ -107,7 +97,6 @@ public final class JsonHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return instance;
     }
 
@@ -115,15 +104,12 @@ public final class JsonHelper {
     public static <T> T toJavaObject(Object valueObject, Class<T> targetClass, String parent) {
         T instance = null;
         try {
-
             instance = ClassUtil.instantiateClass(targetClass, null,  null);
-
             if (valueObject instanceof JsonObject) {
                 JsonObject jsonObject = (JsonObject) valueObject;
                 if (!StringUtils.isEmpty(parent)) {
                     jsonObject = (JsonObject) jsonObject.get(parent);
                 }
-
                 Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(targetClass, InvokerType.ALL);
                 for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
                     String key = entry.getKey();
@@ -137,7 +123,6 @@ public final class JsonHelper {
         catch (Exception e) {
             e.printStackTrace();
         }
-
         return instance;
     }
 
@@ -153,7 +138,6 @@ public final class JsonHelper {
             if (object instanceof Map) {
                 jsonStr.append(Constants.LEFT_CURLY_BRACKET);
             }
-
             if (object instanceof Map) {
                 Map<String, Object> map = (Map<String, Object>) object;
                 ArrayList<Map.Entry<String, Object>> entries = new ArrayList<>(map.entrySet());
@@ -198,11 +182,15 @@ public final class JsonHelper {
             }
             else {
                 Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(object.getClass(), InvokerType.FIELD);
-                JsonObject jsonObject = new JsonObject();
-                for (Map.Entry<String, Invoker> entry : invokerMap.entrySet()) {
-                    jsonObject.put(entry.getKey(), entry.getValue().getValue(object));
+                if (invokerMap.size() == 0) {
+                    jsonStr.append("\"" + object.toString() + "\"");
+                } else {
+                    JsonObject jsonObject = new JsonObject();
+                    for (Map.Entry<String, Invoker> entry : invokerMap.entrySet()) {
+                        jsonObject.put(entry.getKey(), entry.getValue().getValue(object));
+                    }
+                    toJsonSting(jsonObject, jsonStr);
                 }
-                toJsonSting(jsonObject, jsonStr);
             }
 
             if (object instanceof Map) {
@@ -214,4 +202,5 @@ public final class JsonHelper {
         }
         return jsonStr.toString();
     }
+
 }

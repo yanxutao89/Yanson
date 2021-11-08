@@ -16,6 +16,7 @@ import static org.objectweb.asm.Opcodes.ASM4;
  * @Date: 2020/12/28 17:41
  */
 public class RemoveMethodAdapter extends ClassVisitor {
+
 	private String methodName;
 	private String methodDesc;
 
@@ -54,4 +55,5 @@ public class RemoveMethodAdapter extends ClassVisitor {
 			System.out.println(method);
 		}
 	}
+
 }

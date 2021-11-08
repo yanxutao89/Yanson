@@ -13,27 +13,52 @@ import java.lang.reflect.Method;
  * @Date: 2020/12/24 20:26
  */
 public class MethodInvoker implements Invoker {
+
 	private Method delegate;
+	private boolean isRead;
 
 	public MethodInvoker(Method delegate) {
 		this.delegate = delegate;
 	}
 
+	public MethodInvoker(Method delegate, boolean isRead) {
+		this.delegate = delegate;
+		this.isRead = isRead;
+	}
+
 	public String getName() {
-		if (isWriteMethod()) {
-			String name = this.delegate.getName();
-			WriteMethodPrefix[] prefixes = WriteMethodPrefix.values();
-			for (WriteMethodPrefix prefix : prefixes) {
-				String prefixValue = prefix.getValue();
-				if (name.startsWith(prefixValue)) {
-					name = name.substring(prefixValue.length());
-					if (!StringUtils.isEmpty(name)) {
-						name = name.substring(0, 1).toLowerCase() + name.substring(1);
-						return name;
+		if (isRead) {
+			if (isReadMethod()) {
+				String name = this.delegate.getName();
+				ReadMethodPrefix[] prefixes = ReadMethodPrefix.values();
+				for (ReadMethodPrefix prefix : prefixes) {
+					String prefixValue = prefix.getValue();
+					if (name.startsWith(prefixValue) && this.delegate.getParameterTypes().length == 0) {
+						name = name.substring(prefixValue.length());
+						if (!StringUtils.isEmpty(name)) {
+							name = name.substring(0, 1).toLowerCase() + name.substring(1);
+							return name;
+						}
+					}
+				}
+			}
+		} else {
+			if (isWriteMethod()) {
+				String name = this.delegate.getName();
+				WriteMethodPrefix[] prefixes = WriteMethodPrefix.values();
+				for (WriteMethodPrefix prefix : prefixes) {
+					String prefixValue = prefix.getValue();
+					if (name.startsWith(prefixValue) && this.delegate.getParameterTypes().length == 1) {
+						name = name.substring(prefixValue.length());
+						if (!StringUtils.isEmpty(name)) {
+							name = name.substring(0, 1).toLowerCase() + name.substring(1);
+							return name;
+						}
 					}
 				}
 			}
 		}
+
 		return null;
 	}
 
@@ -82,7 +107,6 @@ public class MethodInvoker implements Invoker {
 		if (StringUtils.isEmpty(name)) {
 			return false;
 		}
-
 		boolean isWrite = false;
 		WriteMethodPrefix[] prefixes = WriteMethodPrefix.values();
 		for (WriteMethodPrefix prefix : prefixes) {
@@ -99,7 +123,6 @@ public class MethodInvoker implements Invoker {
 		if (StringUtils.isEmpty(name)) {
 			return false;
 		}
-
 		boolean isRead = false;
 		ReadMethodPrefix[] prefixes = ReadMethodPrefix.values();
 		for (ReadMethodPrefix prefix : prefixes) {
@@ -110,4 +133,5 @@ public class MethodInvoker implements Invoker {
 		}
 		return isRead;
 	}
+
 }

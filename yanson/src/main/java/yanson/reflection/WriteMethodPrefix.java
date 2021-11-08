@@ -6,6 +6,7 @@ package yanson.reflection;
  * @Date: 2020/12/25 11:17
  */
 public enum WriteMethodPrefix {
+
 	SET("set"),
 	IS("is");
 
@@ -18,4 +19,5 @@ public enum WriteMethodPrefix {
 	public String getValue(){
 		return this.value;
 	}
+
 }

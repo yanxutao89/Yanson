@@ -17,6 +17,7 @@ import static yanson.utils.ValidationUtils.isTrue;
 
 
 public class JsonStrTest {
+
 	public static final List<String> JSON_LIST = new ArrayList<String>();
 	private static String jsonStr;
 
@@ -70,5 +71,6 @@ public class JsonStrTest {
 	public static void main(String[] args) throws Exception {
 		AnnotationUtils.getExecutedTime("JsonStrTest", args);
 	}
+
 }
 

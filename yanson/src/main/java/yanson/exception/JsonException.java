@@ -5,6 +5,7 @@ package yanson.exception;
  *
  */
 public class JsonException extends RuntimeException {
+
 	private static final long serialVersionUID = -8079073315158391806L;
 	
 	public JsonException(String message) {
@@ -14,4 +15,5 @@ public class JsonException extends RuntimeException {
 	public JsonException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
 }

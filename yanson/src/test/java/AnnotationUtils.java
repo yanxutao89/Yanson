@@ -7,6 +7,7 @@ import java.util.List;
 
 
 public class AnnotationUtils {
+
 	private static final int TABLE_LENGTH = 64;
 	private static boolean HEAD = false;
 	
@@ -74,4 +75,5 @@ public class AnnotationUtils {
 			throw new Exception("The target class must be provided with a empty constructor");
 		}
 	}
+
 }

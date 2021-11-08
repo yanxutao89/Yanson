@@ -12,6 +12,7 @@ import static org.objectweb.asm.Opcodes.V1_8;
  * @Date: 2020/12/28 14:36
  */
 public class VersionAdapter extends ClassVisitor {
+
 	public VersionAdapter() {
 		super(ASM4);
 	}
@@ -24,4 +25,5 @@ public class VersionAdapter extends ClassVisitor {
 	public void visit(int i, int i1, String s, String s1, String s2, String[] strings) {
 		cv.visit(V1_8, i1, s, s1, s2, strings);
 	}
+
 }

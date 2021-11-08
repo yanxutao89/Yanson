@@ -9,5 +9,7 @@ import java.lang.reflect.Method;
  * @Date: 2020/9/1 22:23
  */
 public interface Matcher {
+
     boolean isMatched(Field field, Method method, String key);
+
 }

@@ -3,6 +3,7 @@ package model;
 import java.util.Objects;
 
 public class EmployeeVo {
+
 	private String firstName;
 	private String lastName;
 	
@@ -36,4 +37,5 @@ public class EmployeeVo {
 	public int hashCode() {
 		return Objects.hash(firstName, lastName);
 	}
+
 }

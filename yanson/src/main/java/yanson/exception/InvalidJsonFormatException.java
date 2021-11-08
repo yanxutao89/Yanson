@@ -5,6 +5,7 @@ package yanson.exception;
  *
  */
 public class InvalidJsonFormatException extends JsonException {
+
 	private static final long serialVersionUID = -5773267584310362898L;
 
 	public InvalidJsonFormatException(String message) {
@@ -14,4 +15,5 @@ public class InvalidJsonFormatException extends JsonException {
 	public InvalidJsonFormatException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
 }

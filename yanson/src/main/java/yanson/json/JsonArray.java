@@ -1,12 +1,12 @@
 package yanson.json;
 
-import yanson.utils.PatternUtils;
 import yanson.utils.ValidationUtils;
 
 import java.util.ArrayList;
 
 
 public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray> {
+
 	private static final long serialVersionUID = -7694911553868661587L;
 
 	private static final int DEFAULT_SIZE = 16;
@@ -45,4 +45,5 @@ public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray
 	public String toJsonStr() {
 		return toJson(this);
 	}
+
 }

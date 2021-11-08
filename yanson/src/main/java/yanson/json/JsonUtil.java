@@ -21,6 +21,7 @@ import java.util.List;
  * @Date: 2020/9/2 19:39
  */
 public final class JsonUtil {
+
     private JsonUtil() {
         throw new UnsupportedOperationException("The constructor can not be called outside");
     }
@@ -29,7 +30,6 @@ public final class JsonUtil {
         if (StringUtils.isEmpty(jsonStr)) {
             return -1;
         }
-
         int index = jsonStr.indexOf(Constants.COLON);
         if (index != -1) {
             String nameToCheck = jsonStr.substring(0, index).trim();
@@ -40,7 +40,6 @@ public final class JsonUtil {
                 valueToCheck = jsonStr.substring(index + 1);
             }
         }
-
         return index;
     }
 
@@ -126,7 +125,6 @@ public final class JsonUtil {
                 return new Object[0];
             }
         }
-
         throw new InvalidJsonFormatException(String.format("Invalid json value type, supported types are %s, but found %s ",  Arrays.toString(Constants.SUPPORTED_VALUE_TYPES), jsonStr));
     }
 
@@ -134,7 +132,6 @@ public final class JsonUtil {
         if (StringUtils.isEmpty(jsonStr)) {
             return null;
         }
-
         if (isString(jsonStr)) {
             while (isMarkedWithDoubleQuotations(jsonStr)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
@@ -160,7 +157,6 @@ public final class JsonUtil {
                 return (T)new Object[0];
             }
         }
-
         throw new InvalidJsonFormatException(String.format("Invalid json value type, supported types are %s, but found %s ",  Arrays.toString(Constants.SUPPORTED_VALUE_TYPES), jsonStr));
     }
 
@@ -213,7 +209,6 @@ public final class JsonUtil {
                 }
             }
         }
-
         return nameValues;
     }
 
@@ -232,7 +227,6 @@ public final class JsonUtil {
                 return !isObject(jsonStr);
             }
         }
-
         return false;
     }
 
@@ -312,7 +306,6 @@ public final class JsonUtil {
         if (StringUtils.isEmpty(jsonStr)) {
             return false;
         }
-
         return jsonStr.startsWith(Constants.LEFT_CURLY_BRACKET) && jsonStr.endsWith(Constants.RIGHT_CURLY_BRACKET);
     }
 
@@ -326,7 +319,7 @@ public final class JsonUtil {
         if (StringUtils.isEmpty(jsonStr)) {
             return false;
         }
-
         return jsonStr.startsWith(Constants.LEFT_SQUARE_BRACKET) && jsonStr.endsWith(Constants.RIGHT_SQUARE_BRACKET);
     }
+
 }

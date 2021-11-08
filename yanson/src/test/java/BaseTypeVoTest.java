@@ -18,6 +18,7 @@ import static yanson.utils.ValidationUtils.isTrue;
 
 
 public class BaseTypeVoTest {
+
 	public static final List<String> JSON_LIST = new ArrayList<String>();
 	private static String jsonStr;
 
@@ -71,5 +72,6 @@ public class BaseTypeVoTest {
 	public static void main(String[] args) throws Exception {
 		AnnotationUtils.getExecutedTime("BaseTypeVoTest", args);
 	}
+
 }
 
