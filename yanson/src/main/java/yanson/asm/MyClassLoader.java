@@ -19,14 +19,12 @@ public class MyClassLoader extends ClassLoader {
 
 	public static void main(String[] args) throws Exception {
 		MyClassLoader myClassLoader = new MyClassLoader();
-
 		ClassReader cr = new ClassReader("");
 		ClassWriter cw = new ClassWriter(cr, 0);
 		VersionAdapter va = new VersionAdapter(cw);
 		cr.accept(va, 0);
 		byte[] bytes1 = cw.toByteArray();
 		System.out.println(Arrays.toString(bytes1));
-
 		ClassReader classReader = new ClassReader(bytes1);
 		ClassWriter classWriter = new ClassWriter(classReader, 0);
 		VersionAdapter versionAdapter = new VersionAdapter(classWriter);
@@ -34,7 +32,6 @@ public class MyClassLoader extends ClassLoader {
 		byte[] bytes2 = classWriter.toByteArray();
 		System.out.println(Arrays.toString(bytes2));
 		Class clazz2 = myClassLoader.defineClass(null, bytes2);
-
 		System.out.println(Arrays.equals(bytes1, bytes2));
 	}
 

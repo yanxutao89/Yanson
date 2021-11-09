@@ -103,7 +103,6 @@ public class ClassUtil extends ClassLoader {
                 break;
             default:
         }
-
         if (Configuration.PREFER_FIELD_VALUE_SET) {
             return getInvokerMap(fieldInvokers, methodInvokers);
         }

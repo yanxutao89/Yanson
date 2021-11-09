@@ -95,7 +95,6 @@ public final class JsonUtil {
         if (StringUtils.isEmpty(jsonStr)) {
             return null;
         }
-
         jsonStr = jsonStr.trim();
         if (isNull(jsonStr)) {
             return getNull(jsonStr);
@@ -216,7 +215,6 @@ public final class JsonUtil {
         if (StringUtils.isEmpty(jsonStr)) {
             return false;
         }
-
         jsonStr = jsonStr.trim();
         if (isArray(jsonStr)) {
             jsonStr = jsonStr.substring(1, jsonStr.length() - 1).trim();

@@ -73,7 +73,6 @@ public class AddFieldAdapter extends ClassVisitor {
 		MyClassLoader myClassLoader = new MyClassLoader();
 		Class clazz = myClassLoader.defineClass(null, bytes);
 		System.out.println(Arrays.toString(clazz.getDeclaredFields()));
-
 	}
 
 }

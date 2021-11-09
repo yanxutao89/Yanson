@@ -4,7 +4,6 @@ import yanson.utils.ValidationUtils;
 
 import java.util.ArrayList;
 
-
 public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray> {
 
 	private static final long serialVersionUID = -7694911553868661587L;
@@ -34,7 +33,6 @@ public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new JsonArray();
 	}
 

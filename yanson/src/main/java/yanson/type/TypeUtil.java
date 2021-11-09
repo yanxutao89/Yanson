@@ -369,7 +369,6 @@ public final class TypeUtil {
 
 	public static boolean isFieldMatched(Field field, Method method, String name) throws Exception {
 		ValidationUtils.isTrue(!StringUtils.isEmpty(name), "Parameter 'name' must not be null or empty");
-
 		boolean isMatched = name.equals(field.getName());
 		JsonField jsonField = field.getAnnotation(JsonField.class);
 		if (null != jsonField) {
@@ -377,14 +376,12 @@ public final class TypeUtil {
 			String propertyName = jsonField.value();
 			isMatched |= aliasKeys.contains(name) && propertyName.equals(field.getName());
 		}
-
 		if (isMatched) {
 			String methodName = method.getName();
 			if ((methodName.startsWith("set") || methodName.startsWith("is")) && methodName.toLowerCase().contains(name.toLowerCase())) {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -399,7 +396,6 @@ public final class TypeUtil {
 		if (Character.isLowerCase(property.charAt(0))) {
 			property = Character.toUpperCase(property.charAt(0)) + property.substring(1);
 		}
-
 		return property;
 	}
 
@@ -513,17 +509,14 @@ public final class TypeUtil {
 
 	public static Object getNumber(String original) {
 		Object object = null;
-
 		object = isLong(original);
 		if (null != object) {
 			return (Long) object;
 		}
-
 		object = isDouble(original);
 		if (null != object){
 			return (Double)object;
 		}
-
 		return null;
 	}
 

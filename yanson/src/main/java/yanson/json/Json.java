@@ -7,6 +7,7 @@ package yanson.json;
  * @Date: 2020/12/19 21:23
  */
 public class Json {
+
     private static final JsonObject jsonObject = new JsonObject();
     private static final JsonArray jsonArray = new JsonArray();
 
@@ -23,6 +24,7 @@ public class Json {
     }
 
     public static String toJsonString(Object object){
-        return null == object ? "{}" : JsonHelper.toJsonSting(object, new StringBuilder());
+        return null == object ? null : JsonHelper.toJsonSting(object, new StringBuilder());
     }
+
 }

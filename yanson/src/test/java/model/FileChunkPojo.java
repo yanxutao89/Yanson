@@ -13,7 +13,6 @@ public class FileChunkPojo {
     public FileChunkPojo() {
     }
 
-
     public Long getFileChunkId() {
         return fileChunkId;
     }

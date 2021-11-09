@@ -48,6 +48,7 @@ public class AddTimerAdapter extends ClassVisitor {
 		}
 		return methodVisitor;
 	}
+
 }
 
 class AddTimerMethodAdapter extends MethodVisitor {

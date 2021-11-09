@@ -86,7 +86,6 @@ public final class JsonHelper {
         else {
             return null;
         }
-
         return jsonObject;
     }
 
@@ -192,7 +191,6 @@ public final class JsonHelper {
                     toJsonSting(jsonObject, jsonStr);
                 }
             }
-
             if (object instanceof Map) {
                 jsonStr.append(Constants.RIGHT_CURLY_BRACKET);
             }
