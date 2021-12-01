@@ -45,8 +45,7 @@ public class ClassUtil extends ClassLoader {
                 constructor.setAccessible(true);
             }
             return constructor.newInstance(constructorArgs.toArray(new Object[constructorArgs.size()]));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             StringBuilder argTypes = new StringBuilder();
             if (constructorArgTypes != null && !constructorArgTypes.isEmpty()) {
                 for (Class<?> argType : constructorArgTypes) {
@@ -71,17 +70,13 @@ public class ClassUtil extends ClassLoader {
         Class<?> classToCreate;
         if (type == List.class || type == Collection.class || type == Iterable.class) {
             classToCreate = ArrayList.class;
-        }
-        else if (type == Map.class) {
+        } else if (type == Map.class) {
             classToCreate = HashMap.class;
-        }
-        else if (type == SortedSet.class) {
+        } else if (type == SortedSet.class) {
             classToCreate = TreeSet.class;
-        }
-        else if (type == Set.class) {
+        } else if (type == Set.class) {
             classToCreate = HashSet.class;
-        }
-        else {
+        } else {
             classToCreate = type;
         }
         return (Class<T>) classToCreate;
@@ -105,8 +100,7 @@ public class ClassUtil extends ClassLoader {
         }
         if (Configuration.PREFER_FIELD_VALUE_SET) {
             return getInvokerMap(fieldInvokers, methodInvokers);
-        }
-        else {
+        } else {
             return getInvokerMap(methodInvokers, fieldInvokers);
         }
     }

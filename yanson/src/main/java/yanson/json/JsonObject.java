@@ -23,7 +23,6 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return new JsonObject();
 	}
 

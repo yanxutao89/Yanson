@@ -44,8 +44,7 @@ public class FieldInvoker implements Invoker {
 				}
 			}
 			delegate.set(instance, TypeUtil.cast2Object(value, type, classes));
-		}
-		catch (IllegalAccessException e) {
+		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
 	}
@@ -60,8 +59,7 @@ public class FieldInvoker implements Invoker {
 		checkPermission(this.delegate);
 		try {
 			return (T) this.delegate.get(instance);
-		}
-		catch (IllegalAccessException e) {
+		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
 		return null;

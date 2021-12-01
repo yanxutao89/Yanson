@@ -37,14 +37,11 @@ public class ConstructorInvoker implements Invoker {
 		checkPermission(this.delegate);
 		try {
 			return (T) this.delegate.newInstance();
-		}
-		catch (InstantiationException e) {
+		} catch (InstantiationException e) {
 			e.printStackTrace();
-		}
-		catch (IllegalAccessException e) {
+		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
 		return null;

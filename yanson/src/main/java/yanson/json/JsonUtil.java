@@ -98,20 +98,16 @@ public final class JsonUtil {
         jsonStr = jsonStr.trim();
         if (isNull(jsonStr)) {
             return getNull(jsonStr);
-        }
-        else if (isString(jsonStr)) {
+        } else if (isString(jsonStr)) {
             while (isMarkedWithDoubleQuotations(jsonStr)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
             }
             return jsonStr;
-        }
-        else if (isNumber(jsonStr)) {
+        } else if (isNumber(jsonStr)) {
             return getNumber(jsonStr);
-        }
-        else if (isBoolean(jsonStr)) {
+        } else if (isBoolean(jsonStr)) {
             return getBoolean(jsonStr);
-        }
-        else if (isArray(jsonStr)) {
+        } else if (isArray(jsonStr)) {
             String[] array = jsonStr.substring(1, jsonStr.length() - 1).split(Constants.COMMA);
             if (array != null && array.length > 0) {
                 Object[] objects = new Object[array.length];
@@ -119,8 +115,7 @@ public final class JsonUtil {
                     objects[i] = getValue(array[i]);
                 }
                 return objects;
-            }
-            else {
+            } else {
                 return new Object[0];
             }
         }
@@ -136,14 +131,11 @@ public final class JsonUtil {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
             }
             return castString(jsonStr, clazz);
-        }
-        else if (isNull(jsonStr)) {
+        } else if (isNull(jsonStr)) {
             return castString(jsonStr, clazz);
-        }
-        else if (isNumber(jsonStr)) {
+        } else if (isNumber(jsonStr)) {
             return castString(jsonStr, clazz);
-        }
-        else if (isArray(jsonStr)) {
+        } else if (isArray(jsonStr)) {
             String[] array = jsonStr.substring(1, jsonStr.length() - 1).split(",");
             if (array != null && array.length > 0) {
                 Object[] objects = new Object[array.length];
@@ -151,8 +143,7 @@ public final class JsonUtil {
                     objects[i] = getValue(array[i]);
                 }
                 return (T)objects;
-            }
-            else {
+            } else {
                 return (T)new Object[0];
             }
         }
@@ -174,8 +165,7 @@ public final class JsonUtil {
         if (isArrayEmptyOrSeparatedByComma(jsonStr)) {
             nameValues.add(Constants.ARRAY_VALUE_WITH_PRIMITIVE_TYPES);
             nameValues.add(jsonStr);
-        }
-        else {
+        } else {
             if (isArray(jsonStr)) {
                 jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
             }
@@ -187,20 +177,16 @@ public final class JsonUtil {
             for (char c : jsonStr.toCharArray()) {
                 if (c == '{') {
                     curlyBracketCount++;
-                }
-                else if (c == '}') {
+                } else if (c == '}') {
                     curlyBracketCount--;
-                }
-                else if (c == '[') {
+                } else if (c == '[') {
                     if (squareBracketCount == -1) {
                         squareBracketCount = 0;
                     }
                     squareBracketCount++;
-                }
-                else if (c == ']') {
+                } else if (c == ']') {
                     squareBracketCount--;
                 }
-
                 sb.append(c);
                 if (c == ',' && curlyBracketCount == 0 && (squareBracketCount == -1 || squareBracketCount == 0)) {
                     nameValues.add(sb.substring(0, sb.length() - 1));
@@ -220,8 +206,7 @@ public final class JsonUtil {
             jsonStr = jsonStr.substring(1, jsonStr.length() - 1).trim();
             if (isArray(jsonStr)) {
                 return isMarkedWithDoubleQuotations(jsonStr);
-            }
-            else {
+            } else {
                 return !isObject(jsonStr);
             }
         }

@@ -68,11 +68,9 @@ public class MethodInvoker implements Invoker {
 				Class type = getType();
 				delegate.invoke(instance, TypeUtil.cast2Object(value, type, null));
 			}
-		}
-		catch (IllegalAccessException e) {
+		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
 	}

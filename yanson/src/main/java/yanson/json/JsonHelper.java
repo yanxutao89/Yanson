@@ -33,7 +33,7 @@ public final class JsonHelper {
             }
             String currName = JsonUtil.getName(nameValue.substring(0, separator).trim());
             String currValue = nameValue.substring(separator + 1).trim();
-            // Object data
+
             if (JsonUtil.isObject(currValue)) {
                 JsonObject currObject = (JsonObject) jsonObject.get(currName);
                 if (null == currObject) {
@@ -45,9 +45,7 @@ public final class JsonHelper {
                 for (String nv : nameValues) {
                     readJson(nv, currObject);
                 }
-            }
-            // Array data
-            else if (JsonUtil.isArray(currValue)) {
+            } else if (JsonUtil.isArray(currValue)) {
                 List<String> nameValues = JsonUtil.formatNameValues(currValue.trim());
                 if (!CollectionUtils.isEmpty(nameValues)) {
                     if (Constants.ARRAY_VALUE_WITH_PRIMITIVE_TYPES.equals(nameValues.get(0))) {
@@ -77,13 +75,10 @@ public final class JsonHelper {
                         }
                     }
                 }
-            }
-            // Others
-            else {
+            } else {
                 jsonObject.put(currName, JsonUtil.getValue(currValue.trim()));
             }
-        }
-        else {
+        } else {
             return null;
         }
         return jsonObject;
@@ -129,8 +124,7 @@ public final class JsonHelper {
     public static String toJsonSting(Object object, StringBuilder jsonStr) {
         if (object == null) {
             jsonStr.append("null");
-        }
-        else {
+        } else {
             if (object.getClass().isArray() || object instanceof Collection) {
                 jsonStr.append(Constants.LEFT_SQUARE_BRACKET);
             }
@@ -151,8 +145,7 @@ public final class JsonHelper {
                         jsonStr.append(Constants.COMMA);
                     }
                 }
-            }
-            else if (object.getClass().isArray()) {
+            } else if (object.getClass().isArray()) {
                 Object[] array = (Object[]) object;
                 for (int i = 0; i < array.length; ++i) {
                     toJsonSting(array[i], jsonStr);
@@ -160,8 +153,7 @@ public final class JsonHelper {
                         jsonStr.append(Constants.COMMA);
                     }
                 }
-            }
-            else if (object instanceof List) {
+            } else if (object instanceof List) {
                 List list = (List) object;
                 for (int i = 0; i < list.size(); ++i) {
                     toJsonSting(list.get(i), jsonStr);
@@ -169,8 +161,7 @@ public final class JsonHelper {
                         jsonStr.append(Constants.COMMA);
                     }
                 }
-            }
-            else if (TypeUtil.isElementType(object.getClass())) {
+            } else if (TypeUtil.isElementType(object.getClass())) {
                 if (object instanceof String) {
                     jsonStr.append(Constants.DOUBLE_QUOTATIONS);
                 }
@@ -178,8 +169,7 @@ public final class JsonHelper {
                 if (object instanceof String) {
                     jsonStr.append(Constants.DOUBLE_QUOTATIONS);
                 }
-            }
-            else {
+            } else {
                 Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(object.getClass(), InvokerType.FIELD);
                 if (invokerMap.size() == 0) {
                     jsonStr.append("\"" + object.toString() + "\"");
