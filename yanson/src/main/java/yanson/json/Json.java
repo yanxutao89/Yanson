@@ -7,22 +7,22 @@ package yanson.json;
  */
 public class Json {
 
-    private static final JsonObject jsonObject = new JsonObject();
-    private static final JsonArray jsonArray = new JsonArray();
+    private static final JsonObject JSON_OBJECT = new JsonObject();
+    private static final JsonArray JSON_ARRAY = new JsonArray();
 
-    public static JsonObject parseObject(String jsonStr) {
-        return jsonStr == null ? null : jsonObject.fromJson(jsonStr);
+    public static JsonObject parseObject(String json) {
+        return json == null ? null : JSON_OBJECT.fromJson(json);
     }
 
-    public static <T> T parseObject(String jsonStr, Class<T> clazz) {
-        return JsonHelper.readJson(jsonStr, clazz);
+    public static <T> T parseObject(String json, Class<T> clazz) {
+        return JsonHelper.readJson(json, clazz);
     }
 
-    public static JsonArray parseArray(String jsonStr) {
-        return jsonStr == null ? null : jsonArray.fromJson(jsonStr);
+    public static JsonArray parseArray(String json) {
+        return json == null ? null : JSON_ARRAY.fromJson(json);
     }
 
-    public static String toJsonString(Object object){
+    public static String toJson(Object object){
         return null == object ? null : JsonHelper.toJsonSting(object, new StringBuilder());
     }
 

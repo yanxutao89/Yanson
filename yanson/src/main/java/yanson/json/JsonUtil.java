@@ -12,10 +12,6 @@ import java.util.List;
 
 /**
  * JSON can represent four primitive types (strings, numbers, booleans, and null) and two structured types (objects and arrays).
- * A string is a sequence of zero or more Unicode characters [UNICODE].
- * An object is an unordered collection of zero or more name/value pairs, where a name is a string and a value is a string, number, boolean, null, object, or array.
- * An array is an ordered sequence of zero or more values.
- * The terms "object" and "array" come from the conventions of JavaScript, which is referenced from rfc4627
  * @Author: Yanxt7
  * @Desc:
  * @Date: 2020/9/2 19:39
@@ -26,36 +22,64 @@ public final class JsonUtil {
         throw new UnsupportedOperationException("The constructor can not be called outside");
     }
 
-    public static int indexOfColon(String jsonStr) {
-        if (StringUtils.isEmpty(jsonStr)) {
+    /**
+     * Check whether the json is object or not. An object is an unordered collection of zero or more name/value pairs,
+     * where a name is a string and a value is a string, number, boolean, null, object, or array.
+     * @param json the json text to be checked
+     * @return true if object otherwise false
+     */
+    public static boolean isObject(String json) {
+        if (StringUtils.isEmpty(json)) {
+            return false;
+        }
+        json = json.trim();
+        return json.startsWith(Constants.LEFT_CURLY_BRACKET) && json.endsWith(Constants.RIGHT_CURLY_BRACKET);
+    }
+
+    /**
+     * Check whether the json is array or not. An array is an ordered sequence of zero or more values.
+     * @param json the json text to be checked
+     * @return true if array otherwise false
+     */
+    public static boolean isArray(String json) {
+        if (StringUtils.isEmpty(json)) {
+            return false;
+        }
+        json = json.trim();
+        return json.startsWith(Constants.LEFT_SQUARE_BRACKET) && json.endsWith(Constants.RIGHT_SQUARE_BRACKET);
+    }
+
+    public static int indexOfColon(String json) {
+        if (StringUtils.isEmpty(json)) {
             return -1;
         }
-        int index = jsonStr.indexOf(Constants.COLON);
+        json = json.trim();
+        int index = json.indexOf(Constants.COLON);
         if (index != -1) {
-            String nameToCheck = jsonStr.substring(0, index).trim();
-            String valueToCheck = jsonStr.substring(index + 1).trim();
+            String nameToCheck = json.substring(0, index).trim();
+            String valueToCheck = json.substring(index + 1).trim();
             while (!(isValidJsonName(nameToCheck) && isValidJsonValue(valueToCheck))) {
-                index = jsonStr.indexOf(Constants.COLON, index);
-                nameToCheck = jsonStr.substring(0, index);
-                valueToCheck = jsonStr.substring(index + 1);
+                index = json.indexOf(Constants.COLON, index);
+                nameToCheck = json.substring(0, index);
+                valueToCheck = json.substring(index + 1);
             }
         }
         return index;
     }
 
-    public static int indexOfComma(String jsonStr) {
+    public static int indexOfComma(String json) {
         return -1;
     }
 
-    public static int indexOfBrace(String jsonStr) {
-        if (StringUtils.isEmpty(jsonStr)) {
+    public static int indexOfBrace(String json) {
+        if (StringUtils.isEmpty(json)) {
             return -1;
         }
         return -1;
     }
 
-    public static int indexOfBracket(String jsonStr) {
-        if (StringUtils.isEmpty(jsonStr)) {
+    public static int indexOfBracket(String json) {
+        if (StringUtils.isEmpty(json)) {
             return -1;
         }
         return -1;
@@ -71,7 +95,7 @@ public final class JsonUtil {
     }
 
     /**
-     * A JSON value MUST be an object, array, number, or string, or one of the following three literal names:false null true
+     * A JSON value MUST be an string, object, array, or number, or one of the following three literal names:false true null
      * The literal names MUST be lowercase. No other literal names are allowed.
      * value = false / null / true / object / array / number / string
      * false = %x66.61.6c.73.65 ; false
@@ -81,34 +105,31 @@ public final class JsonUtil {
      * @return
      */
     public static boolean isValidJsonValue(String value) {
-        if (value == null) {
-            return true;
-        }
-        return isNull(value) || isString(value) || isNumber(value) || isBoolean(value) || isObject(value) || isArray(value);
+        return isString(value) || isObject(value) || isArray(value) || isNumber(value) || isBoolean(value) || isNull(value);
     }
 
-    public static String getName(String jsonStr) {
-        return jsonStr.substring(1, jsonStr.length() - 1);
+    public static String getName(String json) {
+        return json.substring(1, json.length() - 1);
     }
 
-    public static Object getValue(String jsonStr) throws InvalidJsonFormatException {
-        if (StringUtils.isEmpty(jsonStr)) {
+    public static Object getValue(String json) throws InvalidJsonFormatException {
+        if (StringUtils.isEmpty(json)) {
             return null;
         }
-        jsonStr = jsonStr.trim();
-        if (isNull(jsonStr)) {
-            return getNull(jsonStr);
-        } else if (isString(jsonStr)) {
-            while (isMarkedWithDoubleQuotations(jsonStr)) {
-                jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
+        json = json.trim();
+        if (isNull(json)) {
+            return getNull(json);
+        } else if (isString(json)) {
+            while (isMarkedWithDoubleQuotations(json)) {
+                json = json.substring(1, json.length() - 1);
             }
-            return jsonStr;
-        } else if (isNumber(jsonStr)) {
-            return getNumber(jsonStr);
-        } else if (isBoolean(jsonStr)) {
-            return getBoolean(jsonStr);
-        } else if (isArray(jsonStr)) {
-            String[] array = jsonStr.substring(1, jsonStr.length() - 1).split(Constants.COMMA);
+            return json;
+        } else if (isNumber(json)) {
+            return getNumber(json);
+        } else if (isBoolean(json)) {
+            return getBoolean(json);
+        } else if (isArray(json)) {
+            String[] array = json.substring(1, json.length() - 1).split(Constants.COMMA);
             if (array != null && array.length > 0) {
                 Object[] objects = new Object[array.length];
                 for (int i = 0; i < array.length; ++i) {
@@ -119,24 +140,24 @@ public final class JsonUtil {
                 return new Object[0];
             }
         }
-        throw new InvalidJsonFormatException(String.format("Invalid json value type, supported types are %s, but found %s ",  Arrays.toString(Constants.SUPPORTED_VALUE_TYPES), jsonStr));
+        throw new InvalidJsonFormatException(String.format("Invalid json value type, supported types are %s, but found %s ",  Arrays.toString(Constants.SUPPORTED_VALUE_TYPES), json));
     }
 
-    public static <T> T getValue(String jsonStr, Class<T> clazz) throws InvalidJsonFormatException {
-        if (StringUtils.isEmpty(jsonStr)) {
+    public static <T> T getValue(String json, Class<T> clazz) throws InvalidJsonFormatException {
+        if (StringUtils.isEmpty(json)) {
             return null;
         }
-        if (isString(jsonStr)) {
-            while (isMarkedWithDoubleQuotations(jsonStr)) {
-                jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
+        if (isString(json)) {
+            while (isMarkedWithDoubleQuotations(json)) {
+                json = json.substring(1, json.length() - 1);
             }
-            return castString(jsonStr, clazz);
-        } else if (isNull(jsonStr)) {
-            return castString(jsonStr, clazz);
-        } else if (isNumber(jsonStr)) {
-            return castString(jsonStr, clazz);
-        } else if (isArray(jsonStr)) {
-            String[] array = jsonStr.substring(1, jsonStr.length() - 1).split(",");
+            return castString(json, clazz);
+        } else if (isNull(json)) {
+            return castString(json, clazz);
+        } else if (isNumber(json)) {
+            return castString(json, clazz);
+        } else if (isArray(json)) {
+            String[] array = json.substring(1, json.length() - 1).split(",");
             if (array != null && array.length > 0) {
                 Object[] objects = new Object[array.length];
                 for (int i = 0; i < array.length; ++i) {
@@ -147,10 +168,10 @@ public final class JsonUtil {
                 return (T)new Object[0];
             }
         }
-        throw new InvalidJsonFormatException(String.format("Invalid json value type, supported types are %s, but found %s ",  Arrays.toString(Constants.SUPPORTED_VALUE_TYPES), jsonStr));
+        throw new InvalidJsonFormatException(String.format("Invalid json value type, supported types are %s, but found %s ",  Arrays.toString(Constants.SUPPORTED_VALUE_TYPES), json));
     }
 
-    private static <T> T castString(String jsonStr, Class<T> clazz){
+    private static <T> T castString(String json, Class<T> clazz){
         T instance = null;
         return instance;
     }
@@ -159,22 +180,21 @@ public final class JsonUtil {
         return Object.class;
     }
 
-    public static List<String> formatNameValues(String jsonStr) {
-        List<String> nameValues = new ArrayList<String>();
-
-        if (isArrayEmptyOrSeparatedByComma(jsonStr)) {
+    public static List<String> formatNameValues(String json) {
+        List<String> nameValues = new ArrayList<>();
+        if (isArrayEmptyOrSeparatedByComma(json)) {
             nameValues.add(Constants.ARRAY_VALUE_WITH_PRIMITIVE_TYPES);
-            nameValues.add(jsonStr);
+            nameValues.add(json);
         } else {
-            if (isArray(jsonStr)) {
-                jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
+            if (isArray(json)) {
+                json = json.substring(1, json.length() - 1);
             }
-            jsonStr = jsonStr + Constants.COMMA;
+            json = json + Constants.COMMA;
             int curlyBracketCount = 0;
             int squareBracketCount = -1;
 
             StringBuilder sb = new StringBuilder();
-            for (char c : jsonStr.toCharArray()) {
+            for (char c : json.toCharArray()) {
                 if (c == '{') {
                     curlyBracketCount++;
                 } else if (c == '}') {
@@ -197,40 +217,49 @@ public final class JsonUtil {
         return nameValues;
     }
 
-    private static boolean isArrayEmptyOrSeparatedByComma(String jsonStr) {
-        if (StringUtils.isEmpty(jsonStr)) {
+    private static boolean isArrayEmptyOrSeparatedByComma(String json) {
+        if (StringUtils.isEmpty(json)) {
             return false;
         }
-        jsonStr = jsonStr.trim();
-        if (isArray(jsonStr)) {
-            jsonStr = jsonStr.substring(1, jsonStr.length() - 1).trim();
-            if (isArray(jsonStr)) {
-                return isMarkedWithDoubleQuotations(jsonStr);
+        json = json.trim();
+        if (isArray(json)) {
+            json = json.substring(1, json.length() - 1).trim();
+            if (isArray(json)) {
+                return isMarkedWithDoubleQuotations(json);
             } else {
-                return !isObject(jsonStr);
+                return !isObject(json);
             }
         }
         return false;
     }
 
-    private static boolean isString(String jsonStr) {
-        return StringUtils.isNotEmpty(jsonStr) && isMarkedWithDoubleQuotations(jsonStr);
+    /**
+     * A string is a sequence of zero or more Unicode characters [UNICODE].
+     * @param json
+     * @return
+     */
+    private static boolean isString(String json) {
+        return isMarkedWithDoubleQuotations(json);
     }
 
-    private static boolean isMarkedWithDoubleQuotations(String jsonStr) {
-        return jsonStr.startsWith(Constants.DOUBLE_QUOTATIONS) && jsonStr.endsWith(Constants.DOUBLE_QUOTATIONS);
+    private static boolean isMarkedWithDoubleQuotations(String json) {
+        if (StringUtils.isEmpty(json)) {
+            return false;
+        }
+        json = json.trim();
+        return json.startsWith(Constants.DOUBLE_QUOTATIONS) && json.endsWith(Constants.DOUBLE_QUOTATIONS);
     }
 
-    private static boolean isNumber(String jsonStr) {
-        return TypeUtil.isRealNumber(jsonStr);
+    private static boolean isNumber(String json) {
+        return TypeUtil.isRealNumber(json);
     }
 
-    public static BigDecimal getNumber(String jsonStr) {
-        return isNumber(jsonStr) ? new BigDecimal(jsonStr) : null;
+    public static BigDecimal getNumber(String json) {
+        return isNumber(json) ? new BigDecimal(json) : null;
     }
 
-    public static <T> T getNumber(String jsonStr, Class<T> clazz) {
-        BigDecimal number = getNumber(jsonStr);
+    public static <T> T getNumber(String json, Class<T> clazz) {
+        BigDecimal number = getNumber(json);
         if (null != number) {
             if (clazz == byte.class || clazz == Byte.class) {
                 return (T) (Byte) number.byteValue();
@@ -260,49 +289,23 @@ public final class JsonUtil {
         return null;
     }
 
-    public static boolean isBoolean(String jsonStr) {
-        return "true".equals(jsonStr) || "false".equals(jsonStr);
+    public static boolean isBoolean(String json) {
+        return "true".equals(json) || "false".equals(json);
     }
 
-    private static boolean getBoolean(String jsonStr) {
-        return isBoolean(jsonStr) ? Boolean.valueOf(jsonStr) : null;
+    private static boolean getBoolean(String json) {
+        return isBoolean(json) ? Boolean.valueOf(json) : null;
     }
 
-    public static boolean isNull(String jsonStr) {
-        return "null".equals(jsonStr);
+    public static boolean isNull(String json) {
+        return null == json || "null".equals(json);
     }
 
-    public static Object getNull(String jsonStr) {
-        if (isNull(jsonStr)) {
+    public static Object getNull(String json) {
+        if (isNull(json)) {
             return null;
         }
-        throw new InvalidJsonFormatException(String.format("Expected 'null', but found %s", jsonStr));
-    }
-
-    /**
-     * check whether the json is object or not
-     * @param jsonStr the json text to be checked
-     * @return true if object otherwise false
-     * @throws Exception if the json text is object or not
-     */
-    public static boolean isObject(String jsonStr) {
-        if (StringUtils.isEmpty(jsonStr)) {
-            return false;
-        }
-        return jsonStr.startsWith(Constants.LEFT_CURLY_BRACKET) && jsonStr.endsWith(Constants.RIGHT_CURLY_BRACKET);
-    }
-
-    /**
-     * check whether the json is array or not
-     * @param jsonStr the json text to be checked
-     * @return true if array otherwise false
-     * @throws Exception if the json text is array or not
-     */
-    public static boolean isArray(String jsonStr) {
-        if (StringUtils.isEmpty(jsonStr)) {
-            return false;
-        }
-        return jsonStr.startsWith(Constants.LEFT_SQUARE_BRACKET) && jsonStr.endsWith(Constants.RIGHT_SQUARE_BRACKET);
+        throw new InvalidJsonFormatException(String.format("Expected 'null', but found %s", json));
     }
 
 }

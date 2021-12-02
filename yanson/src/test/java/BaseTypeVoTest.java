@@ -16,17 +16,15 @@ import java.util.Objects;
 
 import static yanson.utils.ValidationUtils.isTrue;
 
-
 public class BaseTypeVoTest {
 
 	public static final List<String> JSON_LIST = new ArrayList<String>();
-	private static String jsonStr;
+	private static String json;
 
 	static {
 		StringBuffer sb = new StringBuffer();
 		InputStream is = ClassUtil.getDefaultClassLoader().getResourceAsStream("BaseTypeVo.json");
 		byte[] buffer = new byte[1024 * 8];
-
 		int len;
 		try {
 			while ((len = is.read(buffer)) != -1) {
@@ -39,29 +37,29 @@ public class BaseTypeVoTest {
 		for (String json : jsons) {
 			JSON_LIST.add(json.trim());
 		}
-		jsonStr = JSON_LIST.get(0);
+		json = JSON_LIST.get(0);
 	}
 
 	@MyTest
 	public void toJsonObject() throws Exception {
 		// Yanson
-		BaseTypeVo yansonObject = Json.parseObject(jsonStr).toJavaObject(BaseTypeVo.class);
-		String yansonStr = Json.toJsonString(yansonObject);
+		BaseTypeVo yansonObject = Json.parseObject(json).toJavaObject(BaseTypeVo.class);
+		String yansonStr = Json.toJson(yansonObject);
 		// FastJson
-		BaseTypeVo fastJsonObject = JSONObject.parseObject(jsonStr).toJavaObject(BaseTypeVo.class);
-		String fastJsonStr = JSON.toJSONString(fastJsonObject);
+		BaseTypeVo fastJsonObject = JSONObject.parseObject(json).toJavaObject(BaseTypeVo.class);
+		String fastjson = JSON.toJSONString(fastJsonObject);
 		// Jackson
 		ObjectMapper objectMapper = new ObjectMapper();
-		BaseTypeVo jacksonObject = objectMapper.readValue(jsonStr, BaseTypeVo.class);
+		BaseTypeVo jacksonObject = objectMapper.readValue(json, BaseTypeVo.class);
 		String jacksonStr = objectMapper.writeValueAsString(jacksonObject);
 		// Gson
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		BaseTypeVo gsonObject = gson.fromJson(jsonStr, BaseTypeVo.class);
+		BaseTypeVo gsonObject = gson.fromJson(json, BaseTypeVo.class);
 		String gsonStr = gsonObject.toString();
 
 		try {
-			isTrue(Objects.equals(yansonStr, fastJsonStr), String.format("\nYanson:%s \nis not equal to \nFastJson:%s", yansonStr, fastJsonStr));
-			isTrue(Objects.equals(fastJsonStr, jacksonStr), String.format("\nFastJson:%s \nis not equal to \nJackson:%s", fastJsonStr, jacksonStr));
+			isTrue(Objects.equals(yansonStr, fastjson), String.format("\nYanson:%s \nis not equal to \nFastJson:%s", yansonStr, fastjson));
+			isTrue(Objects.equals(fastjson, jacksonStr), String.format("\nFastJson:%s \nis not equal to \nJackson:%s", fastjson, jacksonStr));
 			isTrue(Objects.equals(jacksonStr, gsonStr), String.format("\nJackson:%s \nis not equal to \nGson:%s", jacksonStr, gsonStr));
 		}
 		catch (Exception e) {

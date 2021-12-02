@@ -8,15 +8,15 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
 
 	private static final long serialVersionUID = 4560188633954957114L;
 
-	public JsonObject fromJson(String jsonStr) {
+	public JsonObject fromJson(String json) {
         try {
-            ValidationUtils.isTrue(JsonUtil.isObject(jsonStr), String.format("Expect object, but found array"));
+            ValidationUtils.isTrue(JsonUtil.isObject(json), String.format("Expect object, but found %s", json));
             StringBuilder sb = new StringBuilder();
             sb.append(Constants.DOUBLE_QUOTATIONS)
 					.append(Constants.MAGIC)
 					.append(Constants.DOUBLE_QUOTATIONS)
 					.append(Constants.COLON)
-					.append(jsonStr.trim());
+					.append(json.trim());
             JsonObject jsonObject = new JsonObject();
             JsonHelper.readJson(sb.toString(), jsonObject);
             return (JsonObject) jsonObject.get(Constants.MAGIC);
@@ -30,7 +30,7 @@ public class JsonObject extends HashMap<String, Object> implements JsonParser<Js
 		return JsonHelper.toJsonSting(jsonObject, new StringBuilder());
 	}
 
-	public String toJsonStr() {
+	public String toJson() {
 		return toJson(this);
 	}
 

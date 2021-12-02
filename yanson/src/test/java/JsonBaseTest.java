@@ -17,14 +17,12 @@ import java.util.List;
 
 public class JsonBaseTest {
 
-	public static final List<String> JSON_LIST = new ArrayList<String>();
-	private static String jsonStr;
+	public static final List<String> JSON_LIST = new ArrayList<>();
 
 	static {
 		StringBuffer sb = new StringBuffer();
 		InputStream is = ClassUtil.getDefaultClassLoader().getResourceAsStream("JsonTest.txt");
 		byte[] buffer = new byte[1024 * 8];
-
 		int len;
 		try {
 			while ((len = is.read(buffer)) != -1) {
@@ -37,53 +35,58 @@ public class JsonBaseTest {
 		for (String json : jsons) {
 			JSON_LIST.add(json.trim());
 		}
-		jsonStr = JSON_LIST.get(9);
 	}
 
 	@MyTest
-	public void yanson() throws Exception {
-		if (jsonStr.startsWith("[")) {
-			JsonArray jsonArray = Json.parseArray(jsonStr);
+	public void test() throws Exception {
+		for (String json : JSON_LIST) {
+			yanson(json);
+			fastJson(json);
+			jackson(json);
+			gson(json);
+		}
+	}
+
+	public void yanson(String json) throws Exception {
+		if (json.startsWith("[")) {
+			JsonArray jsonArray = Json.parseArray(json);
 			System.out.println(jsonArray);
 		} else {
-			JsonObject jsonObject = Json.parseObject(jsonStr);
-			String jsonStr = jsonObject.toJsonStr();
-			System.out.println(jsonStr.length() + ":" + jsonStr);
+			JsonObject jsonObject = Json.parseObject(json);
+			json = jsonObject.toJson();
+			System.out.println("Yanson=" + json.length() + ":" + json);
 		}
 	}
 
-	@MyTest
-	public void fastJson() {
-		if (jsonStr.startsWith("[")) {
+	public void fastJson(String json) {
+		if (json.startsWith("[")) {
 
 		} else {
-			JSONObject jsonObject = JSONObject.parseObject(jsonStr);
-			String jsonStr = jsonObject.toJSONString();
-			System.out.println(jsonStr.length() + ":" + jsonStr);
+			JSONObject jsonObject = JSONObject.parseObject(json);
+			json = jsonObject.toJSONString();
+			System.out.println("FastJson=" + json.length() + ":" + json);
 		}
 	}
 
-	@MyTest
-	public void jackson() throws JsonMappingException, JsonProcessingException {
+	public void jackson(String json) throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
-		if (jsonStr.startsWith("[")) {
+		if (json.startsWith("[")) {
 
 		} else {
-			JsonObject jsonObject = objectMapper.readValue(jsonStr, JsonObject.class);
-			String jsonStr = objectMapper.writeValueAsString(jsonObject);
-			System.out.println(jsonStr.length() + ":" + jsonStr);
+			JsonObject jsonObject = objectMapper.readValue(json, JsonObject.class);
+			json = objectMapper.writeValueAsString(jsonObject);
+			System.out.println("Jackson=" + json.length() + ":" + json);
 		}
 	}
 
-	@MyTest
-	public void gson() {
+	public void gson(String json) {
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		if (jsonStr.startsWith("[")) {
+		if (json.startsWith("[")) {
 
 		} else {
-			com.google.gson.JsonObject jsonObject = gson.fromJson(jsonStr, com.google.gson.JsonObject.class);
-			String jsonStr = jsonObject.toString();
-			System.out.println(jsonStr.length() + ":" + jsonStr);
+			com.google.gson.JsonObject jsonObject = gson.fromJson(json, com.google.gson.JsonObject.class);
+			json = jsonObject.toString();
+			System.out.println("Gson=" + json.length() + ":" + json);
 		}
 	}
 

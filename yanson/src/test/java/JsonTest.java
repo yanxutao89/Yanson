@@ -15,17 +15,15 @@ import java.util.Objects;
 
 import static yanson.utils.ValidationUtils.isTrue;
 
-
-public class JsonStrTest {
+public class JsonTest {
 
 	public static final List<String> JSON_LIST = new ArrayList<String>();
-	private static String jsonStr;
+	private static String json;
 
 	static {
 		StringBuffer sb = new StringBuffer();
-		InputStream is = ClassUtil.getDefaultClassLoader().getResourceAsStream("JsonStr.json");
+		InputStream is = ClassUtil.getDefaultClassLoader().getResourceAsStream("Json.json");
 		byte[] buffer = new byte[1024 * 8];
-
 		int len;
 		try {
 			while ((len = is.read(buffer)) != -1) {
@@ -38,29 +36,29 @@ public class JsonStrTest {
 		for (String json : jsons) {
 			JSON_LIST.add(json.trim());
 		}
-		jsonStr = JSON_LIST.get(0);
+		json = JSON_LIST.get(0);
 	}
 
 	@MyTest
-	public void toJsonStr() throws Exception {
+	public void tojson() throws Exception {
 		// Yanson
-		JsonObject yansonObject = Json.parseObject(jsonStr);
-		String yansonStr = yansonObject.toJsonStr();
+		JsonObject yansonObject = Json.parseObject(json);
+		String yansonStr = yansonObject.toJson();
 		// FastJson
-		JSONObject fastJsonObject = JSONObject.parseObject(jsonStr);
-		String fastJsonStr = fastJsonObject.toJSONString();
+		JSONObject fastJsonObject = JSONObject.parseObject(json);
+		String fastjson = fastJsonObject.toJSONString();
 		// Jackson
 		ObjectMapper objectMapper = new ObjectMapper();
-		JsonObject jacksonObject = objectMapper.readValue(jsonStr, JsonObject.class);
+		JsonObject jacksonObject = objectMapper.readValue(json, JsonObject.class);
 		String jacksonStr = objectMapper.writeValueAsString(jacksonObject);
 		// Gson
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		com.google.gson.JsonObject gsonObject = gson.fromJson(jsonStr, com.google.gson.JsonObject.class);
+		com.google.gson.JsonObject gsonObject = gson.fromJson(json, com.google.gson.JsonObject.class);
 		String gsonStr = gsonObject.toString();
 
 		try {
-			isTrue(Objects.equals(yansonStr, fastJsonStr), String.format("\nYanson:%s \nis not equal to \nFastJson:%s", yansonStr, fastJsonStr));
-			isTrue(Objects.equals(fastJsonStr, jacksonStr), String.format("\nFastJson:%s \nis not equal to \nJackson:%s", fastJsonStr, jacksonStr));
+			isTrue(Objects.equals(yansonStr, fastjson), String.format("\nYanson:%s \nis not equal to \nFastJson:%s", yansonStr, fastjson));
+			isTrue(Objects.equals(fastjson, jacksonStr), String.format("\nFastJson:%s \nis not equal to \nJackson:%s", fastjson, jacksonStr));
 			isTrue(Objects.equals(jacksonStr, gsonStr), String.format("\nJackson:%s \nis not equal to \nGson:%s", jacksonStr, gsonStr));
 		}
 		catch (Exception e) {
@@ -69,7 +67,7 @@ public class JsonStrTest {
 	}
 
 	public static void main(String[] args) throws Exception {
-		AnnotationUtils.getExecutedTime("JsonStrTest", args);
+		AnnotationUtils.getExecutedTime("JsonTest", args);
 	}
 
 }

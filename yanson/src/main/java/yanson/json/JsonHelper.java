@@ -24,15 +24,15 @@ public final class JsonHelper {
         throw new UnsupportedOperationException("The constructor can not be called outside");
     }
 
-    public static JsonObject readJson(String jsonStr, JsonObject jsonObject) {
-        if (!StringUtils.isEmpty(jsonStr)) {
-            String nameValue = jsonStr.trim();
-            int separator = JsonUtil.indexOfColon(nameValue);
+    public static JsonObject readJson(String json, JsonObject jsonObject) {
+        if (!StringUtils.isEmpty(json)) {
+            json = json.trim();
+            int separator = JsonUtil.indexOfColon(json);
             if (-1 == separator) {
-                throw new InvalidJsonFormatException(String.format("Expect name:value, but found %s", nameValue));
+                throw new InvalidJsonFormatException(String.format("Expect name:value, but found %s", json));
             }
-            String currName = JsonUtil.getName(nameValue.substring(0, separator).trim());
-            String currValue = nameValue.substring(separator + 1).trim();
+            String currName = JsonUtil.getName(json.substring(0, separator).trim());
+            String currValue = json.substring(separator + 1).trim();
 
             if (JsonUtil.isObject(currValue)) {
                 JsonObject currObject = (JsonObject) jsonObject.get(currName);
@@ -84,10 +84,10 @@ public final class JsonHelper {
         return jsonObject;
     }
 
-    public static <T> T readJson(String jsonStr, Class<T> clazz) {
+    public static <T> T readJson(String json, Class<T> clazz) {
         T instance = null;
         try {
-            instance = new JsonObject().fromJson(jsonStr).toJavaObject(clazz);
+            instance = new JsonObject().fromJson(json).toJavaObject(clazz);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,74 +121,74 @@ public final class JsonHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public static String toJsonSting(Object object, StringBuilder jsonStr) {
+    public static String toJsonSting(Object object, StringBuilder json) {
         if (object == null) {
-            jsonStr.append("null");
+            json.append("null");
         } else {
             if (object.getClass().isArray() || object instanceof Collection) {
-                jsonStr.append(Constants.LEFT_SQUARE_BRACKET);
+                json.append(Constants.LEFT_SQUARE_BRACKET);
             }
             if (object instanceof Map) {
-                jsonStr.append(Constants.LEFT_CURLY_BRACKET);
+                json.append(Constants.LEFT_CURLY_BRACKET);
             }
             if (object instanceof Map) {
                 Map<String, Object> map = (Map<String, Object>) object;
                 ArrayList<Map.Entry<String, Object>> entries = new ArrayList<>(map.entrySet());
                 for (int i = 0; i < entries.size(); ++i) {
                     Map.Entry<String, Object> entry = entries.get(i);
-                    jsonStr.append(Constants.DOUBLE_QUOTATIONS)
+                    json.append(Constants.DOUBLE_QUOTATIONS)
                             .append(entry.getKey())
                             .append(Constants.DOUBLE_QUOTATIONS)
                             .append(Constants.COLON);
-                    toJsonSting(entry.getValue(), jsonStr);
+                    toJsonSting(entry.getValue(), json);
                     if (i < entries.size() - 1) {
-                        jsonStr.append(Constants.COMMA);
+                        json.append(Constants.COMMA);
                     }
                 }
             } else if (object.getClass().isArray()) {
                 Object[] array = (Object[]) object;
                 for (int i = 0; i < array.length; ++i) {
-                    toJsonSting(array[i], jsonStr);
+                    toJsonSting(array[i], json);
                     if (i < array.length - 1) {
-                        jsonStr.append(Constants.COMMA);
+                        json.append(Constants.COMMA);
                     }
                 }
             } else if (object instanceof List) {
                 List list = (List) object;
                 for (int i = 0; i < list.size(); ++i) {
-                    toJsonSting(list.get(i), jsonStr);
+                    toJsonSting(list.get(i), json);
                     if (i < list.size() - 1) {
-                        jsonStr.append(Constants.COMMA);
+                        json.append(Constants.COMMA);
                     }
                 }
             } else if (TypeUtil.isElementType(object.getClass())) {
                 if (object instanceof String) {
-                    jsonStr.append(Constants.DOUBLE_QUOTATIONS);
+                    json.append(Constants.DOUBLE_QUOTATIONS);
                 }
-                jsonStr.append(object);
+                json.append(object);
                 if (object instanceof String) {
-                    jsonStr.append(Constants.DOUBLE_QUOTATIONS);
+                    json.append(Constants.DOUBLE_QUOTATIONS);
                 }
             } else {
                 Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(object.getClass(), InvokerType.FIELD);
                 if (invokerMap.size() == 0) {
-                    jsonStr.append("\"" + object.toString() + "\"");
+                    json.append("\"" + object.toString() + "\"");
                 } else {
                     JsonObject jsonObject = new JsonObject();
                     for (Map.Entry<String, Invoker> entry : invokerMap.entrySet()) {
                         jsonObject.put(entry.getKey(), entry.getValue().getValue(object));
                     }
-                    toJsonSting(jsonObject, jsonStr);
+                    toJsonSting(jsonObject, json);
                 }
             }
             if (object instanceof Map) {
-                jsonStr.append(Constants.RIGHT_CURLY_BRACKET);
+                json.append(Constants.RIGHT_CURLY_BRACKET);
             }
             if (object.getClass().isArray() || object instanceof Collection) {
-                jsonStr.append(Constants.RIGHT_SQUARE_BRACKET);
+                json.append(Constants.RIGHT_SQUARE_BRACKET);
             }
         }
-        return jsonStr.toString();
+        return json.toString();
     }
 
 }

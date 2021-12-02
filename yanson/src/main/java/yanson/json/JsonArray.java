@@ -21,7 +21,7 @@ public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray
 	public JsonArray fromJson(String json) {
 		try {
 			StringBuilder sb = new StringBuilder();
-			ValidationUtils.isTrue(JsonUtil.isArray(json), String.format("Expect array, but found object"));
+			ValidationUtils.isTrue(JsonUtil.isArray(json), String.format("Expect array, but found %s", json));
 			sb.append(Constants.DOUBLE_QUOTATIONS)
 					.append(Constants.MAGIC)
 					.append(Constants.DOUBLE_QUOTATIONS)
@@ -40,7 +40,7 @@ public class JsonArray extends ArrayList<Object> implements JsonParser<JsonArray
 		return JsonHelper.toJsonSting(this, new StringBuilder());
 	}
 
-	public String toJsonStr() {
+	public String toJson() {
 		return toJson(this);
 	}
 
