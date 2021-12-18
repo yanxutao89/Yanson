@@ -12,13 +12,15 @@ public class DateUtils {
     };
 
     public static Date stringToDate(String dateStr) {
-        for (String format : DATE_FORMATS) {
-            Date date = stringToDate(dateStr, format);
-            if (date != null) {
-                return date;
+        if (dateStr != null) {
+            for (String format : DATE_FORMATS) {
+                Date date = stringToDate(dateStr, format);
+                if (date != null) {
+                    return date;
+                }
             }
         }
-        throw new RuntimeException(String.format("Unable to parse date %s", dateStr));
+        return null;
     }
 
     private static Date stringToDate(String dateStr, String pattern) {
@@ -26,18 +28,21 @@ public class DateUtils {
             SimpleDateFormat sdf = new SimpleDateFormat(pattern);
             return sdf.parse(dateStr);
         } catch (ParseException e) {
+            e.printStackTrace();
             return null;
         }
     }
 
     public static String dateToString(Date date) {
-        for (String format : DATE_FORMATS) {
-            String dateStr = dateToString(date, format);
-            if (dateStr != null) {
-                return dateStr;
+        if (date != null) {
+            for (String format : DATE_FORMATS) {
+                String dateStr = dateToString(date, format);
+                if (dateStr != null) {
+                    return dateStr;
+                }
             }
         }
-        throw new RuntimeException(String.format("Unable to parse date %s", date));
+        return null;
     }
 
     private static String dateToString(Date date, String pattern) {
