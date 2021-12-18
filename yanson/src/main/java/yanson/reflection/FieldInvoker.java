@@ -1,11 +1,14 @@
 package yanson.reflection;
 
 import yanson.type.TypeUtil;
+import yanson.utils.DateUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,7 +61,12 @@ public class FieldInvoker implements Invoker {
 	public <T> T getValue(Object instance) {
 		checkPermission(this.delegate);
 		try {
-			return (T) this.delegate.get(instance);
+			if (delegate.getType() == Date.class) {
+				Date date = (Date) this.delegate.get(instance);
+				return (T) DateUtils.dateToString(date);
+			} else {
+				return (T) this.delegate.get(instance);
+			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}

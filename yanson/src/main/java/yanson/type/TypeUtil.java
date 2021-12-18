@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +14,7 @@ import yanson.annotation.JsonField;
 import yanson.exception.InvalidTypeCastException;
 import yanson.json.Constants;
 import yanson.json.JsonHelper;
+import yanson.utils.DateUtils;
 import yanson.utils.StringUtils;
 import yanson.utils.ValidationUtils;
 
@@ -81,6 +84,9 @@ public final class TypeUtil {
             }
             if (targetClass == char.class || targetClass == Character.class) {
                 return (T) cast2Character(valueObject);
+            }
+            if (targetClass == Date.class) {
+                return (T) cast2Date(valueObject);
             }
         }
         return null;
@@ -246,6 +252,10 @@ public final class TypeUtil {
     public static Date cast2Date(Object valueObject) {
         if (valueObject instanceof Date) {
             return (Date) valueObject;
+        }
+        if (valueObject instanceof String) {
+            String dateStr = (String) valueObject;
+            return DateUtils.stringToDate(dateStr);
         }
         throw new InvalidTypeCastException(valueObject.getClass().getName(), Date.class.getName());
     }
