@@ -30,6 +30,7 @@ public class BaseTypeVo implements Serializable {
 	private List<EmployeeVo> employees;
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date date;
+	private int[] ints = {1, 2, 3};
 
 	public String getString() {
 		return string;
@@ -78,33 +79,11 @@ public class BaseTypeVo implements Serializable {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
-	@Override
-	public String toString() {
-		return "BaseTypeVo{" +
-				"string='" + string + '\'' +
-				", integer=" + integer +
-				", float2=" + float2 +
-				", boolean2=" + boolean2 +
-				", array=" + Arrays.toString(array) +
-				", employees=" + employees +
-				", date=" + date +
-				'}';
+	public int[] getInts() {
+		return ints;
 	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		BaseTypeVo that = (BaseTypeVo) o;
-		return integer == that.integer && Objects.equals(string, that.string) && Objects.equals(float2, that.float2) && Objects.equals(boolean2, that.boolean2) && Arrays.equals(array, that.array) && Objects.equals(employees, that.employees);
-	}
-
-	@Override
-	public int hashCode() {
-		int result = Objects.hash(string, integer, float2, boolean2, employees);
-		result = 31 * result + Arrays.hashCode(array);
-		return result;
+	public void setInts(int[] ints) {
+		this.ints = ints;
 	}
 
 }

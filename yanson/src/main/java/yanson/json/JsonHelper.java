@@ -8,10 +8,7 @@ import yanson.type.TypeUtil;
 import yanson.utils.CollectionUtils;
 import yanson.utils.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author: Yanxt7
@@ -125,7 +122,8 @@ public final class JsonHelper {
         if (object == null) {
             json.append("null");
         } else {
-            if (object.getClass().isArray() || object instanceof Collection) {
+            Class<?> objectClass = object.getClass();
+            if ((objectClass.isArray() && !objectClass.getComponentType().isPrimitive()) || object instanceof Collection) {
                 json.append(Constants.LEFT_SQUARE_BRACKET);
             }
             if (object instanceof Map) {
@@ -145,12 +143,33 @@ public final class JsonHelper {
                         json.append(Constants.COMMA);
                     }
                 }
-            } else if (object.getClass().isArray()) {
-                Object[] array = (Object[]) object;
-                for (int i = 0; i < array.length; ++i) {
-                    toJsonSting(array[i], json);
-                    if (i < array.length - 1) {
-                        json.append(Constants.COMMA);
+            } else if (objectClass.isArray()) {
+                if (object instanceof Object[]) {
+                    Object[] array = (Object[]) object;
+                    for (int i = 0; i < array.length; ++i) {
+                        toJsonSting(array[i], json);
+                        if (i < array.length - 1) {
+                            json.append(Constants.COMMA);
+                        }
+                    }
+                } else if (objectClass.getComponentType().isPrimitive()) {
+                    Class<?> componentType = objectClass.getComponentType();
+                    if (componentType == boolean.class) {
+                        json.append(Arrays.toString((boolean[])object));
+                    } else if (componentType == byte.class) {
+                        json.append(Arrays.toString((byte[])object));
+                    } else if (componentType == char.class) {
+                        json.append(Arrays.toString((char[]) object));
+                    } else if (componentType == short.class) {
+                        json.append(Arrays.toString((short[]) object));
+                    } else if (componentType == int.class) {
+                        json.append(Arrays.toString((int[]) object));
+                    } else if (componentType == long.class) {
+                        json.append(Arrays.toString((long[]) object));
+                    } else if (componentType == float.class) {
+                        json.append(Arrays.toString((float[]) object));
+                    } else if (componentType == double.class) {
+                        json.append(Arrays.toString((double[]) object));
                     }
                 }
             } else if (object instanceof List) {
@@ -161,7 +180,7 @@ public final class JsonHelper {
                         json.append(Constants.COMMA);
                     }
                 }
-            } else if (TypeUtil.isElementType(object.getClass())) {
+            } else if (TypeUtil.isElementType(objectClass)) {
                 if (object instanceof String) {
                     json.append(Constants.DOUBLE_QUOTATIONS);
                 }
@@ -170,7 +189,7 @@ public final class JsonHelper {
                     json.append(Constants.DOUBLE_QUOTATIONS);
                 }
             } else {
-                Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(object.getClass(), InvokerType.FIELD);
+                Map<String, Invoker> invokerMap = ClassUtil.getInvokerMap(objectClass, InvokerType.FIELD);
                 if (invokerMap.size() == 0) {
                     json.append("\"" + object.toString() + "\"");
                 } else {
@@ -184,7 +203,7 @@ public final class JsonHelper {
             if (object instanceof Map) {
                 json.append(Constants.RIGHT_CURLY_BRACKET);
             }
-            if (object.getClass().isArray() || object instanceof Collection) {
+            if ((objectClass.isArray() && !objectClass.getComponentType().isPrimitive()) || object instanceof Collection) {
                 json.append(Constants.RIGHT_SQUARE_BRACKET);
             }
         }
